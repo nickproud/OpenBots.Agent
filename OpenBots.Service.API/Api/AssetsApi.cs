@@ -24,6 +24,27 @@ namespace OpenBots.Service.API.Api
     {
         #region Synchronous Operations
         /// <summary>
+        /// Provides a Count of Assets
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>int?</returns>
+        int? ApiV1AssetsCountGet (string filter = null);
+
+        /// <summary>
+        /// Provides a Count of Assets
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>ApiResponse of int?</returns>
+        ApiResponse<int?> ApiV1AssetsCountGetWithHttpInfo (string filter = null);
+        /// <summary>
         /// Provides a list of all Assets
         /// </summary>
         /// <remarks>
@@ -51,6 +72,73 @@ namespace OpenBots.Service.API.Api
         /// <returns>ApiResponse of AssetPaginatedList</returns>
         ApiResponse<AssetPaginatedList> ApiV1AssetsGetWithHttpInfo (string filter = null, string orderby = null, int? top = null, int? skip = null);
         /// <summary>
+        /// Add in the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>IActionResult</returns>
+        IActionResult ApiV1AssetsIdAddPut (string id, int? value = null);
+
+        /// <summary>
+        /// Add in the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>ApiResponse of IActionResult</returns>
+        ApiResponse<IActionResult> ApiV1AssetsIdAddPutWithHttpInfo (string id, int? value = null);
+        /// <summary>
+        /// Append in the Text value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>IActionResult</returns>
+        IActionResult ApiV1AssetsIdAppendPut (string id, string value = null);
+
+        /// <summary>
+        /// Append in the Text value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>ApiResponse of IActionResult</returns>
+        ApiResponse<IActionResult> ApiV1AssetsIdAppendPutWithHttpInfo (string id, string value = null);
+        /// <summary>
+        /// Decrement in the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>IActionResult</returns>
+        IActionResult ApiV1AssetsIdDecrementPut (string id);
+
+        /// <summary>
+        /// Decrement in the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>ApiResponse of IActionResult</returns>
+        ApiResponse<IActionResult> ApiV1AssetsIdDecrementPutWithHttpInfo (string id);
+        /// <summary>
         /// Deletes an Asset with a specified id from the Asset.
         /// </summary>
         /// <remarks>
@@ -71,6 +159,27 @@ namespace OpenBots.Service.API.Api
         /// <param name="id">Asset ID to be deleted- throws BadRequest if null or empty Guid/</param>
         /// <returns>ApiResponse of IActionResult</returns>
         ApiResponse<IActionResult> ApiV1AssetsIdDeleteWithHttpInfo (string id);
+        /// <summary>
+        /// Increment in the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>IActionResult</returns>
+        IActionResult ApiV1AssetsIdIncrementPut (string id);
+
+        /// <summary>
+        /// Increment in the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>ApiResponse of IActionResult</returns>
+        ApiResponse<IActionResult> ApiV1AssetsIdIncrementPutWithHttpInfo (string id);
         /// <summary>
         /// Updates partial details of Asset.
         /// </summary>
@@ -118,15 +227,58 @@ namespace OpenBots.Service.API.Api
         /// <returns>ApiResponse of IActionResult</returns>
         ApiResponse<IActionResult> ApiV1AssetsIdPutWithHttpInfo (string id, Asset body = null);
         /// <summary>
-        /// Adds a new Asset to the existing Assets
+        /// Subtract from the Number value of Asset.
         /// </summary>
         /// <remarks>
-        /// Adds the Asset with unique Asset Id to the existing Assets
+        /// 
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="body"> (optional)</param>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>IActionResult</returns>
+        IActionResult ApiV1AssetsIdSubtractPut (string id, int? value = null);
+
+        /// <summary>
+        /// Subtract from the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>ApiResponse of IActionResult</returns>
+        ApiResponse<IActionResult> ApiV1AssetsIdSubtractPutWithHttpInfo (string id, int? value = null);
+        /// <summary>
+        /// Updates an Asset with file
+        /// </summary>
+        /// <remarks>
+        /// Provides an action to update an Asset with file, when Asset id and the new details of Asset are given
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset Id, produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
         /// <returns>Asset</returns>
-        Asset ApiV1AssetsPost (Asset body = null);
+        Asset ApiV1AssetsIdUploadPut (string id);
+
+        /// <summary>
+        /// Updates an Asset with file
+        /// </summary>
+        /// <remarks>
+        /// Provides an action to update an Asset with file, when Asset id and the new details of Asset are given
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset Id, produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
+        /// <returns>ApiResponse of Asset</returns>
+        ApiResponse<Asset> ApiV1AssetsIdUploadPutWithHttpInfo (string id);
+        /// <summary>
+        /// Adds a new Asset to the existing Assets
+        /// </summary>
+        /// <remarks>
+        /// Adds the Asset with unique Asset Id to the existing Assets
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Asset</returns>
+        Asset ApiV1AssetsUploadPost ();
 
         /// <summary>
         /// Adds a new Asset to the existing Assets
@@ -135,9 +287,29 @@ namespace OpenBots.Service.API.Api
         /// Adds the Asset with unique Asset Id to the existing Assets
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="body"> (optional)</param>
         /// <returns>ApiResponse of Asset</returns>
-        ApiResponse<Asset> ApiV1AssetsPostWithHttpInfo (Asset body = null);
+        ApiResponse<Asset> ApiV1AssetsUploadPostWithHttpInfo ();
+        /// <summary>
+        /// Export/download an Asset file
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>MemoryStream</returns>
+        MemoryStream ExportAsset (string id);
+
+        /// <summary>
+        /// Export/download an Asset file
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ApiResponse of MemoryStream</returns>
+        ApiResponse<MemoryStream> ExportAssetWithHttpInfo (string id);
         /// <summary>
         /// Provides an Asset&#x27;s details for a particular Asset Id.
         /// </summary>
@@ -146,8 +318,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Asset id</param>
-        /// <returns>AssetPaginatedList</returns>
-        AssetPaginatedList GetAsset (string id);
+        /// <returns>Asset</returns>
+        Asset GetAsset (string id);
 
         /// <summary>
         /// Provides an Asset&#x27;s details for a particular Asset Id.
@@ -157,10 +329,31 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Asset id</param>
-        /// <returns>ApiResponse of AssetPaginatedList</returns>
-        ApiResponse<AssetPaginatedList> GetAssetWithHttpInfo (string id);
+        /// <returns>ApiResponse of Asset</returns>
+        ApiResponse<Asset> GetAssetWithHttpInfo (string id);
         #endregion Synchronous Operations
         #region Asynchronous Operations
+        /// <summary>
+        /// Provides a Count of Assets
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of int?</returns>
+        System.Threading.Tasks.Task<int?> ApiV1AssetsCountGetAsync (string filter = null);
+
+        /// <summary>
+        /// Provides a Count of Assets
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of ApiResponse (int?)</returns>
+        System.Threading.Tasks.Task<ApiResponse<int?>> ApiV1AssetsCountGetAsyncWithHttpInfo (string filter = null);
         /// <summary>
         /// Provides a list of all Assets
         /// </summary>
@@ -189,6 +382,73 @@ namespace OpenBots.Service.API.Api
         /// <returns>Task of ApiResponse (AssetPaginatedList)</returns>
         System.Threading.Tasks.Task<ApiResponse<AssetPaginatedList>> ApiV1AssetsGetAsyncWithHttpInfo (string filter = null, string orderby = null, int? top = null, int? skip = null);
         /// <summary>
+        /// Add in the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>Task of IActionResult</returns>
+        System.Threading.Tasks.Task<IActionResult> ApiV1AssetsIdAddPutAsync (string id, int? value = null);
+
+        /// <summary>
+        /// Add in the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>Task of ApiResponse (IActionResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AssetsIdAddPutAsyncWithHttpInfo (string id, int? value = null);
+        /// <summary>
+        /// Append in the Text value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>Task of IActionResult</returns>
+        System.Threading.Tasks.Task<IActionResult> ApiV1AssetsIdAppendPutAsync (string id, string value = null);
+
+        /// <summary>
+        /// Append in the Text value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>Task of ApiResponse (IActionResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AssetsIdAppendPutAsyncWithHttpInfo (string id, string value = null);
+        /// <summary>
+        /// Decrement in the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>Task of IActionResult</returns>
+        System.Threading.Tasks.Task<IActionResult> ApiV1AssetsIdDecrementPutAsync (string id);
+
+        /// <summary>
+        /// Decrement in the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>Task of ApiResponse (IActionResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AssetsIdDecrementPutAsyncWithHttpInfo (string id);
+        /// <summary>
         /// Deletes an Asset with a specified id from the Asset.
         /// </summary>
         /// <remarks>
@@ -209,6 +469,27 @@ namespace OpenBots.Service.API.Api
         /// <param name="id">Asset ID to be deleted- throws BadRequest if null or empty Guid/</param>
         /// <returns>Task of ApiResponse (IActionResult)</returns>
         System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AssetsIdDeleteAsyncWithHttpInfo (string id);
+        /// <summary>
+        /// Increment in the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>Task of IActionResult</returns>
+        System.Threading.Tasks.Task<IActionResult> ApiV1AssetsIdIncrementPutAsync (string id);
+
+        /// <summary>
+        /// Increment in the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>Task of ApiResponse (IActionResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AssetsIdIncrementPutAsyncWithHttpInfo (string id);
         /// <summary>
         /// Updates partial details of Asset.
         /// </summary>
@@ -256,15 +537,58 @@ namespace OpenBots.Service.API.Api
         /// <returns>Task of ApiResponse (IActionResult)</returns>
         System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AssetsIdPutAsyncWithHttpInfo (string id, Asset body = null);
         /// <summary>
-        /// Adds a new Asset to the existing Assets
+        /// Subtract from the Number value of Asset.
         /// </summary>
         /// <remarks>
-        /// Adds the Asset with unique Asset Id to the existing Assets
+        /// 
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="body"> (optional)</param>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>Task of IActionResult</returns>
+        System.Threading.Tasks.Task<IActionResult> ApiV1AssetsIdSubtractPutAsync (string id, int? value = null);
+
+        /// <summary>
+        /// Subtract from the Number value of Asset.
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>Task of ApiResponse (IActionResult)</returns>
+        System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AssetsIdSubtractPutAsyncWithHttpInfo (string id, int? value = null);
+        /// <summary>
+        /// Updates an Asset with file
+        /// </summary>
+        /// <remarks>
+        /// Provides an action to update an Asset with file, when Asset id and the new details of Asset are given
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset Id, produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
         /// <returns>Task of Asset</returns>
-        System.Threading.Tasks.Task<Asset> ApiV1AssetsPostAsync (Asset body = null);
+        System.Threading.Tasks.Task<Asset> ApiV1AssetsIdUploadPutAsync (string id);
+
+        /// <summary>
+        /// Updates an Asset with file
+        /// </summary>
+        /// <remarks>
+        /// Provides an action to update an Asset with file, when Asset id and the new details of Asset are given
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset Id, produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
+        /// <returns>Task of ApiResponse (Asset)</returns>
+        System.Threading.Tasks.Task<ApiResponse<Asset>> ApiV1AssetsIdUploadPutAsyncWithHttpInfo (string id);
+        /// <summary>
+        /// Adds a new Asset to the existing Assets
+        /// </summary>
+        /// <remarks>
+        /// Adds the Asset with unique Asset Id to the existing Assets
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of Asset</returns>
+        System.Threading.Tasks.Task<Asset> ApiV1AssetsUploadPostAsync ();
 
         /// <summary>
         /// Adds a new Asset to the existing Assets
@@ -273,9 +597,29 @@ namespace OpenBots.Service.API.Api
         /// Adds the Asset with unique Asset Id to the existing Assets
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="body"> (optional)</param>
         /// <returns>Task of ApiResponse (Asset)</returns>
-        System.Threading.Tasks.Task<ApiResponse<Asset>> ApiV1AssetsPostAsyncWithHttpInfo (Asset body = null);
+        System.Threading.Tasks.Task<ApiResponse<Asset>> ApiV1AssetsUploadPostAsyncWithHttpInfo ();
+        /// <summary>
+        /// Export/download an Asset file
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of MemoryStream</returns>
+        System.Threading.Tasks.Task<MemoryStream> ExportAssetAsync (string id);
+
+        /// <summary>
+        /// Export/download an Asset file
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ApiResponse (MemoryStream)</returns>
+        System.Threading.Tasks.Task<ApiResponse<MemoryStream>> ExportAssetAsyncWithHttpInfo (string id);
         /// <summary>
         /// Provides an Asset&#x27;s details for a particular Asset Id.
         /// </summary>
@@ -284,8 +628,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Asset id</param>
-        /// <returns>Task of AssetPaginatedList</returns>
-        System.Threading.Tasks.Task<AssetPaginatedList> GetAssetAsync (string id);
+        /// <returns>Task of Asset</returns>
+        System.Threading.Tasks.Task<Asset> GetAssetAsync (string id);
 
         /// <summary>
         /// Provides an Asset&#x27;s details for a particular Asset Id.
@@ -295,8 +639,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Asset id</param>
-        /// <returns>Task of ApiResponse (AssetPaginatedList)</returns>
-        System.Threading.Tasks.Task<ApiResponse<AssetPaginatedList>> GetAssetAsyncWithHttpInfo (string id);
+        /// <returns>Task of ApiResponse (Asset)</returns>
+        System.Threading.Tasks.Task<ApiResponse<Asset>> GetAssetAsyncWithHttpInfo (string id);
         #endregion Asynchronous Operations
     }
 
@@ -406,6 +750,131 @@ namespace OpenBots.Service.API.Api
         public void AddDefaultHeader(string key, string value)
         {
             this.Configuration.AddDefaultHeader(key, value);
+        }
+
+        /// <summary>
+        /// Provides a Count of Assets 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>int?</returns>
+        public int? ApiV1AssetsCountGet (string filter = null)
+        {
+             ApiResponse<int?> localVarResponse = ApiV1AssetsCountGetWithHttpInfo(filter);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Provides a Count of Assets 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>ApiResponse of int?</returns>
+        public ApiResponse< int? > ApiV1AssetsCountGetWithHttpInfo (string filter = null)
+        {
+
+            var localVarPath = "/api/v1/Assets/Count";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (filter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$filter", filter)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AssetsCountGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<int?>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (int?) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int?)));
+        }
+
+        /// <summary>
+        /// Provides a Count of Assets 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of int?</returns>
+        public async System.Threading.Tasks.Task<int?> ApiV1AssetsCountGetAsync (string filter = null)
+        {
+             ApiResponse<int?> localVarResponse = await ApiV1AssetsCountGetAsyncWithHttpInfo(filter);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Provides a Count of Assets 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of ApiResponse (int?)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<int?>> ApiV1AssetsCountGetAsyncWithHttpInfo (string filter = null)
+        {
+
+            var localVarPath = "/api/v1/Assets/Count";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (filter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$filter", filter)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AssetsCountGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<int?>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (int?) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int?)));
         }
 
         /// <summary>
@@ -552,6 +1021,411 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
+        /// Add in the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>IActionResult</returns>
+        public IActionResult ApiV1AssetsIdAddPut (string id, int? value = null)
+        {
+             ApiResponse<IActionResult> localVarResponse = ApiV1AssetsIdAddPutWithHttpInfo(id, value);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Add in the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>ApiResponse of IActionResult</returns>
+        public ApiResponse< IActionResult > ApiV1AssetsIdAddPutWithHttpInfo (string id, int? value = null)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ApiV1AssetsIdAddPut");
+
+            var localVarPath = "/api/v1/Assets/{id}/Add";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (value != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "value", value)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AssetsIdAddPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<IActionResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (IActionResult) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(IActionResult)));
+        }
+
+        /// <summary>
+        /// Add in the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>Task of IActionResult</returns>
+        public async System.Threading.Tasks.Task<IActionResult> ApiV1AssetsIdAddPutAsync (string id, int? value = null)
+        {
+             ApiResponse<IActionResult> localVarResponse = await ApiV1AssetsIdAddPutAsyncWithHttpInfo(id, value);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Add in the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>Task of ApiResponse (IActionResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AssetsIdAddPutAsyncWithHttpInfo (string id, int? value = null)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ApiV1AssetsIdAddPut");
+
+            var localVarPath = "/api/v1/Assets/{id}/Add";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (value != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "value", value)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AssetsIdAddPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<IActionResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (IActionResult) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(IActionResult)));
+        }
+
+        /// <summary>
+        /// Append in the Text value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>IActionResult</returns>
+        public IActionResult ApiV1AssetsIdAppendPut (string id, string value = null)
+        {
+             ApiResponse<IActionResult> localVarResponse = ApiV1AssetsIdAppendPutWithHttpInfo(id, value);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Append in the Text value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>ApiResponse of IActionResult</returns>
+        public ApiResponse< IActionResult > ApiV1AssetsIdAppendPutWithHttpInfo (string id, string value = null)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ApiV1AssetsIdAppendPut");
+
+            var localVarPath = "/api/v1/Assets/{id}/Append";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (value != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "value", value)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AssetsIdAppendPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<IActionResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (IActionResult) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(IActionResult)));
+        }
+
+        /// <summary>
+        /// Append in the Text value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>Task of IActionResult</returns>
+        public async System.Threading.Tasks.Task<IActionResult> ApiV1AssetsIdAppendPutAsync (string id, string value = null)
+        {
+             ApiResponse<IActionResult> localVarResponse = await ApiV1AssetsIdAppendPutAsyncWithHttpInfo(id, value);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Append in the Text value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>Task of ApiResponse (IActionResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AssetsIdAppendPutAsyncWithHttpInfo (string id, string value = null)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ApiV1AssetsIdAppendPut");
+
+            var localVarPath = "/api/v1/Assets/{id}/Append";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (value != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "value", value)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AssetsIdAppendPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<IActionResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (IActionResult) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(IActionResult)));
+        }
+
+        /// <summary>
+        /// Decrement in the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>IActionResult</returns>
+        public IActionResult ApiV1AssetsIdDecrementPut (string id)
+        {
+             ApiResponse<IActionResult> localVarResponse = ApiV1AssetsIdDecrementPutWithHttpInfo(id);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Decrement in the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>ApiResponse of IActionResult</returns>
+        public ApiResponse< IActionResult > ApiV1AssetsIdDecrementPutWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ApiV1AssetsIdDecrementPut");
+
+            var localVarPath = "/api/v1/Assets/{id}/Decrement";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AssetsIdDecrementPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<IActionResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (IActionResult) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(IActionResult)));
+        }
+
+        /// <summary>
+        /// Decrement in the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>Task of IActionResult</returns>
+        public async System.Threading.Tasks.Task<IActionResult> ApiV1AssetsIdDecrementPutAsync (string id)
+        {
+             ApiResponse<IActionResult> localVarResponse = await ApiV1AssetsIdDecrementPutAsyncWithHttpInfo(id);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Decrement in the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>Task of ApiResponse (IActionResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AssetsIdDecrementPutAsyncWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ApiV1AssetsIdDecrementPut");
+
+            var localVarPath = "/api/v1/Assets/{id}/Decrement";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AssetsIdDecrementPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<IActionResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (IActionResult) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(IActionResult)));
+        }
+
+        /// <summary>
         /// Deletes an Asset with a specified id from the Asset. 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
@@ -674,6 +1548,137 @@ namespace OpenBots.Service.API.Api
             if (ExceptionFactory != null)
             {
                 Exception exception = ExceptionFactory("ApiV1AssetsIdDelete", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<IActionResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (IActionResult) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(IActionResult)));
+        }
+
+        /// <summary>
+        /// Increment in the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>IActionResult</returns>
+        public IActionResult ApiV1AssetsIdIncrementPut (string id)
+        {
+             ApiResponse<IActionResult> localVarResponse = ApiV1AssetsIdIncrementPutWithHttpInfo(id);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Increment in the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>ApiResponse of IActionResult</returns>
+        public ApiResponse< IActionResult > ApiV1AssetsIdIncrementPutWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ApiV1AssetsIdIncrementPut");
+
+            var localVarPath = "/api/v1/Assets/{id}/Increment";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AssetsIdIncrementPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<IActionResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (IActionResult) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(IActionResult)));
+        }
+
+        /// <summary>
+        /// Increment in the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>Task of IActionResult</returns>
+        public async System.Threading.Tasks.Task<IActionResult> ApiV1AssetsIdIncrementPutAsync (string id)
+        {
+             ApiResponse<IActionResult> localVarResponse = await ApiV1AssetsIdIncrementPutAsyncWithHttpInfo(id);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Increment in the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <returns>Task of ApiResponse (IActionResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AssetsIdIncrementPutAsyncWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ApiV1AssetsIdIncrementPut");
+
+            var localVarPath = "/api/v1/Assets/{id}/Increment";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AssetsIdIncrementPut", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -1001,27 +2006,167 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Adds a new Asset to the existing Assets Adds the Asset with unique Asset Id to the existing Assets
+        /// Subtract from the Number value of Asset. 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="body"> (optional)</param>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>IActionResult</returns>
+        public IActionResult ApiV1AssetsIdSubtractPut (string id, int? value = null)
+        {
+             ApiResponse<IActionResult> localVarResponse = ApiV1AssetsIdSubtractPutWithHttpInfo(id, value);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Subtract from the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>ApiResponse of IActionResult</returns>
+        public ApiResponse< IActionResult > ApiV1AssetsIdSubtractPutWithHttpInfo (string id, int? value = null)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ApiV1AssetsIdSubtractPut");
+
+            var localVarPath = "/api/v1/Assets/{id}/Subtract";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (value != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "value", value)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AssetsIdSubtractPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<IActionResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (IActionResult) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(IActionResult)));
+        }
+
+        /// <summary>
+        /// Subtract from the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>Task of IActionResult</returns>
+        public async System.Threading.Tasks.Task<IActionResult> ApiV1AssetsIdSubtractPutAsync (string id, int? value = null)
+        {
+             ApiResponse<IActionResult> localVarResponse = await ApiV1AssetsIdSubtractPutAsyncWithHttpInfo(id, value);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Subtract from the Number value of Asset. 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset identifier</param>
+        /// <param name="value">Value of the Asset to be updated. (optional)</param>
+        /// <returns>Task of ApiResponse (IActionResult)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AssetsIdSubtractPutAsyncWithHttpInfo (string id, int? value = null)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ApiV1AssetsIdSubtractPut");
+
+            var localVarPath = "/api/v1/Assets/{id}/Subtract";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (value != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "value", value)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AssetsIdSubtractPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<IActionResult>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (IActionResult) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(IActionResult)));
+        }
+
+        /// <summary>
+        /// Updates an Asset with file Provides an action to update an Asset with file, when Asset id and the new details of Asset are given
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id">Asset Id, produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
         /// <returns>Asset</returns>
-        public Asset ApiV1AssetsPost (Asset body = null)
+        public Asset ApiV1AssetsIdUploadPut (string id)
         {
-             ApiResponse<Asset> localVarResponse = ApiV1AssetsPostWithHttpInfo(body);
+             ApiResponse<Asset> localVarResponse = ApiV1AssetsIdUploadPutWithHttpInfo(id);
              return localVarResponse.Data;
         }
 
         /// <summary>
-        /// Adds a new Asset to the existing Assets Adds the Asset with unique Asset Id to the existing Assets
+        /// Updates an Asset with file Provides an action to update an Asset with file, when Asset id and the new details of Asset are given
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="body"> (optional)</param>
+        /// <param name="id">Asset Id, produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
         /// <returns>ApiResponse of Asset</returns>
-        public ApiResponse< Asset > ApiV1AssetsPostWithHttpInfo (Asset body = null)
+        public ApiResponse< Asset > ApiV1AssetsIdUploadPutWithHttpInfo (string id)
         {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ApiV1AssetsIdUploadPut");
 
-            var localVarPath = "/api/v1/Assets";
+            var localVarPath = "/api/v1/Assets/{id}/Upload";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
@@ -1031,10 +2176,7 @@ namespace OpenBots.Service.API.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
+                "multipart/form-data"
             };
             String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
@@ -1046,25 +2188,27 @@ namespace OpenBots.Service.API.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (body != null && body.GetType() != typeof(byte[]))
-            {
-                localVarPostBody = this.Configuration.ApiClient.Serialize(body); // http body (model) parameter
-            }
-            else
-            {
-                localVarPostBody = body; // byte array
-            }
+            //////if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+            //////if (id != null) localVarFormParams.Add("Id", this.Configuration.ApiClient.ParameterToString(id)); // form parameter
+            //////if (name != null) localVarFormParams.Add("Name", this.Configuration.ApiClient.ParameterToString(name)); // form parameter
+            //////if (type != null) localVarFormParams.Add("Type", this.Configuration.ApiClient.ParameterToString(type)); // form parameter
+            //////if (textValue != null) localVarFormParams.Add("TextValue", this.Configuration.ApiClient.ParameterToString(textValue)); // form parameter
+            //////if (numberValue != null) localVarFormParams.Add("NumberValue", this.Configuration.ApiClient.ParameterToString(numberValue)); // form parameter
+            //////if (jsonValue != null) localVarFormParams.Add("JsonValue", this.Configuration.ApiClient.ParameterToString(jsonValue)); // form parameter
+            //////if (binaryObjectID != null) localVarFormParams.Add("BinaryObjectID", this.Configuration.ApiClient.ParameterToString(binaryObjectID)); // form parameter
+            //////if (_file != null) localVarFileParams.Add("file", this.Configuration.ApiClient.ParameterToFile("file", _file));
+            //////if (organizationId != null) localVarFormParams.Add("OrganizationId", this.Configuration.ApiClient.ParameterToString(organizationId)); // form parameter
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
-                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
             int localVarStatusCode = (int) localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("ApiV1AssetsPost", localVarResponse);
+                Exception exception = ExceptionFactory("ApiV1AssetsIdUploadPut", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -1074,28 +2218,31 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Adds a new Asset to the existing Assets Adds the Asset with unique Asset Id to the existing Assets
+        /// Updates an Asset with file Provides an action to update an Asset with file, when Asset id and the new details of Asset are given
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="body"> (optional)</param>
+        /// <param name="id">Asset Id, produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
         /// <returns>Task of Asset</returns>
-        public async System.Threading.Tasks.Task<Asset> ApiV1AssetsPostAsync (Asset body = null)
+        public async System.Threading.Tasks.Task<Asset> ApiV1AssetsIdUploadPutAsync (string id)
         {
-             ApiResponse<Asset> localVarResponse = await ApiV1AssetsPostAsyncWithHttpInfo(body);
+             ApiResponse<Asset> localVarResponse = await ApiV1AssetsIdUploadPutAsyncWithHttpInfo(id);
              return localVarResponse.Data;
 
         }
 
         /// <summary>
-        /// Adds a new Asset to the existing Assets Adds the Asset with unique Asset Id to the existing Assets
+        /// Updates an Asset with file Provides an action to update an Asset with file, when Asset id and the new details of Asset are given
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
-        /// <param name="body"> (optional)</param>
+        /// <param name="id">Asset Id, produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
         /// <returns>Task of ApiResponse (Asset)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Asset>> ApiV1AssetsPostAsyncWithHttpInfo (Asset body = null)
+        public async System.Threading.Tasks.Task<ApiResponse<Asset>> ApiV1AssetsIdUploadPutAsyncWithHttpInfo (string id)
         {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ApiV1AssetsIdUploadPut");
 
-            var localVarPath = "/api/v1/Assets";
+            var localVarPath = "/api/v1/Assets/{id}/Upload";
             var localVarPathParams = new Dictionary<String, String>();
             var localVarQueryParams = new List<KeyValuePair<String, String>>();
             var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
@@ -1105,10 +2252,7 @@ namespace OpenBots.Service.API.Api
 
             // to determine the Content-Type header
             String[] localVarHttpContentTypes = new String[] {
-                "application/json-patch+json", 
-                "application/json", 
-                "text/json", 
-                "application/_*+json"
+                "multipart/form-data"
             };
             String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
 
@@ -1120,14 +2264,155 @@ namespace OpenBots.Service.API.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
-            if (body != null && body.GetType() != typeof(byte[]))
+            //////if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+            //////if (id != null) localVarFormParams.Add("Id", this.Configuration.ApiClient.ParameterToString(id)); // form parameter
+            //////if (name != null) localVarFormParams.Add("Name", this.Configuration.ApiClient.ParameterToString(name)); // form parameter
+            //////if (type != null) localVarFormParams.Add("Type", this.Configuration.ApiClient.ParameterToString(type)); // form parameter
+            //////if (textValue != null) localVarFormParams.Add("TextValue", this.Configuration.ApiClient.ParameterToString(textValue)); // form parameter
+            //////if (numberValue != null) localVarFormParams.Add("NumberValue", this.Configuration.ApiClient.ParameterToString(numberValue)); // form parameter
+            //////if (jsonValue != null) localVarFormParams.Add("JsonValue", this.Configuration.ApiClient.ParameterToString(jsonValue)); // form parameter
+            //////if (binaryObjectID != null) localVarFormParams.Add("BinaryObjectID", this.Configuration.ApiClient.ParameterToString(binaryObjectID)); // form parameter
+            //////if (_file != null) localVarFileParams.Add("file", this.Configuration.ApiClient.ParameterToFile("file", _file));
+            //////if (organizationId != null) localVarFormParams.Add("OrganizationId", this.Configuration.ApiClient.ParameterToString(organizationId)); // form parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
             {
-                localVarPostBody = this.Configuration.ApiClient.Serialize(body); // http body (model) parameter
+                Exception exception = ExceptionFactory("ApiV1AssetsIdUploadPut", localVarResponse);
+                if (exception != null) throw exception;
             }
-            else
+
+            return new ApiResponse<Asset>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (Asset) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(Asset)));
+        }
+
+        /// <summary>
+        /// Adds a new Asset to the existing Assets Adds the Asset with unique Asset Id to the existing Assets
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Asset</returns>
+        public Asset ApiV1AssetsUploadPost ()
+        {
+             ApiResponse<Asset> localVarResponse = ApiV1AssetsUploadPostWithHttpInfo();
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Adds a new Asset to the existing Assets Adds the Asset with unique Asset Id to the existing Assets
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ApiResponse of Asset</returns>
+        public ApiResponse< Asset > ApiV1AssetsUploadPostWithHttpInfo ()
+        {
+
+            var localVarPath = "/api/v1/Assets/Upload";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "multipart/form-data"
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            //////if (id != null) localVarFormParams.Add("Id", this.Configuration.ApiClient.ParameterToString(id)); // form parameter
+            //////if (name != null) localVarFormParams.Add("Name", this.Configuration.ApiClient.ParameterToString(name)); // form parameter
+            //////if (type != null) localVarFormParams.Add("Type", this.Configuration.ApiClient.ParameterToString(type)); // form parameter
+            //////if (textValue != null) localVarFormParams.Add("TextValue", this.Configuration.ApiClient.ParameterToString(textValue)); // form parameter
+            //////if (numberValue != null) localVarFormParams.Add("NumberValue", this.Configuration.ApiClient.ParameterToString(numberValue)); // form parameter
+            //////if (jsonValue != null) localVarFormParams.Add("JsonValue", this.Configuration.ApiClient.ParameterToString(jsonValue)); // form parameter
+            //////if (binaryObjectID != null) localVarFormParams.Add("BinaryObjectID", this.Configuration.ApiClient.ParameterToString(binaryObjectID)); // form parameter
+            //////if (_file != null) localVarFileParams.Add("file", this.Configuration.ApiClient.ParameterToFile("file", _file));
+            //////if (organizationId != null) localVarFormParams.Add("OrganizationId", this.Configuration.ApiClient.ParameterToString(organizationId)); // form parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
             {
-                localVarPostBody = body; // byte array
+                Exception exception = ExceptionFactory("ApiV1AssetsUploadPost", localVarResponse);
+                if (exception != null) throw exception;
             }
+
+            return new ApiResponse<Asset>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (Asset) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(Asset)));
+        }
+
+        /// <summary>
+        /// Adds a new Asset to the existing Assets Adds the Asset with unique Asset Id to the existing Assets
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of Asset</returns>
+        public async System.Threading.Tasks.Task<Asset> ApiV1AssetsUploadPostAsync ()
+        {
+             ApiResponse<Asset> localVarResponse = await ApiV1AssetsUploadPostAsyncWithHttpInfo();
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Adds a new Asset to the existing Assets Adds the Asset with unique Asset Id to the existing Assets
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of ApiResponse (Asset)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Asset>> ApiV1AssetsUploadPostAsyncWithHttpInfo ()
+        {
+
+            var localVarPath = "/api/v1/Assets/Upload";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "multipart/form-data"
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            //////if (id != null) localVarFormParams.Add("Id", this.Configuration.ApiClient.ParameterToString(id)); // form parameter
+            //////if (name != null) localVarFormParams.Add("Name", this.Configuration.ApiClient.ParameterToString(name)); // form parameter
+            //////if (type != null) localVarFormParams.Add("Type", this.Configuration.ApiClient.ParameterToString(type)); // form parameter
+            //////if (textValue != null) localVarFormParams.Add("TextValue", this.Configuration.ApiClient.ParameterToString(textValue)); // form parameter
+            //////if (numberValue != null) localVarFormParams.Add("NumberValue", this.Configuration.ApiClient.ParameterToString(numberValue)); // form parameter
+            //////if (jsonValue != null) localVarFormParams.Add("JsonValue", this.Configuration.ApiClient.ParameterToString(jsonValue)); // form parameter
+            //////if (binaryObjectID != null) localVarFormParams.Add("BinaryObjectID", this.Configuration.ApiClient.ParameterToString(binaryObjectID)); // form parameter
+            //////if (_file != null) localVarFileParams.Add("file", this.Configuration.ApiClient.ParameterToFile("file", _file));
+            //////if (organizationId != null) localVarFormParams.Add("OrganizationId", this.Configuration.ApiClient.ParameterToString(organizationId)); // form parameter
 
             // make the HTTP request
             IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
@@ -1138,7 +2423,7 @@ namespace OpenBots.Service.API.Api
 
             if (ExceptionFactory != null)
             {
-                Exception exception = ExceptionFactory("ApiV1AssetsPost", localVarResponse);
+                Exception exception = ExceptionFactory("ApiV1AssetsUploadPost", localVarResponse);
                 if (exception != null) throw exception;
             }
 
@@ -1148,14 +2433,145 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
+        /// Export/download an Asset file 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>MemoryStream</returns>
+        public MemoryStream ExportAsset (string id)
+        {
+             ApiResponse<MemoryStream> localVarResponse = ExportAssetWithHttpInfo(id);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Export/download an Asset file 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>ApiResponse of MemoryStream</returns>
+        public ApiResponse< MemoryStream > ExportAssetWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ExportAsset");
+
+            var localVarPath = "/api/v1/Assets/{id}/Export";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ExportAsset", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<MemoryStream>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (MemoryStream) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(MemoryStream)));
+        }
+
+        /// <summary>
+        /// Export/download an Asset file 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of MemoryStream</returns>
+        public async System.Threading.Tasks.Task<MemoryStream> ExportAssetAsync (string id)
+        {
+             ApiResponse<MemoryStream> localVarResponse = await ExportAssetAsyncWithHttpInfo(id);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Export/download an Asset file 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="id"></param>
+        /// <returns>Task of ApiResponse (MemoryStream)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<MemoryStream>> ExportAssetAsyncWithHttpInfo (string id)
+        {
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling AssetsApi->ExportAsset");
+
+            var localVarPath = "/api/v1/Assets/{id}/Export";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ExportAsset", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<MemoryStream>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (MemoryStream) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(MemoryStream)));
+        }
+
+        /// <summary>
         /// Provides an Asset&#x27;s details for a particular Asset Id. 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Asset id</param>
-        /// <returns>AssetPaginatedList</returns>
-        public AssetPaginatedList GetAsset (string id)
+        /// <returns>Asset</returns>
+        public Asset GetAsset (string id)
         {
-             ApiResponse<AssetPaginatedList> localVarResponse = GetAssetWithHttpInfo(id);
+             ApiResponse<Asset> localVarResponse = GetAssetWithHttpInfo(id);
              return localVarResponse.Data;
         }
 
@@ -1164,8 +2580,8 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Asset id</param>
-        /// <returns>ApiResponse of AssetPaginatedList</returns>
-        public ApiResponse< AssetPaginatedList > GetAssetWithHttpInfo (string id)
+        /// <returns>ApiResponse of Asset</returns>
+        public ApiResponse< Asset > GetAssetWithHttpInfo (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1207,9 +2623,9 @@ namespace OpenBots.Service.API.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<AssetPaginatedList>(localVarStatusCode,
+            return new ApiResponse<Asset>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (AssetPaginatedList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(AssetPaginatedList)));
+                (Asset) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(Asset)));
         }
 
         /// <summary>
@@ -1217,10 +2633,10 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Asset id</param>
-        /// <returns>Task of AssetPaginatedList</returns>
-        public async System.Threading.Tasks.Task<AssetPaginatedList> GetAssetAsync (string id)
+        /// <returns>Task of Asset</returns>
+        public async System.Threading.Tasks.Task<Asset> GetAssetAsync (string id)
         {
-             ApiResponse<AssetPaginatedList> localVarResponse = await GetAssetAsyncWithHttpInfo(id);
+             ApiResponse<Asset> localVarResponse = await GetAssetAsyncWithHttpInfo(id);
              return localVarResponse.Data;
 
         }
@@ -1230,8 +2646,8 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Asset id</param>
-        /// <returns>Task of ApiResponse (AssetPaginatedList)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<AssetPaginatedList>> GetAssetAsyncWithHttpInfo (string id)
+        /// <returns>Task of ApiResponse (Asset)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Asset>> GetAssetAsyncWithHttpInfo (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1273,9 +2689,9 @@ namespace OpenBots.Service.API.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<AssetPaginatedList>(localVarStatusCode,
+            return new ApiResponse<Asset>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (AssetPaginatedList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(AssetPaginatedList)));
+                (Asset) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(Asset)));
         }
 
     }

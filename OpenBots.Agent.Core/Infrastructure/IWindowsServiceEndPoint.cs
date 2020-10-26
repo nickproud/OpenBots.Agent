@@ -7,9 +7,11 @@ namespace OpenBots.Agent.Core.Infrastructure
     public interface IWindowsServiceEndPoint
     {
         [OperationContract]
-        ServerResponse ConnectToServer(ServerConnectionSettings settings);
+        [ServiceKnownType(typeof(ServerConnectionSettings))]
+        ServerResponse ConnectToServer(ServerConnectionSettings settings, string agentDataDirectoryPath);
 
         [OperationContract]
+        [ServiceKnownType(typeof(ServerConnectionSettings))]
         ServerResponse DisconnectFromServer(ServerConnectionSettings settings);
 
         [OperationContract]
@@ -20,6 +22,9 @@ namespace OpenBots.Agent.Core.Infrastructure
 
         [OperationContract]
         ServerConnectionSettings GetConnectionSettings();
+
+        [OperationContract]
+        void SetEnvironmentVariable(string environmentVariable, string settingsFilePath);
     }
 }
 

@@ -2,6 +2,7 @@
 using OpenBots.Agent.Core.Model;
 using System;
 using System.ServiceModel;
+using System.Windows;
 
 namespace OpenBots.Agent.Client
 {
@@ -44,7 +45,8 @@ namespace OpenBots.Agent.Client
 
         public ServerResponse ConnectToServer(ServerConnectionSettings connectionSettings)
         {
-            return _pipeProxy.ConnectToServer(connectionSettings);
+            string agentDataDirectoryPath = SettingsManager.Instance.EnvironmentSettings.EnvironmentVariableValue;
+            return _pipeProxy.ConnectToServer(connectionSettings, agentDataDirectoryPath);
         }
 
         public ServerResponse DisconnectFromServer(ServerConnectionSettings connectionSettings)
@@ -73,6 +75,11 @@ namespace OpenBots.Agent.Client
         public ServerConnectionSettings GetConnectionHistory()
         {
             return _pipeProxy.GetConnectionSettings();
+        }
+
+        public void SetConfigFilePath(string environmentVariable, string settingsFilePath)
+        {
+            _pipeProxy.SetEnvironmentVariable(environmentVariable, settingsFilePath);
         }
     }
 }

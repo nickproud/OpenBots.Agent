@@ -8,13 +8,23 @@ namespace OpenBots.Agent.Core.Model
         [DataMember]
         public string ServerURL { get; set; }
         [DataMember]
+        public string AgentUsername { get; set; }
+        [DataMember]
+        public string AgentPassword { get; set; }
+        [DataMember]
         public string DNSHost { get; set; }
+        [DataMember]
+        public string WhoAmI { get; set; }
         [DataMember]
         public string MachineName { get; set; }
         [DataMember]
         public string AgentId { get; set; }
         [DataMember]
+        public string AgentName { get; set; }
+        [DataMember]
         public string MACAddress { get; set; }
+        [DataMember]
+        public string IPAddress { get; set; }
         [DataMember]
         public string TracingLevel { get; set; }
         [DataMember]

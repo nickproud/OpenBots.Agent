@@ -24,7 +24,7 @@ using SwaggerDateConverter = OpenBots.Service.API.Client.SwaggerDateConverter;
 namespace OpenBots.Service.API.Model
 {
     /// <summary>
-    /// QueueItem
+    /// QueueItem Model
     /// </summary>
     [DataContract]
         public partial class QueueItem :  IEquatable<QueueItem>, IValidatableObject
@@ -32,45 +32,38 @@ namespace OpenBots.Service.API.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="QueueItem" /> class.
         /// </summary>
-        /// <param name="organizationId">organizationId.</param>
-        /// <param name="processID">processID.</param>
+        /// <param name="isLocked">Whether a QueueItem is locked by a job or not.</param>
+        /// <param name="lockedOnUTC">When the QueueItem was locked.</param>
+        /// <param name="lockedUntilUTC">When to lock QueueItem if still being executed.</param>
+        /// <param name="lockedBy">Which Agent locked the QueueItem.</param>
+        /// <param name="queueId">Which Queue the QueueItem belongs to.</param>
+        /// <param name="type">Format of Data.</param>
+        /// <param name="jsonType">Describes the type of item the queue is dealing with.</param>
+        /// <param name="dataJson">Data in JSON or Text format.</param>
+        /// <param name="state">Failed, Expired, Successful, New.</param>
+        /// <param name="stateMessage">Message given to user after state of QueueItem was changed.</param>
+        /// <param name="lockTransactionKey">Guid generated when item is dequeued.</param>
+        /// <param name="lockedEndTimeUTC">Tells when QueueItem has been executed and when IsLocked has been turned back to false.</param>
+        /// <param name="retryCount">Number of time a QueueItem has been retried.</param>
+        /// <param name="priority">Priority of when queue item should be dequeued.</param>
+        /// <param name="expireOnUTC">DateTime the queue item will expire on.</param>
+        /// <param name="postponeUntilUTC">DateTime to postpone the queue item from being processed until.</param>
+        /// <param name="errorCode">Error Code received when processing a queue item.</param>
+        /// <param name="errorMessage">Error message received when processing a queue item.</param>
+        /// <param name="errorSerialized">ErrorCode and ErrorMessage serialized into JSON string.</param>
+        /// <param name="source">System of event that was raised (ex: \&quot;Employee.Onboarded\&quot;).</param>
+        /// <param name="_event">Event raised from an application (ex: \&quot;New employee joins the company.\&quot;).</param>
         /// <param name="name">name (required).</param>
-        /// <param name="subtopic">subtopic.</param>
-        /// <param name="_event">_event.</param>
-        /// <param name="source">source.</param>
-        /// <param name="priority">priority (default to 1).</param>
-        /// <param name="queueItemType">queueItemType.</param>
-        /// <param name="entityType">entityType.</param>
-        /// <param name="entityStatus">entityStatus.</param>
-        /// <param name="dataJSON">dataJSON.</param>
-        /// <param name="dataText">dataText.</param>
-        /// <param name="dontDequeueUntil">dontDequeueUntil.</param>
-        /// <param name="dontDequeueAfter">dontDequeueAfter.</param>
-        /// <param name="isDequeued">isDequeued (default to false).</param>
-        /// <param name="isLocked">isLocked (default to false).</param>
-        /// <param name="lockedOn">lockedOn.</param>
-        /// <param name="lockedUntil">lockedUntil.</param>
-        /// <param name="lockedBy">lockedBy.</param>
-        /// <param name="lockTransactionKey">lockTransactionKey.</param>
-        /// <param name="retryCount">retryCount.</param>
-        /// <param name="lastOccuredError">lastOccuredError.</param>
-        /// <param name="timestamp">timestamp.</param>
-        /// <param name="isError">isError (default to false).</param>
-        /// <param name="queueID">queueID.</param>
-        /// <param name="data">data.</param>
-        /// <param name="rawData">rawData.</param>
-        /// <param name="status">status.</param>
-        /// <param name="statusMessage">statusMessage.</param>
-        /// <param name="exceptionMessage">exceptionMessage.</param>
         /// <param name="id">id.</param>
         /// <param name="isDeleted">isDeleted (default to false).</param>
         /// <param name="createdBy">createdBy.</param>
         /// <param name="createdOn">createdOn.</param>
         /// <param name="deletedBy">deletedBy.</param>
         /// <param name="deleteOn">deleteOn.</param>
+        /// <param name="timestamp">timestamp.</param>
         /// <param name="updatedOn">updatedOn.</param>
         /// <param name="updatedBy">updatedBy.</param>
-        public QueueItem(Guid? organizationId = default(Guid?), Guid? processID = default(Guid?), string name = default(string), string subtopic = default(string), string _event = default(string), string source = default(string), int? priority = 1, string queueItemType = default(string), string entityType = default(string), string entityStatus = default(string), string dataJSON = default(string), string dataText = default(string), DateTime? dontDequeueUntil = default(DateTime?), DateTime? dontDequeueAfter = default(DateTime?), bool? isDequeued = false, bool? isLocked = false, DateTime? lockedOn = default(DateTime?), DateTime? lockedUntil = default(DateTime?), Guid? lockedBy = default(Guid?), Guid? lockTransactionKey = default(Guid?), int? retryCount = default(int?), string lastOccuredError = default(string), byte[] timestamp = default(byte[]), bool? isError = false, Guid? queueID = default(Guid?), string data = default(string), string rawData = default(string), string status = default(string), string statusMessage = default(string), string exceptionMessage = default(string), Guid? id = default(Guid?), bool? isDeleted = false, string createdBy = default(string), DateTime? createdOn = default(DateTime?), string deletedBy = default(string), DateTime? deleteOn = default(DateTime?), DateTime? updatedOn = default(DateTime?), string updatedBy = default(string))
+        public QueueItem(bool? isLocked = default(bool?), DateTime? lockedOnUTC = default(DateTime?), DateTime? lockedUntilUTC = default(DateTime?), Guid? lockedBy = default(Guid?), Guid? queueId = default(Guid?), string type = default(string), string jsonType = default(string), string dataJson = default(string), string state = default(string), string stateMessage = default(string), Guid? lockTransactionKey = default(Guid?), DateTime? lockedEndTimeUTC = default(DateTime?), int? retryCount = default(int?), int? priority = default(int?), DateTime? expireOnUTC = default(DateTime?), DateTime? postponeUntilUTC = default(DateTime?), string errorCode = default(string), string errorMessage = default(string), string errorSerialized = default(string), string source = default(string), string _event = default(string), string name = default(string), Guid? id = default(Guid?), bool? isDeleted = false, string createdBy = default(string), DateTime? createdOn = default(DateTime?), string deletedBy = default(string), DateTime? deleteOn = default(DateTime?), byte[] timestamp = default(byte[]), DateTime? updatedOn = default(DateTime?), string updatedBy = default(string))
         {
             // to ensure "name" is required (not null)
             if (name == null)
@@ -81,67 +74,27 @@ namespace OpenBots.Service.API.Model
             {
                 this.Name = name;
             }
-            this.OrganizationId = organizationId;
-            this.ProcessID = processID;
-            this.Subtopic = subtopic;
-            this.Event = _event;
-            this.Source = source;
-            // use default value if no "priority" provided
-            if (priority == null)
-            {
-                this.Priority = 1;
-            }
-            else
-            {
-                this.Priority = priority;
-            }
-            this.QueueItemType = queueItemType;
-            this.EntityType = entityType;
-            this.EntityStatus = entityStatus;
-            this.DataJSON = dataJSON;
-            this.DataText = dataText;
-            this.DontDequeueUntil = dontDequeueUntil;
-            this.DontDequeueAfter = dontDequeueAfter;
-            // use default value if no "isDequeued" provided
-            if (isDequeued == null)
-            {
-                this.IsDequeued = false;
-            }
-            else
-            {
-                this.IsDequeued = isDequeued;
-            }
-            // use default value if no "isLocked" provided
-            if (isLocked == null)
-            {
-                this.IsLocked = false;
-            }
-            else
-            {
-                this.IsLocked = isLocked;
-            }
-            this.LockedOn = lockedOn;
-            this.LockedUntil = lockedUntil;
+            this.IsLocked = isLocked;
+            this.LockedOnUTC = lockedOnUTC;
+            this.LockedUntilUTC = lockedUntilUTC;
             this.LockedBy = lockedBy;
+            this.QueueId = queueId;
+            this.Type = type;
+            this.JsonType = jsonType;
+            this.DataJson = dataJson;
+            this.State = state;
+            this.StateMessage = stateMessage;
             this.LockTransactionKey = lockTransactionKey;
+            this.LockedEndTimeUTC = lockedEndTimeUTC;
             this.RetryCount = retryCount;
-            this.LastOccuredError = lastOccuredError;
-            this.Timestamp = timestamp;
-            // use default value if no "isError" provided
-            if (isError == null)
-            {
-                this.IsError = false;
-            }
-            else
-            {
-                this.IsError = isError;
-            }
-            this.QueueID = queueID;
-            this.Data = data;
-            this.RawData = rawData;
-            this.Status = status;
-            this.StatusMessage = statusMessage;
-            this.ExceptionMessage = exceptionMessage;
+            this.Priority = priority;
+            this.ExpireOnUTC = expireOnUTC;
+            this.PostponeUntilUTC = postponeUntilUTC;
+            this.ErrorCode = errorCode;
+            this.ErrorMessage = errorMessage;
+            this.ErrorSerialized = errorSerialized;
+            this.Source = source;
+            this.Event = _event;
             this.Id = id;
             // use default value if no "isDeleted" provided
             if (isDeleted == null)
@@ -156,189 +109,163 @@ namespace OpenBots.Service.API.Model
             this.CreatedOn = createdOn;
             this.DeletedBy = deletedBy;
             this.DeleteOn = deleteOn;
+            this.Timestamp = timestamp;
             this.UpdatedOn = updatedOn;
             this.UpdatedBy = updatedBy;
         }
         
         /// <summary>
-        /// Gets or Sets OrganizationId
+        /// Whether a QueueItem is locked by a job or not
         /// </summary>
-        [DataMember(Name="organizationId", EmitDefaultValue=false)]
-        public Guid? OrganizationId { get; set; }
+        /// <value>Whether a QueueItem is locked by a job or not</value>
+        [DataMember(Name="isLocked", EmitDefaultValue=false)]
+        public bool? IsLocked { get; set; }
 
         /// <summary>
-        /// Gets or Sets ProcessID
+        /// When the QueueItem was locked
         /// </summary>
-        [DataMember(Name="processID", EmitDefaultValue=false)]
-        public Guid? ProcessID { get; set; }
+        /// <value>When the QueueItem was locked</value>
+        [DataMember(Name="lockedOnUTC", EmitDefaultValue=false)]
+        public DateTime? LockedOnUTC { get; set; }
+
+        /// <summary>
+        /// When to lock QueueItem if still being executed
+        /// </summary>
+        /// <value>When to lock QueueItem if still being executed</value>
+        [DataMember(Name="lockedUntilUTC", EmitDefaultValue=false)]
+        public DateTime? LockedUntilUTC { get; set; }
+
+        /// <summary>
+        /// Which Agent locked the QueueItem
+        /// </summary>
+        /// <value>Which Agent locked the QueueItem</value>
+        [DataMember(Name="lockedBy", EmitDefaultValue=false)]
+        public Guid? LockedBy { get; set; }
+
+        /// <summary>
+        /// Which Queue the QueueItem belongs to
+        /// </summary>
+        /// <value>Which Queue the QueueItem belongs to</value>
+        [DataMember(Name="queueId", EmitDefaultValue=false)]
+        public Guid? QueueId { get; set; }
+
+        /// <summary>
+        /// Format of Data
+        /// </summary>
+        /// <value>Format of Data</value>
+        [DataMember(Name="type", EmitDefaultValue=false)]
+        public string Type { get; set; }
+
+        /// <summary>
+        /// Describes the type of item the queue is dealing with
+        /// </summary>
+        /// <value>Describes the type of item the queue is dealing with</value>
+        [DataMember(Name="jsonType", EmitDefaultValue=false)]
+        public string JsonType { get; set; }
+
+        /// <summary>
+        /// Data in JSON or Text format
+        /// </summary>
+        /// <value>Data in JSON or Text format</value>
+        [DataMember(Name="dataJson", EmitDefaultValue=false)]
+        public string DataJson { get; set; }
+
+        /// <summary>
+        /// Failed, Expired, Successful, New
+        /// </summary>
+        /// <value>Failed, Expired, Successful, New</value>
+        [DataMember(Name="state", EmitDefaultValue=false)]
+        public string State { get; set; }
+
+        /// <summary>
+        /// Message given to user after state of QueueItem was changed
+        /// </summary>
+        /// <value>Message given to user after state of QueueItem was changed</value>
+        [DataMember(Name="stateMessage", EmitDefaultValue=false)]
+        public string StateMessage { get; set; }
+
+        /// <summary>
+        /// Guid generated when item is dequeued
+        /// </summary>
+        /// <value>Guid generated when item is dequeued</value>
+        [DataMember(Name="lockTransactionKey", EmitDefaultValue=false)]
+        public Guid? LockTransactionKey { get; set; }
+
+        /// <summary>
+        /// Tells when QueueItem has been executed and when IsLocked has been turned back to false
+        /// </summary>
+        /// <value>Tells when QueueItem has been executed and when IsLocked has been turned back to false</value>
+        [DataMember(Name="lockedEndTimeUTC", EmitDefaultValue=false)]
+        public DateTime? LockedEndTimeUTC { get; set; }
+
+        /// <summary>
+        /// Number of time a QueueItem has been retried
+        /// </summary>
+        /// <value>Number of time a QueueItem has been retried</value>
+        [DataMember(Name="retryCount", EmitDefaultValue=false)]
+        public int? RetryCount { get; set; }
+
+        /// <summary>
+        /// Priority of when queue item should be dequeued
+        /// </summary>
+        /// <value>Priority of when queue item should be dequeued</value>
+        [DataMember(Name="priority", EmitDefaultValue=false)]
+        public int? Priority { get; set; }
+
+        /// <summary>
+        /// DateTime the queue item will expire on
+        /// </summary>
+        /// <value>DateTime the queue item will expire on</value>
+        [DataMember(Name="expireOnUTC", EmitDefaultValue=false)]
+        public DateTime? ExpireOnUTC { get; set; }
+
+        /// <summary>
+        /// DateTime to postpone the queue item from being processed until
+        /// </summary>
+        /// <value>DateTime to postpone the queue item from being processed until</value>
+        [DataMember(Name="postponeUntilUTC", EmitDefaultValue=false)]
+        public DateTime? PostponeUntilUTC { get; set; }
+
+        /// <summary>
+        /// Error Code received when processing a queue item
+        /// </summary>
+        /// <value>Error Code received when processing a queue item</value>
+        [DataMember(Name="errorCode", EmitDefaultValue=false)]
+        public string ErrorCode { get; set; }
+
+        /// <summary>
+        /// Error message received when processing a queue item
+        /// </summary>
+        /// <value>Error message received when processing a queue item</value>
+        [DataMember(Name="errorMessage", EmitDefaultValue=false)]
+        public string ErrorMessage { get; set; }
+
+        /// <summary>
+        /// ErrorCode and ErrorMessage serialized into JSON string
+        /// </summary>
+        /// <value>ErrorCode and ErrorMessage serialized into JSON string</value>
+        [DataMember(Name="errorSerialized", EmitDefaultValue=false)]
+        public string ErrorSerialized { get; set; }
+
+        /// <summary>
+        /// System of event that was raised (ex: \&quot;Employee.Onboarded\&quot;)
+        /// </summary>
+        /// <value>System of event that was raised (ex: \&quot;Employee.Onboarded\&quot;)</value>
+        [DataMember(Name="source", EmitDefaultValue=false)]
+        public string Source { get; set; }
+
+        /// <summary>
+        /// Event raised from an application (ex: \&quot;New employee joins the company.\&quot;)
+        /// </summary>
+        /// <value>Event raised from an application (ex: \&quot;New employee joins the company.\&quot;)</value>
+        [DataMember(Name="event", EmitDefaultValue=false)]
+        public string Event { get; set; }
 
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
         [DataMember(Name="name", EmitDefaultValue=false)]
         public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Subtopic
-        /// </summary>
-        [DataMember(Name="subtopic", EmitDefaultValue=false)]
-        public string Subtopic { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Event
-        /// </summary>
-        [DataMember(Name="event", EmitDefaultValue=false)]
-        public string Event { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Source
-        /// </summary>
-        [DataMember(Name="source", EmitDefaultValue=false)]
-        public string Source { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Priority
-        /// </summary>
-        [DataMember(Name="priority", EmitDefaultValue=false)]
-        public int? Priority { get; set; }
-
-        /// <summary>
-        /// Gets or Sets QueueItemType
-        /// </summary>
-        [DataMember(Name="queueItemType", EmitDefaultValue=false)]
-        public string QueueItemType { get; set; }
-
-        /// <summary>
-        /// Gets or Sets EntityType
-        /// </summary>
-        [DataMember(Name="entityType", EmitDefaultValue=false)]
-        public string EntityType { get; set; }
-
-        /// <summary>
-        /// Gets or Sets EntityStatus
-        /// </summary>
-        [DataMember(Name="entityStatus", EmitDefaultValue=false)]
-        public string EntityStatus { get; set; }
-
-        /// <summary>
-        /// Gets or Sets DataJSON
-        /// </summary>
-        [DataMember(Name="dataJSON", EmitDefaultValue=false)]
-        public string DataJSON { get; set; }
-
-        /// <summary>
-        /// Gets or Sets DataText
-        /// </summary>
-        [DataMember(Name="dataText", EmitDefaultValue=false)]
-        public string DataText { get; set; }
-
-        /// <summary>
-        /// Gets or Sets DontDequeueUntil
-        /// </summary>
-        [DataMember(Name="dontDequeueUntil", EmitDefaultValue=false)]
-        public DateTime? DontDequeueUntil { get; set; }
-
-        /// <summary>
-        /// Gets or Sets DontDequeueAfter
-        /// </summary>
-        [DataMember(Name="dontDequeueAfter", EmitDefaultValue=false)]
-        public DateTime? DontDequeueAfter { get; set; }
-
-        /// <summary>
-        /// Gets or Sets IsDequeued
-        /// </summary>
-        [DataMember(Name="isDequeued", EmitDefaultValue=false)]
-        public bool? IsDequeued { get; set; }
-
-        /// <summary>
-        /// Gets or Sets IsLocked
-        /// </summary>
-        [DataMember(Name="isLocked", EmitDefaultValue=false)]
-        public bool? IsLocked { get; set; }
-
-        /// <summary>
-        /// Gets or Sets LockedOn
-        /// </summary>
-        [DataMember(Name="lockedOn", EmitDefaultValue=false)]
-        public DateTime? LockedOn { get; set; }
-
-        /// <summary>
-        /// Gets or Sets LockedUntil
-        /// </summary>
-        [DataMember(Name="lockedUntil", EmitDefaultValue=false)]
-        public DateTime? LockedUntil { get; set; }
-
-        /// <summary>
-        /// Gets or Sets LockedBy
-        /// </summary>
-        [DataMember(Name="lockedBy", EmitDefaultValue=false)]
-        public Guid? LockedBy { get; set; }
-
-        /// <summary>
-        /// Gets or Sets LockTransactionKey
-        /// </summary>
-        [DataMember(Name="lockTransactionKey", EmitDefaultValue=false)]
-        public Guid? LockTransactionKey { get; set; }
-
-        /// <summary>
-        /// Gets or Sets RetryCount
-        /// </summary>
-        [DataMember(Name="retryCount", EmitDefaultValue=false)]
-        public int? RetryCount { get; set; }
-
-        /// <summary>
-        /// Gets or Sets LastOccuredError
-        /// </summary>
-        [DataMember(Name="lastOccuredError", EmitDefaultValue=false)]
-        public string LastOccuredError { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Timestamp
-        /// </summary>
-        [DataMember(Name="timestamp", EmitDefaultValue=false)]
-        public byte[] Timestamp { get; set; }
-
-        /// <summary>
-        /// Gets or Sets IsError
-        /// </summary>
-        [DataMember(Name="isError", EmitDefaultValue=false)]
-        public bool? IsError { get; set; }
-
-        /// <summary>
-        /// Gets or Sets QueueID
-        /// </summary>
-        [DataMember(Name="queueID", EmitDefaultValue=false)]
-        public Guid? QueueID { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Data
-        /// </summary>
-        [DataMember(Name="data", EmitDefaultValue=false)]
-        public string Data { get; set; }
-
-        /// <summary>
-        /// Gets or Sets RawData
-        /// </summary>
-        [DataMember(Name="rawData", EmitDefaultValue=false)]
-        public string RawData { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Status
-        /// </summary>
-        [DataMember(Name="status", EmitDefaultValue=false)]
-        public string Status { get; set; }
-
-        /// <summary>
-        /// Gets or Sets StatusMessage
-        /// </summary>
-        [DataMember(Name="statusMessage", EmitDefaultValue=false)]
-        public string StatusMessage { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ExceptionMessage
-        /// </summary>
-        [DataMember(Name="exceptionMessage", EmitDefaultValue=false)]
-        public string ExceptionMessage { get; set; }
 
         /// <summary>
         /// Gets or Sets Id
@@ -377,6 +304,12 @@ namespace OpenBots.Service.API.Model
         public DateTime? DeleteOn { get; set; }
 
         /// <summary>
+        /// Gets or Sets Timestamp
+        /// </summary>
+        [DataMember(Name="timestamp", EmitDefaultValue=false)]
+        public byte[] Timestamp { get; set; }
+
+        /// <summary>
         /// Gets or Sets UpdatedOn
         /// </summary>
         [DataMember(Name="updatedOn", EmitDefaultValue=false)]
@@ -396,42 +329,35 @@ namespace OpenBots.Service.API.Model
         {
             var sb = new StringBuilder();
             sb.Append("class QueueItem {\n");
-            sb.Append("  OrganizationId: ").Append(OrganizationId).Append("\n");
-            sb.Append("  ProcessID: ").Append(ProcessID).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Subtopic: ").Append(Subtopic).Append("\n");
-            sb.Append("  Event: ").Append(Event).Append("\n");
-            sb.Append("  Source: ").Append(Source).Append("\n");
-            sb.Append("  Priority: ").Append(Priority).Append("\n");
-            sb.Append("  QueueItemType: ").Append(QueueItemType).Append("\n");
-            sb.Append("  EntityType: ").Append(EntityType).Append("\n");
-            sb.Append("  EntityStatus: ").Append(EntityStatus).Append("\n");
-            sb.Append("  DataJSON: ").Append(DataJSON).Append("\n");
-            sb.Append("  DataText: ").Append(DataText).Append("\n");
-            sb.Append("  DontDequeueUntil: ").Append(DontDequeueUntil).Append("\n");
-            sb.Append("  DontDequeueAfter: ").Append(DontDequeueAfter).Append("\n");
-            sb.Append("  IsDequeued: ").Append(IsDequeued).Append("\n");
             sb.Append("  IsLocked: ").Append(IsLocked).Append("\n");
-            sb.Append("  LockedOn: ").Append(LockedOn).Append("\n");
-            sb.Append("  LockedUntil: ").Append(LockedUntil).Append("\n");
+            sb.Append("  LockedOnUTC: ").Append(LockedOnUTC).Append("\n");
+            sb.Append("  LockedUntilUTC: ").Append(LockedUntilUTC).Append("\n");
             sb.Append("  LockedBy: ").Append(LockedBy).Append("\n");
+            sb.Append("  QueueId: ").Append(QueueId).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
+            sb.Append("  JsonType: ").Append(JsonType).Append("\n");
+            sb.Append("  DataJson: ").Append(DataJson).Append("\n");
+            sb.Append("  State: ").Append(State).Append("\n");
+            sb.Append("  StateMessage: ").Append(StateMessage).Append("\n");
             sb.Append("  LockTransactionKey: ").Append(LockTransactionKey).Append("\n");
+            sb.Append("  LockedEndTimeUTC: ").Append(LockedEndTimeUTC).Append("\n");
             sb.Append("  RetryCount: ").Append(RetryCount).Append("\n");
-            sb.Append("  LastOccuredError: ").Append(LastOccuredError).Append("\n");
-            sb.Append("  Timestamp: ").Append(Timestamp).Append("\n");
-            sb.Append("  IsError: ").Append(IsError).Append("\n");
-            sb.Append("  QueueID: ").Append(QueueID).Append("\n");
-            sb.Append("  Data: ").Append(Data).Append("\n");
-            sb.Append("  RawData: ").Append(RawData).Append("\n");
-            sb.Append("  Status: ").Append(Status).Append("\n");
-            sb.Append("  StatusMessage: ").Append(StatusMessage).Append("\n");
-            sb.Append("  ExceptionMessage: ").Append(ExceptionMessage).Append("\n");
+            sb.Append("  Priority: ").Append(Priority).Append("\n");
+            sb.Append("  ExpireOnUTC: ").Append(ExpireOnUTC).Append("\n");
+            sb.Append("  PostponeUntilUTC: ").Append(PostponeUntilUTC).Append("\n");
+            sb.Append("  ErrorCode: ").Append(ErrorCode).Append("\n");
+            sb.Append("  ErrorMessage: ").Append(ErrorMessage).Append("\n");
+            sb.Append("  ErrorSerialized: ").Append(ErrorSerialized).Append("\n");
+            sb.Append("  Source: ").Append(Source).Append("\n");
+            sb.Append("  Event: ").Append(Event).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  IsDeleted: ").Append(IsDeleted).Append("\n");
             sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  CreatedOn: ").Append(CreatedOn).Append("\n");
             sb.Append("  DeletedBy: ").Append(DeletedBy).Append("\n");
             sb.Append("  DeleteOn: ").Append(DeleteOn).Append("\n");
+            sb.Append("  Timestamp: ").Append(Timestamp).Append("\n");
             sb.Append("  UpdatedOn: ").Append(UpdatedOn).Append("\n");
             sb.Append("  UpdatedBy: ").Append(UpdatedBy).Append("\n");
             sb.Append("}\n");
@@ -469,94 +395,19 @@ namespace OpenBots.Service.API.Model
 
             return 
                 (
-                    this.OrganizationId == input.OrganizationId ||
-                    (this.OrganizationId != null &&
-                    this.OrganizationId.Equals(input.OrganizationId))
-                ) && 
-                (
-                    this.ProcessID == input.ProcessID ||
-                    (this.ProcessID != null &&
-                    this.ProcessID.Equals(input.ProcessID))
-                ) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && 
-                (
-                    this.Subtopic == input.Subtopic ||
-                    (this.Subtopic != null &&
-                    this.Subtopic.Equals(input.Subtopic))
-                ) && 
-                (
-                    this.Event == input.Event ||
-                    (this.Event != null &&
-                    this.Event.Equals(input.Event))
-                ) && 
-                (
-                    this.Source == input.Source ||
-                    (this.Source != null &&
-                    this.Source.Equals(input.Source))
-                ) && 
-                (
-                    this.Priority == input.Priority ||
-                    (this.Priority != null &&
-                    this.Priority.Equals(input.Priority))
-                ) && 
-                (
-                    this.QueueItemType == input.QueueItemType ||
-                    (this.QueueItemType != null &&
-                    this.QueueItemType.Equals(input.QueueItemType))
-                ) && 
-                (
-                    this.EntityType == input.EntityType ||
-                    (this.EntityType != null &&
-                    this.EntityType.Equals(input.EntityType))
-                ) && 
-                (
-                    this.EntityStatus == input.EntityStatus ||
-                    (this.EntityStatus != null &&
-                    this.EntityStatus.Equals(input.EntityStatus))
-                ) && 
-                (
-                    this.DataJSON == input.DataJSON ||
-                    (this.DataJSON != null &&
-                    this.DataJSON.Equals(input.DataJSON))
-                ) && 
-                (
-                    this.DataText == input.DataText ||
-                    (this.DataText != null &&
-                    this.DataText.Equals(input.DataText))
-                ) && 
-                (
-                    this.DontDequeueUntil == input.DontDequeueUntil ||
-                    (this.DontDequeueUntil != null &&
-                    this.DontDequeueUntil.Equals(input.DontDequeueUntil))
-                ) && 
-                (
-                    this.DontDequeueAfter == input.DontDequeueAfter ||
-                    (this.DontDequeueAfter != null &&
-                    this.DontDequeueAfter.Equals(input.DontDequeueAfter))
-                ) && 
-                (
-                    this.IsDequeued == input.IsDequeued ||
-                    (this.IsDequeued != null &&
-                    this.IsDequeued.Equals(input.IsDequeued))
-                ) && 
-                (
                     this.IsLocked == input.IsLocked ||
                     (this.IsLocked != null &&
                     this.IsLocked.Equals(input.IsLocked))
                 ) && 
                 (
-                    this.LockedOn == input.LockedOn ||
-                    (this.LockedOn != null &&
-                    this.LockedOn.Equals(input.LockedOn))
+                    this.LockedOnUTC == input.LockedOnUTC ||
+                    (this.LockedOnUTC != null &&
+                    this.LockedOnUTC.Equals(input.LockedOnUTC))
                 ) && 
                 (
-                    this.LockedUntil == input.LockedUntil ||
-                    (this.LockedUntil != null &&
-                    this.LockedUntil.Equals(input.LockedUntil))
+                    this.LockedUntilUTC == input.LockedUntilUTC ||
+                    (this.LockedUntilUTC != null &&
+                    this.LockedUntilUTC.Equals(input.LockedUntilUTC))
                 ) && 
                 (
                     this.LockedBy == input.LockedBy ||
@@ -564,9 +415,44 @@ namespace OpenBots.Service.API.Model
                     this.LockedBy.Equals(input.LockedBy))
                 ) && 
                 (
+                    this.QueueId == input.QueueId ||
+                    (this.QueueId != null &&
+                    this.QueueId.Equals(input.QueueId))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
+                ) && 
+                (
+                    this.JsonType == input.JsonType ||
+                    (this.JsonType != null &&
+                    this.JsonType.Equals(input.JsonType))
+                ) && 
+                (
+                    this.DataJson == input.DataJson ||
+                    (this.DataJson != null &&
+                    this.DataJson.Equals(input.DataJson))
+                ) && 
+                (
+                    this.State == input.State ||
+                    (this.State != null &&
+                    this.State.Equals(input.State))
+                ) && 
+                (
+                    this.StateMessage == input.StateMessage ||
+                    (this.StateMessage != null &&
+                    this.StateMessage.Equals(input.StateMessage))
+                ) && 
+                (
                     this.LockTransactionKey == input.LockTransactionKey ||
                     (this.LockTransactionKey != null &&
                     this.LockTransactionKey.Equals(input.LockTransactionKey))
+                ) && 
+                (
+                    this.LockedEndTimeUTC == input.LockedEndTimeUTC ||
+                    (this.LockedEndTimeUTC != null &&
+                    this.LockedEndTimeUTC.Equals(input.LockedEndTimeUTC))
                 ) && 
                 (
                     this.RetryCount == input.RetryCount ||
@@ -574,49 +460,49 @@ namespace OpenBots.Service.API.Model
                     this.RetryCount.Equals(input.RetryCount))
                 ) && 
                 (
-                    this.LastOccuredError == input.LastOccuredError ||
-                    (this.LastOccuredError != null &&
-                    this.LastOccuredError.Equals(input.LastOccuredError))
+                    this.Priority == input.Priority ||
+                    (this.Priority != null &&
+                    this.Priority.Equals(input.Priority))
                 ) && 
                 (
-                    this.Timestamp == input.Timestamp ||
-                    (this.Timestamp != null &&
-                    this.Timestamp.Equals(input.Timestamp))
+                    this.ExpireOnUTC == input.ExpireOnUTC ||
+                    (this.ExpireOnUTC != null &&
+                    this.ExpireOnUTC.Equals(input.ExpireOnUTC))
                 ) && 
                 (
-                    this.IsError == input.IsError ||
-                    (this.IsError != null &&
-                    this.IsError.Equals(input.IsError))
+                    this.PostponeUntilUTC == input.PostponeUntilUTC ||
+                    (this.PostponeUntilUTC != null &&
+                    this.PostponeUntilUTC.Equals(input.PostponeUntilUTC))
                 ) && 
                 (
-                    this.QueueID == input.QueueID ||
-                    (this.QueueID != null &&
-                    this.QueueID.Equals(input.QueueID))
+                    this.ErrorCode == input.ErrorCode ||
+                    (this.ErrorCode != null &&
+                    this.ErrorCode.Equals(input.ErrorCode))
                 ) && 
                 (
-                    this.Data == input.Data ||
-                    (this.Data != null &&
-                    this.Data.Equals(input.Data))
+                    this.ErrorMessage == input.ErrorMessage ||
+                    (this.ErrorMessage != null &&
+                    this.ErrorMessage.Equals(input.ErrorMessage))
                 ) && 
                 (
-                    this.RawData == input.RawData ||
-                    (this.RawData != null &&
-                    this.RawData.Equals(input.RawData))
+                    this.ErrorSerialized == input.ErrorSerialized ||
+                    (this.ErrorSerialized != null &&
+                    this.ErrorSerialized.Equals(input.ErrorSerialized))
                 ) && 
                 (
-                    this.Status == input.Status ||
-                    (this.Status != null &&
-                    this.Status.Equals(input.Status))
+                    this.Source == input.Source ||
+                    (this.Source != null &&
+                    this.Source.Equals(input.Source))
                 ) && 
                 (
-                    this.StatusMessage == input.StatusMessage ||
-                    (this.StatusMessage != null &&
-                    this.StatusMessage.Equals(input.StatusMessage))
+                    this.Event == input.Event ||
+                    (this.Event != null &&
+                    this.Event.Equals(input.Event))
                 ) && 
                 (
-                    this.ExceptionMessage == input.ExceptionMessage ||
-                    (this.ExceptionMessage != null &&
-                    this.ExceptionMessage.Equals(input.ExceptionMessage))
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
                 ) && 
                 (
                     this.Id == input.Id ||
@@ -649,6 +535,11 @@ namespace OpenBots.Service.API.Model
                     this.DeleteOn.Equals(input.DeleteOn))
                 ) && 
                 (
+                    this.Timestamp == input.Timestamp ||
+                    (this.Timestamp != null &&
+                    this.Timestamp.Equals(input.Timestamp))
+                ) && 
+                (
                     this.UpdatedOn == input.UpdatedOn ||
                     (this.UpdatedOn != null &&
                     this.UpdatedOn.Equals(input.UpdatedOn))
@@ -669,66 +560,50 @@ namespace OpenBots.Service.API.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                if (this.OrganizationId != null)
-                    hashCode = hashCode * 59 + this.OrganizationId.GetHashCode();
-                if (this.ProcessID != null)
-                    hashCode = hashCode * 59 + this.ProcessID.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.Subtopic != null)
-                    hashCode = hashCode * 59 + this.Subtopic.GetHashCode();
-                if (this.Event != null)
-                    hashCode = hashCode * 59 + this.Event.GetHashCode();
-                if (this.Source != null)
-                    hashCode = hashCode * 59 + this.Source.GetHashCode();
-                if (this.Priority != null)
-                    hashCode = hashCode * 59 + this.Priority.GetHashCode();
-                if (this.QueueItemType != null)
-                    hashCode = hashCode * 59 + this.QueueItemType.GetHashCode();
-                if (this.EntityType != null)
-                    hashCode = hashCode * 59 + this.EntityType.GetHashCode();
-                if (this.EntityStatus != null)
-                    hashCode = hashCode * 59 + this.EntityStatus.GetHashCode();
-                if (this.DataJSON != null)
-                    hashCode = hashCode * 59 + this.DataJSON.GetHashCode();
-                if (this.DataText != null)
-                    hashCode = hashCode * 59 + this.DataText.GetHashCode();
-                if (this.DontDequeueUntil != null)
-                    hashCode = hashCode * 59 + this.DontDequeueUntil.GetHashCode();
-                if (this.DontDequeueAfter != null)
-                    hashCode = hashCode * 59 + this.DontDequeueAfter.GetHashCode();
-                if (this.IsDequeued != null)
-                    hashCode = hashCode * 59 + this.IsDequeued.GetHashCode();
                 if (this.IsLocked != null)
                     hashCode = hashCode * 59 + this.IsLocked.GetHashCode();
-                if (this.LockedOn != null)
-                    hashCode = hashCode * 59 + this.LockedOn.GetHashCode();
-                if (this.LockedUntil != null)
-                    hashCode = hashCode * 59 + this.LockedUntil.GetHashCode();
+                if (this.LockedOnUTC != null)
+                    hashCode = hashCode * 59 + this.LockedOnUTC.GetHashCode();
+                if (this.LockedUntilUTC != null)
+                    hashCode = hashCode * 59 + this.LockedUntilUTC.GetHashCode();
                 if (this.LockedBy != null)
                     hashCode = hashCode * 59 + this.LockedBy.GetHashCode();
+                if (this.QueueId != null)
+                    hashCode = hashCode * 59 + this.QueueId.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.JsonType != null)
+                    hashCode = hashCode * 59 + this.JsonType.GetHashCode();
+                if (this.DataJson != null)
+                    hashCode = hashCode * 59 + this.DataJson.GetHashCode();
+                if (this.State != null)
+                    hashCode = hashCode * 59 + this.State.GetHashCode();
+                if (this.StateMessage != null)
+                    hashCode = hashCode * 59 + this.StateMessage.GetHashCode();
                 if (this.LockTransactionKey != null)
                     hashCode = hashCode * 59 + this.LockTransactionKey.GetHashCode();
+                if (this.LockedEndTimeUTC != null)
+                    hashCode = hashCode * 59 + this.LockedEndTimeUTC.GetHashCode();
                 if (this.RetryCount != null)
                     hashCode = hashCode * 59 + this.RetryCount.GetHashCode();
-                if (this.LastOccuredError != null)
-                    hashCode = hashCode * 59 + this.LastOccuredError.GetHashCode();
-                if (this.Timestamp != null)
-                    hashCode = hashCode * 59 + this.Timestamp.GetHashCode();
-                if (this.IsError != null)
-                    hashCode = hashCode * 59 + this.IsError.GetHashCode();
-                if (this.QueueID != null)
-                    hashCode = hashCode * 59 + this.QueueID.GetHashCode();
-                if (this.Data != null)
-                    hashCode = hashCode * 59 + this.Data.GetHashCode();
-                if (this.RawData != null)
-                    hashCode = hashCode * 59 + this.RawData.GetHashCode();
-                if (this.Status != null)
-                    hashCode = hashCode * 59 + this.Status.GetHashCode();
-                if (this.StatusMessage != null)
-                    hashCode = hashCode * 59 + this.StatusMessage.GetHashCode();
-                if (this.ExceptionMessage != null)
-                    hashCode = hashCode * 59 + this.ExceptionMessage.GetHashCode();
+                if (this.Priority != null)
+                    hashCode = hashCode * 59 + this.Priority.GetHashCode();
+                if (this.ExpireOnUTC != null)
+                    hashCode = hashCode * 59 + this.ExpireOnUTC.GetHashCode();
+                if (this.PostponeUntilUTC != null)
+                    hashCode = hashCode * 59 + this.PostponeUntilUTC.GetHashCode();
+                if (this.ErrorCode != null)
+                    hashCode = hashCode * 59 + this.ErrorCode.GetHashCode();
+                if (this.ErrorMessage != null)
+                    hashCode = hashCode * 59 + this.ErrorMessage.GetHashCode();
+                if (this.ErrorSerialized != null)
+                    hashCode = hashCode * 59 + this.ErrorSerialized.GetHashCode();
+                if (this.Source != null)
+                    hashCode = hashCode * 59 + this.Source.GetHashCode();
+                if (this.Event != null)
+                    hashCode = hashCode * 59 + this.Event.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Id != null)
                     hashCode = hashCode * 59 + this.Id.GetHashCode();
                 if (this.IsDeleted != null)
@@ -741,6 +616,8 @@ namespace OpenBots.Service.API.Model
                     hashCode = hashCode * 59 + this.DeletedBy.GetHashCode();
                 if (this.DeleteOn != null)
                     hashCode = hashCode * 59 + this.DeleteOn.GetHashCode();
+                if (this.Timestamp != null)
+                    hashCode = hashCode * 59 + this.Timestamp.GetHashCode();
                 if (this.UpdatedOn != null)
                     hashCode = hashCode * 59 + this.UpdatedOn.GetHashCode();
                 if (this.UpdatedBy != null)

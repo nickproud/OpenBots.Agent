@@ -2,6 +2,8 @@
 using Newtonsoft.Json.Linq;
 using OpenBots.Agent.Client.Utilities;
 using OpenBots.Agent.Core.Model;
+using OpenBots.Agent.Core.MachineRegistry;
+using OpenBots.Agent.Core.Enums;
 using Serilog.Events;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,10 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Drawing = System.Drawing;
-using Forms = System.Windows.Forms;
+using SystemForms = System.Windows.Forms;
+using System.IO;
+using OpenBots.Agent.Client.Forms.Dialog;
+using System.Security.Principal;
 
 namespace OpenBots.Agent.Client
 {
@@ -24,11 +29,14 @@ namespace OpenBots.Agent.Client
         private ServerConnectionSettings _connectionSettings;
         private OpenBotsSettings _agentSettings;
         private Timer _serviceHeartBeat;
+        private RegistryManager _registryManager;
 
-        private Forms.NotifyIcon _notifyIcon = null;
+        private SystemForms.NotifyIcon _notifyIcon = null;
         private Dictionary<string, Drawing.Icon> _iconHandles = null;
-        private Forms.ContextMenu _contextMenuTrayIcon;
-        private Forms.MenuItem _menuItemExit;
+        private SystemForms.ContextMenu _contextMenuTrayIcon;
+        private SystemForms.MenuItem _menuItemExit;
+        private SystemForms.MenuItem _menuItemClearCredentials;
+        private SystemForms.MenuItem _menuItemMachineInfo;
 
         private bool _isServiceUP = false;
         private bool _windowHeightReduced = false;
@@ -37,29 +45,44 @@ namespace OpenBots.Agent.Client
         public MainWindow()
         {
             InitializeComponent();
-
-            // Connect to WCF Service Endpoint
-            _isServiceUP = PipeProxy.Instance.StartServiceEndPoint();
+            ConnectToService();
         }
 
         #region Window Events / Helper Methods
         private void OnInitialized(object sender, EventArgs e)
         {
-            _contextMenuTrayIcon = new Forms.ContextMenu();
-            _menuItemExit = new Forms.MenuItem();
+            // Initialize Registry Manager
+            _registryManager = new RegistryManager();
 
-            // Initialize contextMenu1
-            _contextMenuTrayIcon.MenuItems.AddRange(
-                        new Forms.MenuItem[] { _menuItemExit });
+            // Create ContextMenu
+            _contextMenuTrayIcon = new SystemForms.ContextMenu();
+            _menuItemExit = new SystemForms.MenuItem();
+            _menuItemClearCredentials = new SystemForms.MenuItem();
+            _menuItemMachineInfo = new SystemForms.MenuItem();
+            
+            // Initialize contextMenu
+            _contextMenuTrayIcon.MenuItems.AddRange(new SystemForms.MenuItem[] 
+            { 
+                _menuItemMachineInfo,
+                _menuItemClearCredentials,
+                _menuItemExit
+            });
 
-            // Initialize menuItem1
-            _menuItemExit.Index = 0;
+            // Initialize _menuItemMachineInfo
+            _menuItemMachineInfo.Text = "Machine Info";
+            _menuItemMachineInfo.Click += menuItemMachineInfo_Click;
+
+            // Initialize _menuItemClearCredentials
+            _menuItemClearCredentials.Text = "Clear Credentials";
+            _menuItemClearCredentials.Click += menuItemClearCredentials_Click;
+
+            // Initialize _menuItemExit
             _menuItemExit.Text = "Exit";
             _menuItemExit.Click += menuItemExit_Click;
 
             _iconHandles = new Dictionary<string, Drawing.Icon>();
             _iconHandles.Add("QuickLaunch", new Drawing.Icon(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"OpenBots.ico")));
-            _notifyIcon = new Forms.NotifyIcon();
+            _notifyIcon = new SystemForms.NotifyIcon();
             _notifyIcon.ContextMenu = _contextMenuTrayIcon;
             _notifyIcon.Click += notifyIcon_Click;
             _notifyIcon.DoubleClick += notifyIcon_DoubleClick;
@@ -68,8 +91,10 @@ namespace OpenBots.Agent.Client
             Closing += OnClosing;
             Closed += OnClosed;
         }
+
         private void OnLoad(object sender, RoutedEventArgs e)
         {
+            SetConfigFilePath();
             LoadConnectionSettings();
             UpdateConnectButtonState();
             UpdateSaveButtonState();
@@ -126,7 +151,8 @@ namespace OpenBots.Agent.Client
         }
         private void LoadConnectionSettings()
         {
-            _agentSettings = SettingsManager.ReadSettings();
+            // Load settings from "OpenBots.Settings" (Config File)
+            _agentSettings = SettingsManager.Instance.ReadSettings();
             bool isServerAlive = false;
 
             // If Server Connection is already Up and Agent has just started.
@@ -139,27 +165,38 @@ namespace OpenBots.Agent.Client
 
             if (_connectionSettings == null)
             {
+                if (!string.IsNullOrEmpty(_agentSettings.AgentId))
+                    _agentSettings = SettingsManager.Instance.ResetToDefaultSettings();
+
                 _connectionSettings = new ServerConnectionSettings()
                 {
                     ServerConnectionEnabled = false,
                     ServerURL = string.Empty,
-                    SinkType = string.IsNullOrEmpty(_agentSettings.SinkType) ? Enums.SinkType.File.ToString() : _agentSettings.SinkType,
+                    AgentUsername = _registryManager.AgentUsername ?? string.Empty,  // Load Username from User Registry
+                    AgentPassword = _registryManager.AgentPassword ?? string.Empty,  // Load Password from User Registry
+                    SinkType = string.IsNullOrEmpty(_agentSettings.SinkType) ? SinkType.File.ToString() : _agentSettings.SinkType,
                     TracingLevel = string.IsNullOrEmpty(_agentSettings.TracingLevel) ? LogEventLevel.Information.ToString() : _agentSettings.TracingLevel,
                     DNSHost = Dns.GetHostName(),
+                    WhoAmI = WindowsIdentity.GetCurrent().Name.ToLower(),
                     MachineName = Environment.MachineName,
                     AgentId = string.Empty,
                     MACAddress = AgentHelper.GetMacAddress(),
+                    IPAddress = new WebClient().DownloadString("https://ipv4.icanhazip.com/").Trim()
                 };
             }
 
             // Loading settings in UI
-            txt_MachineName.Text = _connectionSettings.MachineName;
+            txt_Username.Text = _connectionSettings.AgentUsername;
+            txt_Password.Password = _connectionSettings.AgentPassword;
             txt_ServerURL.Text = _connectionSettings.ServerURL;
-            txt_AgentId.Text = _connectionSettings.AgentId;
             cmb_LogLevel.ItemsSource = Enum.GetValues(typeof(LogEventLevel));
             cmb_LogLevel.SelectedIndex = Array.IndexOf((Array)cmb_LogLevel.ItemsSource, Enum.Parse(typeof(LogEventLevel), _connectionSettings.TracingLevel));
-            cmb_SinkType.ItemsSource = Enum.GetValues(typeof(Enums.SinkType));
-            cmb_SinkType.SelectedIndex = Array.IndexOf((Array)cmb_SinkType.ItemsSource, Enum.Parse(typeof(Enums.SinkType), _connectionSettings.SinkType));
+            cmb_SinkType.ItemsSource = Enum.GetValues(typeof(SinkType));
+            cmb_SinkType.SelectedIndex = Array.IndexOf((Array)cmb_SinkType.ItemsSource, Enum.Parse(typeof(SinkType), _connectionSettings.SinkType));
+            
+            // Update UI Controls after loading settings
+            OnSetRegistryKeys();
+            UpdateClearCredentialsUI();
             OnSinkSelectionChange();
 
             if (isServerAlive)
@@ -167,7 +204,64 @@ namespace OpenBots.Agent.Client
                 UpdateUIOnConnect();
             }
         }
+        private void SetConfigFilePath()
+        {
+            if(_isServiceUP)
+            {
+                try
+                {
+                    // Get Settings file Path from Environment Variable
+                    string environmentVariableValue = SettingsManager.Instance.EnvironmentSettings.GetEnvironmentVariable();
 
+                    // Create Environment Variable if It doesn't exist
+                    if (string.IsNullOrEmpty(environmentVariableValue))
+                    {
+                        string settingsFilePath = SettingsManager.Instance.GetSettingsFilePath();
+
+                        if (File.Exists(settingsFilePath))
+                            PipeProxy.Instance.SetConfigFilePath(SettingsManager.Instance.EnvironmentSettings.EnvironmentVariableName, settingsFilePath);
+                        else
+                            throw new FileNotFoundException($"OpenBots Agent Settings file not found at \"{settingsFilePath}\"");
+                    }
+                }
+                catch (FileNotFoundException ex)
+                {
+                    ShowErrorDialog("An error occurred while setting up OpenBots Agent Settings File Path " +
+                        "to an Environment Variable.",
+                        "",
+                        ex.Message,
+                        Application.Current.MainWindow);
+
+                    ShutDownApplication();
+                }
+                catch (Exception ex)
+                {
+                    ShowErrorDialog("An error occurred while setting up OpenBots.Settings (Config File Path)" +
+                        $"to an Environment Variable. Please add the variable \"{SettingsManager.Instance.EnvironmentSettings.EnvironmentVariableName}\" " +
+                        "manually and re-run the agent.",
+                        "",
+                        ex.Message,
+                        Application.Current.MainWindow);
+
+                    ShutDownApplication();
+                }
+            }
+        }
+        private void ConnectToService()
+        {
+            // Connect to WCF Service Endpoint
+            _isServiceUP = PipeProxy.Instance.StartServiceEndPoint();
+
+            if (!_isServiceUP)
+            {
+                ShowErrorDialog("An error occurred while connecting to the OpenBots Agent Service.",
+                    "",
+                    "OpenBots Agent Service \"OpenBotsSvc\" is not running. " +
+                    "Please start the service and try again.");
+
+                ExitApplication();
+            }
+        }
         #endregion
 
         #region Service HeartBeat Method(s)
@@ -175,7 +269,7 @@ namespace OpenBots.Agent.Client
         {
             _serviceHeartBeat = new Timer();
             _serviceHeartBeat.Elapsed += new ElapsedEventHandler(OnElapsedTime);
-            _serviceHeartBeat.Interval = 10000; //number in miliseconds  
+            _serviceHeartBeat.Interval = 5000; //number in miliseconds  
             _serviceHeartBeat.Enabled = true;
         }
         private void OnElapsedTime(object source, ElapsedEventArgs e)
@@ -232,6 +326,36 @@ namespace OpenBots.Agent.Client
         private void notifyIcon_DoubleClick(object sender, EventArgs e)
         {
         }
+        private void menuItemMachineInfo_Click(object Sender, EventArgs e)
+        {
+            MachineInfo machineInfoDialog = new MachineInfo(
+                _connectionSettings.WhoAmI,
+                _connectionSettings.DNSHost, 
+                _connectionSettings.MACAddress, 
+                _connectionSettings.IPAddress);
+
+            machineInfoDialog.Owner = Application.Current.MainWindow;
+            machineInfoDialog.ShowDialog();
+        }
+        private void menuItemClearCredentials_Click(object sender, EventArgs e)
+        {
+            if(!string.IsNullOrEmpty(_registryManager.AgentUsername))
+            {
+                ClearCredentials();
+                LoadConnectionSettings();
+
+                // Clear TextBoxes
+                txt_Username.Text = string.Empty;
+                txt_Password.Password = string.Empty;
+
+                MessageDialog messageDialog = new MessageDialog(
+                    "Credentials Cleared",
+                    "OpenBots Agent Credentials have been cleared.");
+
+                messageDialog.Owner = Application.Current.MainWindow;
+                messageDialog.ShowDialog();
+            }
+        }
         private void menuItemExit_Click(object Sender, EventArgs e)
         {
             // Close the application.
@@ -245,9 +369,23 @@ namespace OpenBots.Agent.Client
             if (_contextMenuTrayIcon != null)
                 _contextMenuTrayIcon.Dispose();
 
+            ShutDownApplication();
+        }
+        private void ShutDownApplication()
+        {
             Application.Current.Shutdown();
         }
-
+        private void RestartApplication()
+        {
+            SystemForms.Application.Restart();
+            ShutDownApplication();
+        }
+        private void ClearCredentials()
+        {
+            // Clear from Registry
+            _registryManager.AgentUsername = string.Empty;
+            _registryManager.AgentPassword = string.Empty;
+        }
         #endregion
 
         #region Input Control Events / Helper Methods
@@ -255,12 +393,57 @@ namespace OpenBots.Agent.Client
         {
             UpdateConnectButtonState();
         }
+        private bool UpdateHttpSinkURL()
+        {
+            string endPoint = SettingsManager.Instance.GetDefaultSettings().LoggingValue1;
+
+            // Change Logging Value for Http Sink Type
+            if (cmb_SinkType.SelectedItem.ToString().Split(new string[] { ": " }, StringSplitOptions.None).Last() == "Http" &&
+                string.IsNullOrEmpty(txt_SinkType_Logging1.Text))
+            {
+                Uri baseUri = new Uri(txt_ServerURL.Text);
+                txt_SinkType_Logging1.Text = new Uri(baseUri, endPoint).ToString();
+                btn_Save.IsEnabled = false;
+
+                return true;
+            }
+            return false;
+        }
+        private void OnUpdateHttpSinkURL(bool isSinkURLModified, bool isConnectedToServer)
+        {
+            if (isSinkURLModified)
+            {
+                if (isConnectedToServer)
+                    _agentSettings.LoggingValue1 = _connectionSettings.LoggingValue1;
+                else
+                {
+                    _agentSettings.LoggingValue1 = string.Empty;
+                    _connectionSettings.LoggingValue1 = string.Empty;
+                    txt_SinkType_Logging1.Text = string.Empty;
+                    btn_Save.IsEnabled = false;
+                }
+            }
+        }
+
+        private void OnTextChange_AgentUsername(object sender, TextChangedEventArgs e)
+        {
+            UpdateConnectButtonState();
+        }
+        private void OnPasswordChange_AgentPassword(object sender, RoutedEventArgs e)
+        {
+            UpdateConnectButtonState();
+        }
         private void OnClick_ConnectBtn(object sender, RoutedEventArgs e)
         {
             if (btn_Connect.Content.ToString() == "Connect")
             {
+                // Update Http Sink URL
+                var isSinkURLModified = UpdateHttpSinkURL();
+
                 // Server Configuration
                 _connectionSettings.ServerURL = txt_ServerURL.Text;
+                _connectionSettings.AgentUsername = txt_Username.Text;
+                _connectionSettings.AgentPassword = txt_Password.Password;
 
                 // Logging
                 _connectionSettings.TracingLevel = cmb_LogLevel.Text;
@@ -270,49 +453,91 @@ namespace OpenBots.Agent.Client
                 _connectionSettings.LoggingValue3 = txt_SinkType_Logging3.Text;
                 _connectionSettings.LoggingValue4 = txt_SinkType_Logging4.Text;
 
-                var serverResponse = PipeProxy.Instance.ConnectToServer(_connectionSettings);
-                if (serverResponse.Data != null)
+                try
                 {
-                    _agentSettings.OpenBotsServerUrl = _connectionSettings.ServerURL;
-                    _agentSettings.AgentId = serverResponse.Data.ToString();
+                    // Calling Service Method to Connect to Server
+                    var serverResponse = PipeProxy.Instance.ConnectToServer(_connectionSettings);
+                    if (serverResponse != null)
+                    {
+                        if (serverResponse.Data != null)
+                        {
+                            _agentSettings.OpenBotsServerUrl = _connectionSettings.ServerURL;
+                            _agentSettings.AgentId = ((ServerConnectionSettings)serverResponse.Data).AgentId.ToString();
+                            _agentSettings.AgentName = ((ServerConnectionSettings)serverResponse.Data).AgentName.ToString();
+                            OnUpdateHttpSinkURL(isSinkURLModified, true);
 
-                    UpdateUIOnConnect();
+                            UpdateUIOnConnect();
 
-                    // Update OpenBots.settings file
-                    SettingsManager.UpdateSettings(_agentSettings);
+                            //Set Registry Keys if NOT already Set
+                            if (string.IsNullOrEmpty(_registryManager.AgentUsername) || string.IsNullOrEmpty(_registryManager.AgentPassword))
+                            {
+                                _registryManager.AgentUsername = _connectionSettings.AgentUsername;
+                                _registryManager.AgentPassword = _connectionSettings.AgentPassword;
+
+                                OnSetRegistryKeys();
+                            }
+
+                            // Update OpenBots.settings file
+                            SettingsManager.Instance.UpdateSettings(_agentSettings);
+                        }
+                        else
+                        {
+                            OnUpdateHttpSinkURL(isSinkURLModified, false);
+
+                            ShowErrorDialog("An error occurred while connecting to the server.",
+                                serverResponse.StatusCode,
+                                serverResponse.Message,
+                                Application.Current.MainWindow);
+                        }
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    ErrorDialog errorDialog = new ErrorDialog("An error occurred while connecting to the server.", 
-                        serverResponse.StatusCode, 
-                        serverResponse.Message);
-                    errorDialog.Owner = Application.Current.MainWindow;
-                    errorDialog.ShowDialog();
+                    OnUpdateHttpSinkURL(isSinkURLModified, false);
+
+                    ShowErrorDialog("An error occurred while connecting to the server.",
+                        ex.GetType().GetProperty("ErrorCode")?.GetValue(ex, null)?.ToString() ?? string.Empty,
+                        ex.Message,
+                        Application.Current.MainWindow);
                 }
             }
             else if (btn_Connect.Content.ToString() == "Disconnect")
             {
-                var serverResponse = PipeProxy.Instance.DisconnectFromServer(_connectionSettings);
-                if (serverResponse.StatusCode == "200")
+                try
                 {
-                    _agentSettings.OpenBotsServerUrl = "";
-                    _agentSettings.AgentId = string.Empty;
+                    // Calling Service Method to Disconnect from Server
+                    var serverResponse = PipeProxy.Instance.DisconnectFromServer(_connectionSettings);
+                    if (serverResponse != null)
+                    {
+                        if (serverResponse.StatusCode == "200")
+                        {
+                            _agentSettings.OpenBotsServerUrl = "";
+                            _agentSettings.AgentId = string.Empty;
+                            _agentSettings.AgentName = string.Empty;
 
-                    UpdateUIOnDisconnect();
+                            UpdateUIOnDisconnect();
 
-                    // Update OpenBots.settings file
-                    SettingsManager.UpdateSettings(_agentSettings);
+                            // Update OpenBots.settings file
+                            SettingsManager.Instance.UpdateSettings(_agentSettings);
+                        }
+                        else
+                        {
+                            string errorMessage = JToken.Parse(serverResponse.Message).ToString(Formatting.Indented);
+
+                            ShowErrorDialog("An error occurred while disconnecting from the server.",
+                                serverResponse.StatusCode,
+                                errorMessage,
+                                Application.Current.MainWindow);
+                        }
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    string errorMessage = JToken.Parse(serverResponse.Message).ToString(Formatting.Indented);
-                    ErrorDialog errorDialog = new ErrorDialog("An error occurred while disconnecting from the server.",
-                        serverResponse.StatusCode,
-                        errorMessage);
-                    errorDialog.Owner = Application.Current.MainWindow;
-                    errorDialog.ShowDialog();
+                    ShowErrorDialog("An error occurred while disconnecting from the server.",
+                        ex.GetType().GetProperty("ErrorCode")?.GetValue(ex, null)?.ToString() ?? string.Empty,
+                        ex.Message,
+                        Application.Current.MainWindow);
                 }
-
             }
         }
         private void OnDropDownClosed_LogLevel(object sender, EventArgs e)
@@ -336,10 +561,12 @@ namespace OpenBots.Agent.Client
         }
         private void OnTextChange_Logging1(object sender, TextChangedEventArgs e)
         {
-            if (/*(agentSettings.SinkType.Equals("File")|| agentSettings.SinkType.Equals("Http")) && */!_agentSettings.LoggingValue1.Equals(txt_SinkType_Logging1.Text))
+            if (!_agentSettings.LoggingValue1.Equals(txt_SinkType_Logging1.Text))
                 _logInfoChanged = true;
             else
                 _logInfoChanged = false;
+
+            SetToolTip(txt_SinkType_Logging1);
             UpdateSaveButtonState();
         }
         private void OnTextChange_Logging2(object sender, TextChangedEventArgs e)
@@ -348,6 +575,8 @@ namespace OpenBots.Agent.Client
                 _logInfoChanged = true;
             else
                 _logInfoChanged = false;
+
+            SetToolTip(txt_SinkType_Logging2);
             UpdateSaveButtonState();
         }
         private void OnTextChange_Logging3(object sender, TextChangedEventArgs e)
@@ -356,6 +585,8 @@ namespace OpenBots.Agent.Client
                 _logInfoChanged = true;
             else
                 _logInfoChanged = false;
+
+            SetToolTip(txt_SinkType_Logging3);
             UpdateSaveButtonState();
         }
         private void OnTextChange_Logging4(object sender, TextChangedEventArgs e)
@@ -364,6 +595,8 @@ namespace OpenBots.Agent.Client
                 _logInfoChanged = true;
             else
                 _logInfoChanged = false;
+
+            SetToolTip(txt_SinkType_Logging4);
             UpdateSaveButtonState();
         }
         private void OnClick_SaveBtn(object sender, RoutedEventArgs e)
@@ -375,9 +608,17 @@ namespace OpenBots.Agent.Client
             _agentSettings.LoggingValue3 = txt_SinkType_Logging3.Text;
             _agentSettings.LoggingValue4 = txt_SinkType_Logging4.Text;
 
-            SettingsManager.UpdateSettings(_agentSettings);
+            SettingsManager.Instance.UpdateSettings(_agentSettings);
             _logInfoChanged = false;
             UpdateSaveButtonState();
+        }
+
+        private void SetToolTip(TextBox txtLogging)
+        {
+            if (txtLogging.Text.Length > 36)
+                txtLogging.ToolTip = txtLogging.Text;
+            else
+                txtLogging.ClearValue(TextBox.ToolTipProperty);
         }
         private void UpdateUIOnConnect()
         {
@@ -385,9 +626,6 @@ namespace OpenBots.Agent.Client
             lbl_StatusValue.Content = "Connected";
             lbl_StatusValue.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF4FE823"));
             lbl_StatusValue.FontWeight = FontWeights.Bold;
-
-            // Update Agent Id
-            txt_AgentId.Text = _agentSettings.AgentId;
 
             // Disable Input Controls
             txt_ServerURL.IsEnabled = false;
@@ -398,6 +636,9 @@ namespace OpenBots.Agent.Client
             txt_SinkType_Logging2.IsEnabled = false;
             txt_SinkType_Logging3.IsEnabled = false;
             txt_SinkType_Logging4.IsEnabled = false;
+
+            // Disable and Hide _menuItemClearCredentials
+            UpdateClearCredentialsUI();
         }
         private void UpdateUIOnDisconnect()
         {
@@ -405,9 +646,6 @@ namespace OpenBots.Agent.Client
             lbl_StatusValue.Content = "Offline";
             lbl_StatusValue.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFBBB5B5"));
             lbl_StatusValue.FontWeight = FontWeights.Normal;
-
-            // Update Agent Id
-            txt_AgentId.Text = _agentSettings.AgentId;
 
             // Enable Input Controls
             txt_ServerURL.IsEnabled = true;
@@ -418,10 +656,30 @@ namespace OpenBots.Agent.Client
             txt_SinkType_Logging2.IsEnabled = true;
             txt_SinkType_Logging3.IsEnabled = true;
             txt_SinkType_Logging4.IsEnabled = true;
+
+            // Enable and Show _menuItemClearCredentials
+            UpdateClearCredentialsUI();
+        }
+        private void UpdateClearCredentialsUI()
+        {
+            if (!string.IsNullOrEmpty(_registryManager.AgentUsername))
+            {
+                _menuItemClearCredentials.Enabled = true;
+                _menuItemClearCredentials.Visible = true;
+            }
+            else
+            {
+                _menuItemClearCredentials.Enabled = false;
+                _menuItemClearCredentials.Visible = false;
+            }
+
+                
         }
         private void UpdateConnectButtonState()
         {
-            if (lbl_StatusValue.Content.ToString() != "Not Connected" && !string.IsNullOrEmpty(txt_ServerURL.Text) && !btn_Save.IsEnabled)
+            if (lbl_StatusValue.Content.ToString() != "Not Connected" && !string.IsNullOrEmpty(txt_ServerURL.Text) 
+                && !string.IsNullOrEmpty(txt_Username.Text) && !string.IsNullOrEmpty(txt_Password.Password) 
+                && !btn_Save.IsEnabled)
                 btn_Connect.IsEnabled = true;
             else
                 btn_Connect.IsEnabled = false;
@@ -538,7 +796,32 @@ namespace OpenBots.Agent.Client
                     break;
             }
         }
+        private void OnSetRegistryKeys()
+        {
+            // If Agent's Credentials (Username, Password) exist in the Registry
+            if(!string.IsNullOrEmpty(_registryManager.AgentUsername) && !string.IsNullOrEmpty(_registryManager.AgentPassword))
+            {
+                // Disable Credentials Controls
+                txt_Username.IsEnabled = false;
+                txt_Password.IsEnabled = false;
+            }
+            else
+            {
+                // Enable Credentials Controls
+                txt_Username.IsEnabled = true;
+                txt_Password.IsEnabled = true;
+            }
+        }
+        #endregion
 
+        #region Dialog Windows Handler
+        private void ShowErrorDialog(string generalMessage, string errorCode, string errorMessage, Window parentWindow = null)
+        {
+            ErrorDialog errorDialog = new ErrorDialog(generalMessage, errorCode, errorMessage);
+            if(parentWindow != null)
+                errorDialog.Owner = parentWindow;
+            errorDialog.ShowDialog();
+        }
         #endregion
     }
 }

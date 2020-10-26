@@ -1,27 +1,70 @@
 ﻿using Newtonsoft.Json;
+using OpenBots.Agent.Core.Model;
 using System;
 using System.IO;
 
 namespace OpenBots.Agent.Client
 {
-    public static class SettingsManager
+    public class SettingsManager
     {
-        public static void UpdateSettings(OpenBotsSettings agentSettings)
+        public EnvironmentSettings EnvironmentSettings;
+        public static SettingsManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new SettingsManager();
+
+                return instance;
+            }
+        }
+        private static SettingsManager instance;
+
+        private SettingsManager()
+        {
+            EnvironmentSettings = new EnvironmentSettings();
+        }
+
+        public void UpdateSettings(OpenBotsSettings agentSettings)
         {
             File.WriteAllText(GetSettingsFilePath(), JsonConvert.SerializeObject(agentSettings, Formatting.Indented));
         }
 
-        public static OpenBotsSettings ReadSettings()
+        public OpenBotsSettings ReadSettings()
         {
             return JsonConvert.DeserializeObject<OpenBotsSettings>(File.ReadAllText(GetSettingsFilePath()));
         }
 
-        public static string GetSettingsFilePath()
+        public OpenBotsSettings GetDefaultSettings()
         {
-            string settingsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"OpenBots.settings");
-            if (!File.Exists(settingsFilePath))
-                throw new FileNotFoundException($"File NOT found at {settingsFilePath}");
-            return settingsFilePath;
+            // Default Settings
+            return new OpenBotsSettings()
+            {
+                TracingLevel = "Information",
+                SinkType = "Http",
+                LoggingValue1 = "/api/v1/Logger/Agent",
+                LoggingValue2 = "",
+                LoggingValue3 = "",
+                LoggingValue4 = "",
+                OpenBotsServerUrl = "",
+                AgentId = "",
+                AgentName = ""
+            };
+        }
+
+        public OpenBotsSettings ResetToDefaultSettings()
+        {
+            var agentSettings = GetDefaultSettings();
+            agentSettings.LoggingValue1 = string.Empty;
+
+            UpdateSettings(agentSettings);
+
+            return agentSettings;
+        }
+
+        public string GetSettingsFilePath()
+        {
+            return Path.Combine(EnvironmentSettings.EnvironmentVariableValue, EnvironmentSettings.SettingsFileName);
         }
     }
 }

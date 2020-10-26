@@ -32,74 +32,50 @@ namespace OpenBots.Service.API.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="JobViewModel" /> class.
         /// </summary>
+        /// <param name="id">id.</param>
         /// <param name="agentName">agentName.</param>
         /// <param name="processName">processName.</param>
-        /// <param name="agentId">agentId (required).</param>
+        /// <param name="agentId">agentId.</param>
         /// <param name="startTime">startTime.</param>
         /// <param name="endTime">endTime.</param>
         /// <param name="enqueueTime">enqueueTime.</param>
         /// <param name="dequeueTime">dequeueTime.</param>
-        /// <param name="processId">processId (required).</param>
+        /// <param name="processId">processId.</param>
         /// <param name="jobStatus">jobStatus.</param>
         /// <param name="message">message.</param>
         /// <param name="isSuccessful">isSuccessful.</param>
-        /// <param name="id">id.</param>
-        /// <param name="isDeleted">isDeleted (default to false).</param>
-        /// <param name="createdBy">createdBy.</param>
         /// <param name="createdOn">createdOn.</param>
-        /// <param name="deletedBy">deletedBy.</param>
-        /// <param name="deleteOn">deleteOn.</param>
-        /// <param name="timestamp">timestamp.</param>
-        /// <param name="updatedOn">updatedOn.</param>
-        /// <param name="updatedBy">updatedBy.</param>
-        public JobViewModel(string agentName = default(string), string processName = default(string), Guid? agentId = default(Guid?), DateTime? startTime = default(DateTime?), DateTime? endTime = default(DateTime?), DateTime? enqueueTime = default(DateTime?), DateTime? dequeueTime = default(DateTime?), Guid? processId = default(Guid?), string jobStatus = default(string), string message = default(string), bool? isSuccessful = default(bool?), Guid? id = default(Guid?), bool? isDeleted = false, string createdBy = default(string), DateTime? createdOn = default(DateTime?), string deletedBy = default(string), DateTime? deleteOn = default(DateTime?), byte[] timestamp = default(byte[]), DateTime? updatedOn = default(DateTime?), string updatedBy = default(string))
+        /// <param name="createdBy">createdBy.</param>
+        /// <param name="errorReason">errorReason.</param>
+        /// <param name="errorCode">errorCode.</param>
+        /// <param name="serializedErrorString">serializedErrorString.</param>
+        public JobViewModel(Guid? id = default(Guid?), string agentName = default(string), string processName = default(string), Guid? agentId = default(Guid?), DateTime? startTime = default(DateTime?), DateTime? endTime = default(DateTime?), DateTime? enqueueTime = default(DateTime?), DateTime? dequeueTime = default(DateTime?), Guid? processId = default(Guid?), JobStatusType jobStatus = default(JobStatusType), string message = default(string), bool? isSuccessful = default(bool?), DateTime? createdOn = default(DateTime?), string createdBy = default(string), string errorReason = default(string), string errorCode = default(string), string serializedErrorString = default(string))
         {
-            // to ensure "agentId" is required (not null)
-            if (agentId == null)
-            {
-                throw new InvalidDataException("agentId is a required property for JobViewModel and cannot be null");
-            }
-            else
-            {
-                this.AgentId = agentId;
-            }
-            // to ensure "processId" is required (not null)
-            if (processId == null)
-            {
-                throw new InvalidDataException("processId is a required property for JobViewModel and cannot be null");
-            }
-            else
-            {
-                this.ProcessId = processId;
-            }
+            this.Id = id;
             this.AgentName = agentName;
             this.ProcessName = processName;
+            this.AgentId = agentId;
             this.StartTime = startTime;
             this.EndTime = endTime;
             this.EnqueueTime = enqueueTime;
             this.DequeueTime = dequeueTime;
+            this.ProcessId = processId;
             this.JobStatus = jobStatus;
             this.Message = message;
             this.IsSuccessful = isSuccessful;
-            this.Id = id;
-            // use default value if no "isDeleted" provided
-            if (isDeleted == null)
-            {
-                this.IsDeleted = false;
-            }
-            else
-            {
-                this.IsDeleted = isDeleted;
-            }
-            this.CreatedBy = createdBy;
             this.CreatedOn = createdOn;
-            this.DeletedBy = deletedBy;
-            this.DeleteOn = deleteOn;
-            this.Timestamp = timestamp;
-            this.UpdatedOn = updatedOn;
-            this.UpdatedBy = updatedBy;
+            this.CreatedBy = createdBy;
+            this.ErrorReason = errorReason;
+            this.ErrorCode = errorCode;
+            this.SerializedErrorString = serializedErrorString;
         }
         
+        /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        [DataMember(Name="id", EmitDefaultValue=false)]
+        public Guid? Id { get; set; }
+
         /// <summary>
         /// Gets or Sets AgentName
         /// </summary>
@@ -152,7 +128,7 @@ namespace OpenBots.Service.API.Model
         /// Gets or Sets JobStatus
         /// </summary>
         [DataMember(Name="jobStatus", EmitDefaultValue=false)]
-        public string JobStatus { get; set; }
+        public JobStatusType JobStatus { get; set; }
 
         /// <summary>
         /// Gets or Sets Message
@@ -167,16 +143,10 @@ namespace OpenBots.Service.API.Model
         public bool? IsSuccessful { get; set; }
 
         /// <summary>
-        /// Gets or Sets Id
+        /// Gets or Sets CreatedOn
         /// </summary>
-        [DataMember(Name="id", EmitDefaultValue=false)]
-        public Guid? Id { get; set; }
-
-        /// <summary>
-        /// Gets or Sets IsDeleted
-        /// </summary>
-        [DataMember(Name="isDeleted", EmitDefaultValue=false)]
-        public bool? IsDeleted { get; set; }
+        [DataMember(Name="createdOn", EmitDefaultValue=false)]
+        public DateTime? CreatedOn { get; set; }
 
         /// <summary>
         /// Gets or Sets CreatedBy
@@ -185,40 +155,22 @@ namespace OpenBots.Service.API.Model
         public string CreatedBy { get; set; }
 
         /// <summary>
-        /// Gets or Sets CreatedOn
+        /// Gets or Sets ErrorReason
         /// </summary>
-        [DataMember(Name="createdOn", EmitDefaultValue=false)]
-        public DateTime? CreatedOn { get; set; }
+        [DataMember(Name="errorReason", EmitDefaultValue=false)]
+        public string ErrorReason { get; set; }
 
         /// <summary>
-        /// Gets or Sets DeletedBy
+        /// Gets or Sets ErrorCode
         /// </summary>
-        [DataMember(Name="deletedBy", EmitDefaultValue=false)]
-        public string DeletedBy { get; set; }
+        [DataMember(Name="errorCode", EmitDefaultValue=false)]
+        public string ErrorCode { get; set; }
 
         /// <summary>
-        /// Gets or Sets DeleteOn
+        /// Gets or Sets SerializedErrorString
         /// </summary>
-        [DataMember(Name="deleteOn", EmitDefaultValue=false)]
-        public DateTime? DeleteOn { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Timestamp
-        /// </summary>
-        [DataMember(Name="timestamp", EmitDefaultValue=false)]
-        public byte[] Timestamp { get; set; }
-
-        /// <summary>
-        /// Gets or Sets UpdatedOn
-        /// </summary>
-        [DataMember(Name="updatedOn", EmitDefaultValue=false)]
-        public DateTime? UpdatedOn { get; set; }
-
-        /// <summary>
-        /// Gets or Sets UpdatedBy
-        /// </summary>
-        [DataMember(Name="updatedBy", EmitDefaultValue=false)]
-        public string UpdatedBy { get; set; }
+        [DataMember(Name="serializedErrorString", EmitDefaultValue=false)]
+        public string SerializedErrorString { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -228,6 +180,7 @@ namespace OpenBots.Service.API.Model
         {
             var sb = new StringBuilder();
             sb.Append("class JobViewModel {\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  AgentName: ").Append(AgentName).Append("\n");
             sb.Append("  ProcessName: ").Append(ProcessName).Append("\n");
             sb.Append("  AgentId: ").Append(AgentId).Append("\n");
@@ -239,15 +192,11 @@ namespace OpenBots.Service.API.Model
             sb.Append("  JobStatus: ").Append(JobStatus).Append("\n");
             sb.Append("  Message: ").Append(Message).Append("\n");
             sb.Append("  IsSuccessful: ").Append(IsSuccessful).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  IsDeleted: ").Append(IsDeleted).Append("\n");
-            sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
             sb.Append("  CreatedOn: ").Append(CreatedOn).Append("\n");
-            sb.Append("  DeletedBy: ").Append(DeletedBy).Append("\n");
-            sb.Append("  DeleteOn: ").Append(DeleteOn).Append("\n");
-            sb.Append("  Timestamp: ").Append(Timestamp).Append("\n");
-            sb.Append("  UpdatedOn: ").Append(UpdatedOn).Append("\n");
-            sb.Append("  UpdatedBy: ").Append(UpdatedBy).Append("\n");
+            sb.Append("  CreatedBy: ").Append(CreatedBy).Append("\n");
+            sb.Append("  ErrorReason: ").Append(ErrorReason).Append("\n");
+            sb.Append("  ErrorCode: ").Append(ErrorCode).Append("\n");
+            sb.Append("  SerializedErrorString: ").Append(SerializedErrorString).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -282,6 +231,11 @@ namespace OpenBots.Service.API.Model
                 return false;
 
             return 
+                (
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
+                ) && 
                 (
                     this.AgentName == input.AgentName ||
                     (this.AgentName != null &&
@@ -338,14 +292,9 @@ namespace OpenBots.Service.API.Model
                     this.IsSuccessful.Equals(input.IsSuccessful))
                 ) && 
                 (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && 
-                (
-                    this.IsDeleted == input.IsDeleted ||
-                    (this.IsDeleted != null &&
-                    this.IsDeleted.Equals(input.IsDeleted))
+                    this.CreatedOn == input.CreatedOn ||
+                    (this.CreatedOn != null &&
+                    this.CreatedOn.Equals(input.CreatedOn))
                 ) && 
                 (
                     this.CreatedBy == input.CreatedBy ||
@@ -353,34 +302,19 @@ namespace OpenBots.Service.API.Model
                     this.CreatedBy.Equals(input.CreatedBy))
                 ) && 
                 (
-                    this.CreatedOn == input.CreatedOn ||
-                    (this.CreatedOn != null &&
-                    this.CreatedOn.Equals(input.CreatedOn))
+                    this.ErrorReason == input.ErrorReason ||
+                    (this.ErrorReason != null &&
+                    this.ErrorReason.Equals(input.ErrorReason))
                 ) && 
                 (
-                    this.DeletedBy == input.DeletedBy ||
-                    (this.DeletedBy != null &&
-                    this.DeletedBy.Equals(input.DeletedBy))
+                    this.ErrorCode == input.ErrorCode ||
+                    (this.ErrorCode != null &&
+                    this.ErrorCode.Equals(input.ErrorCode))
                 ) && 
                 (
-                    this.DeleteOn == input.DeleteOn ||
-                    (this.DeleteOn != null &&
-                    this.DeleteOn.Equals(input.DeleteOn))
-                ) && 
-                (
-                    this.Timestamp == input.Timestamp ||
-                    (this.Timestamp != null &&
-                    this.Timestamp.Equals(input.Timestamp))
-                ) && 
-                (
-                    this.UpdatedOn == input.UpdatedOn ||
-                    (this.UpdatedOn != null &&
-                    this.UpdatedOn.Equals(input.UpdatedOn))
-                ) && 
-                (
-                    this.UpdatedBy == input.UpdatedBy ||
-                    (this.UpdatedBy != null &&
-                    this.UpdatedBy.Equals(input.UpdatedBy))
+                    this.SerializedErrorString == input.SerializedErrorString ||
+                    (this.SerializedErrorString != null &&
+                    this.SerializedErrorString.Equals(input.SerializedErrorString))
                 );
         }
 
@@ -393,6 +327,8 @@ namespace OpenBots.Service.API.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
+                if (this.Id != null)
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
                 if (this.AgentName != null)
                     hashCode = hashCode * 59 + this.AgentName.GetHashCode();
                 if (this.ProcessName != null)
@@ -415,24 +351,16 @@ namespace OpenBots.Service.API.Model
                     hashCode = hashCode * 59 + this.Message.GetHashCode();
                 if (this.IsSuccessful != null)
                     hashCode = hashCode * 59 + this.IsSuccessful.GetHashCode();
-                if (this.Id != null)
-                    hashCode = hashCode * 59 + this.Id.GetHashCode();
-                if (this.IsDeleted != null)
-                    hashCode = hashCode * 59 + this.IsDeleted.GetHashCode();
-                if (this.CreatedBy != null)
-                    hashCode = hashCode * 59 + this.CreatedBy.GetHashCode();
                 if (this.CreatedOn != null)
                     hashCode = hashCode * 59 + this.CreatedOn.GetHashCode();
-                if (this.DeletedBy != null)
-                    hashCode = hashCode * 59 + this.DeletedBy.GetHashCode();
-                if (this.DeleteOn != null)
-                    hashCode = hashCode * 59 + this.DeleteOn.GetHashCode();
-                if (this.Timestamp != null)
-                    hashCode = hashCode * 59 + this.Timestamp.GetHashCode();
-                if (this.UpdatedOn != null)
-                    hashCode = hashCode * 59 + this.UpdatedOn.GetHashCode();
-                if (this.UpdatedBy != null)
-                    hashCode = hashCode * 59 + this.UpdatedBy.GetHashCode();
+                if (this.CreatedBy != null)
+                    hashCode = hashCode * 59 + this.CreatedBy.GetHashCode();
+                if (this.ErrorReason != null)
+                    hashCode = hashCode * 59 + this.ErrorReason.GetHashCode();
+                if (this.ErrorCode != null)
+                    hashCode = hashCode * 59 + this.ErrorCode.GetHashCode();
+                if (this.SerializedErrorString != null)
+                    hashCode = hashCode * 59 + this.SerializedErrorString.GetHashCode();
                 return hashCode;
             }
         }

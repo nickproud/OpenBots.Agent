@@ -24,7 +24,7 @@ namespace OpenBots.Service.API.Api
     {
         #region Synchronous Operations
         /// <summary>
-        /// Provides an Agent id if the provided machine matches an Agent and updates the isConnected field
+        /// Provides an Agent id and Name if the provided machine matches an Agent and updates the isConnected field
         /// </summary>
         /// <remarks>
         /// 
@@ -32,11 +32,11 @@ namespace OpenBots.Service.API.Api
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="machineName"></param>
         /// <param name="macAddresses"></param>
-        /// <returns>IActionResult</returns>
-        ConnectAgentResponseModel ApiV1AgentsConnectPatch (string machineName, string macAddresses);
+        /// <returns>ConnectedViewModel</returns>
+        ConnectedViewModel ApiV1AgentsConnectPatch (string machineName, string macAddresses);
 
         /// <summary>
-        /// Provides an Agent id if the provided machine matches an Agent and updates the isConnected field
+        /// Provides an Agent id and Name if the provided machine matches an Agent and updates the isConnected field
         /// </summary>
         /// <remarks>
         /// 
@@ -44,8 +44,29 @@ namespace OpenBots.Service.API.Api
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="machineName"></param>
         /// <param name="macAddresses"></param>
-        /// <returns>ApiResponse of IActionResult</returns>
-        ApiResponse<ConnectAgentResponseModel> ApiV1AgentsConnectPatchWithHttpInfo (string machineName, string macAddresses);
+        /// <returns>ApiResponse of ConnectedViewModel</returns>
+        ApiResponse<ConnectedViewModel> ApiV1AgentsConnectPatchWithHttpInfo (string machineName, string macAddresses);
+        /// <summary>
+        /// Provides a Count of Agents
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>int?</returns>
+        int? ApiV1AgentsCountGet (string filter = null);
+
+        /// <summary>
+        /// Provides a Count of Agents
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>ApiResponse of int?</returns>
+        ApiResponse<int?> ApiV1AgentsCountGetWithHttpInfo (string filter = null);
         /// <summary>
         /// Updates the isConnected field if the disconnect details are correct
         /// </summary>
@@ -99,6 +120,25 @@ namespace OpenBots.Service.API.Api
         /// <returns>ApiResponse of AgentModelPaginatedList</returns>
         ApiResponse<AgentModelPaginatedList> ApiV1AgentsGetWithHttpInfo (string filter = null, string orderby = null, int? top = null, int? skip = null);
         /// <summary>
+        /// Lookup list of all agents
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>List&lt;JobAgentsLookup&gt;</returns>
+        List<JobAgentsLookup> ApiV1AgentsGetLookupGet ();
+
+        /// <summary>
+        /// Lookup list of all agents
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ApiResponse of List&lt;JobAgentsLookup&gt;</returns>
+        ApiResponse<List<JobAgentsLookup>> ApiV1AgentsGetLookupGetWithHttpInfo ();
+        /// <summary>
         /// Deletes an Agent with a specified id from the Agents.
         /// </summary>
         /// <remarks>
@@ -127,9 +167,9 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent identifier</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Heartbeat values to be updated. (optional)</param>
         /// <returns>IActionResult</returns>
-        IActionResult ApiV1AgentsIdHeartbeatPatch (string id, List<Operation> body = null);
+        IActionResult ApiV1AgentsIdHeartbeatPatch (string id, HeartbeatViewModel body = null);
 
         /// <summary>
         /// Performs a Heatbeat on Agent id.
@@ -139,9 +179,9 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent identifier</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Heartbeat values to be updated. (optional)</param>
         /// <returns>ApiResponse of IActionResult</returns>
-        ApiResponse<IActionResult> ApiV1AgentsIdHeartbeatPatchWithHttpInfo (string id, List<Operation> body = null);
+        ApiResponse<IActionResult> ApiV1AgentsIdHeartbeatPatchWithHttpInfo (string id, HeartbeatViewModel body = null);
         /// <summary>
         /// Updates partial details of Agent.
         /// </summary>
@@ -189,7 +229,7 @@ namespace OpenBots.Service.API.Api
         /// <returns>ApiResponse of IActionResult</returns>
         ApiResponse<IActionResult> ApiV1AgentsIdPutWithHttpInfo (string id, AgentModel body = null);
         /// <summary>
-        /// Adds a new Agent to the existing Agents
+        /// Adds a new Agent to the existing Agents and create a new Agent Application user
         /// </summary>
         /// <remarks>
         /// Adds the Agent with unique Agent Id to the existing Agents
@@ -197,10 +237,10 @@ namespace OpenBots.Service.API.Api
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body"> (optional)</param>
         /// <returns>AgentModel</returns>
-        AgentModel ApiV1AgentsPost (AgentModel body = null);
+        AgentModel ApiV1AgentsPost (CreateAgentViewModel body = null);
 
         /// <summary>
-        /// Adds a new Agent to the existing Agents
+        /// Adds a new Agent to the existing Agents and create a new Agent Application user
         /// </summary>
         /// <remarks>
         /// Adds the Agent with unique Agent Id to the existing Agents
@@ -208,7 +248,7 @@ namespace OpenBots.Service.API.Api
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body"> (optional)</param>
         /// <returns>ApiResponse of AgentModel</returns>
-        ApiResponse<AgentModel> ApiV1AgentsPostWithHttpInfo (AgentModel body = null);
+        ApiResponse<AgentModel> ApiV1AgentsPostWithHttpInfo (CreateAgentViewModel body = null);
         /// <summary>
         /// Provides an Agent details for a particular Agent Id.
         /// </summary>
@@ -217,8 +257,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent id</param>
-        /// <returns>AgentModelPaginatedList</returns>
-        AgentModelPaginatedList GetAgentModel (string id);
+        /// <returns>AgentViewModel</returns>
+        AgentViewModel GetAgentModel (string id);
 
         /// <summary>
         /// Provides an Agent details for a particular Agent Id.
@@ -228,12 +268,12 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent id</param>
-        /// <returns>ApiResponse of AgentModelPaginatedList</returns>
-        ApiResponse<AgentModelPaginatedList> GetAgentModelWithHttpInfo (string id);
+        /// <returns>ApiResponse of AgentViewModel</returns>
+        ApiResponse<AgentViewModel> GetAgentModelWithHttpInfo (string id);
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
-        /// Provides an Agent id if the provided machine matches an Agent and updates the isConnected field
+        /// Provides an Agent id and Name if the provided machine matches an Agent and updates the isConnected field
         /// </summary>
         /// <remarks>
         /// 
@@ -241,11 +281,11 @@ namespace OpenBots.Service.API.Api
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="machineName"></param>
         /// <param name="macAddresses"></param>
-        /// <returns>Task of IActionResult</returns>
-        System.Threading.Tasks.Task<IActionResult> ApiV1AgentsConnectPatchAsync (string machineName, string macAddresses);
+        /// <returns>Task of ConnectedViewModel</returns>
+        System.Threading.Tasks.Task<ConnectedViewModel> ApiV1AgentsConnectPatchAsync (string machineName, string macAddresses);
 
         /// <summary>
-        /// Provides an Agent id if the provided machine matches an Agent and updates the isConnected field
+        /// Provides an Agent id and Name if the provided machine matches an Agent and updates the isConnected field
         /// </summary>
         /// <remarks>
         /// 
@@ -253,8 +293,29 @@ namespace OpenBots.Service.API.Api
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="machineName"></param>
         /// <param name="macAddresses"></param>
-        /// <returns>Task of ApiResponse (IActionResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AgentsConnectPatchAsyncWithHttpInfo (string machineName, string macAddresses);
+        /// <returns>Task of ApiResponse (ConnectedViewModel)</returns>
+        System.Threading.Tasks.Task<ApiResponse<ConnectedViewModel>> ApiV1AgentsConnectPatchAsyncWithHttpInfo (string machineName, string macAddresses);
+        /// <summary>
+        /// Provides a Count of Agents
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of int?</returns>
+        System.Threading.Tasks.Task<int?> ApiV1AgentsCountGetAsync (string filter = null);
+
+        /// <summary>
+        /// Provides a Count of Agents
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of ApiResponse (int?)</returns>
+        System.Threading.Tasks.Task<ApiResponse<int?>> ApiV1AgentsCountGetAsyncWithHttpInfo (string filter = null);
         /// <summary>
         /// Updates the isConnected field if the disconnect details are correct
         /// </summary>
@@ -308,6 +369,25 @@ namespace OpenBots.Service.API.Api
         /// <returns>Task of ApiResponse (AgentModelPaginatedList)</returns>
         System.Threading.Tasks.Task<ApiResponse<AgentModelPaginatedList>> ApiV1AgentsGetAsyncWithHttpInfo (string filter = null, string orderby = null, int? top = null, int? skip = null);
         /// <summary>
+        /// Lookup list of all agents
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of List&lt;JobAgentsLookup&gt;</returns>
+        System.Threading.Tasks.Task<List<JobAgentsLookup>> ApiV1AgentsGetLookupGetAsync ();
+
+        /// <summary>
+        /// Lookup list of all agents
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of ApiResponse (List&lt;JobAgentsLookup&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<List<JobAgentsLookup>>> ApiV1AgentsGetLookupGetAsyncWithHttpInfo ();
+        /// <summary>
         /// Deletes an Agent with a specified id from the Agents.
         /// </summary>
         /// <remarks>
@@ -336,9 +416,9 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent identifier</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Heartbeat values to be updated. (optional)</param>
         /// <returns>Task of IActionResult</returns>
-        System.Threading.Tasks.Task<IActionResult> ApiV1AgentsIdHeartbeatPatchAsync (string id, List<Operation> body = null);
+        System.Threading.Tasks.Task<IActionResult> ApiV1AgentsIdHeartbeatPatchAsync (string id, HeartbeatViewModel body = null);
 
         /// <summary>
         /// Performs a Heatbeat on Agent id.
@@ -348,9 +428,9 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent identifier</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Heartbeat values to be updated. (optional)</param>
         /// <returns>Task of ApiResponse (IActionResult)</returns>
-        System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AgentsIdHeartbeatPatchAsyncWithHttpInfo (string id, List<Operation> body = null);
+        System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AgentsIdHeartbeatPatchAsyncWithHttpInfo (string id, HeartbeatViewModel body = null);
         /// <summary>
         /// Updates partial details of Agent.
         /// </summary>
@@ -398,7 +478,7 @@ namespace OpenBots.Service.API.Api
         /// <returns>Task of ApiResponse (IActionResult)</returns>
         System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AgentsIdPutAsyncWithHttpInfo (string id, AgentModel body = null);
         /// <summary>
-        /// Adds a new Agent to the existing Agents
+        /// Adds a new Agent to the existing Agents and create a new Agent Application user
         /// </summary>
         /// <remarks>
         /// Adds the Agent with unique Agent Id to the existing Agents
@@ -406,10 +486,10 @@ namespace OpenBots.Service.API.Api
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body"> (optional)</param>
         /// <returns>Task of AgentModel</returns>
-        System.Threading.Tasks.Task<AgentModel> ApiV1AgentsPostAsync (AgentModel body = null);
+        System.Threading.Tasks.Task<AgentModel> ApiV1AgentsPostAsync (CreateAgentViewModel body = null);
 
         /// <summary>
-        /// Adds a new Agent to the existing Agents
+        /// Adds a new Agent to the existing Agents and create a new Agent Application user
         /// </summary>
         /// <remarks>
         /// Adds the Agent with unique Agent Id to the existing Agents
@@ -417,7 +497,7 @@ namespace OpenBots.Service.API.Api
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body"> (optional)</param>
         /// <returns>Task of ApiResponse (AgentModel)</returns>
-        System.Threading.Tasks.Task<ApiResponse<AgentModel>> ApiV1AgentsPostAsyncWithHttpInfo (AgentModel body = null);
+        System.Threading.Tasks.Task<ApiResponse<AgentModel>> ApiV1AgentsPostAsyncWithHttpInfo (CreateAgentViewModel body = null);
         /// <summary>
         /// Provides an Agent details for a particular Agent Id.
         /// </summary>
@@ -426,8 +506,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent id</param>
-        /// <returns>Task of AgentModelPaginatedList</returns>
-        System.Threading.Tasks.Task<AgentModelPaginatedList> GetAgentModelAsync (string id);
+        /// <returns>Task of AgentViewModel</returns>
+        System.Threading.Tasks.Task<AgentViewModel> GetAgentModelAsync (string id);
 
         /// <summary>
         /// Provides an Agent details for a particular Agent Id.
@@ -437,8 +517,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent id</param>
-        /// <returns>Task of ApiResponse (AgentModelPaginatedList)</returns>
-        System.Threading.Tasks.Task<ApiResponse<AgentModelPaginatedList>> GetAgentModelAsyncWithHttpInfo (string id);
+        /// <returns>Task of ApiResponse (AgentViewModel)</returns>
+        System.Threading.Tasks.Task<ApiResponse<AgentViewModel>> GetAgentModelAsyncWithHttpInfo (string id);
         #endregion Asynchronous Operations
     }
 
@@ -551,26 +631,26 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Provides an Agent id if the provided machine matches an Agent and updates the isConnected field 
+        /// Provides an Agent id and Name if the provided machine matches an Agent and updates the isConnected field 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="machineName"></param>
         /// <param name="macAddresses"></param>
-        /// <returns>ConnectViewModel</returns>
-        public ConnectAgentResponseModel ApiV1AgentsConnectPatch (string machineName, string macAddresses)
+        /// <returns>ConnectedViewModel</returns>
+        public ConnectedViewModel ApiV1AgentsConnectPatch (string machineName, string macAddresses)
         {
-             ApiResponse<ConnectAgentResponseModel> localVarResponse = ApiV1AgentsConnectPatchWithHttpInfo(machineName, macAddresses);
+             ApiResponse<ConnectedViewModel> localVarResponse = ApiV1AgentsConnectPatchWithHttpInfo(machineName, macAddresses);
              return localVarResponse.Data;
         }
 
         /// <summary>
-        /// Provides an Agent id if the provided machine matches an Agent and updates the isConnected field 
+        /// Provides an Agent id and Name if the provided machine matches an Agent and updates the isConnected field 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="machineName"></param>
         /// <param name="macAddresses"></param>
-        /// <returns>ApiResponse of IActionResult</returns>
-        public ApiResponse<ConnectAgentResponseModel> ApiV1AgentsConnectPatchWithHttpInfo (string machineName, string macAddresses)
+        /// <returns>ApiResponse of ConnectedViewModel</returns>
+        public ApiResponse< ConnectedViewModel > ApiV1AgentsConnectPatchWithHttpInfo (string machineName, string macAddresses)
         {
             // verify the required parameter 'machineName' is set
             if (machineName == null)
@@ -600,6 +680,10 @@ namespace OpenBots.Service.API.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
+            String localVarHttpHeaderAuthorization = $"Bearer {this.Configuration.AccessToken}";
+            if (localVarHttpHeaderAuthorization != null)
+                localVarHeaderParams.Add("Authorization", localVarHttpHeaderAuthorization);
+
             if (machineName != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "MachineName", machineName)); // query parameter
             if (macAddresses != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "MacAddresses", macAddresses)); // query parameter
 
@@ -616,33 +700,33 @@ namespace OpenBots.Service.API.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<ConnectAgentResponseModel>(localVarStatusCode,
+            return new ApiResponse<ConnectedViewModel>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (ConnectAgentResponseModel) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(ConnectAgentResponseModel)));
+                (ConnectedViewModel) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(ConnectedViewModel)));
         }
 
         /// <summary>
-        /// Provides an Agent id if the provided machine matches an Agent and updates the isConnected field 
+        /// Provides an Agent id and Name if the provided machine matches an Agent and updates the isConnected field 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="machineName"></param>
         /// <param name="macAddresses"></param>
-        /// <returns>Task of IActionResult</returns>
-        public async System.Threading.Tasks.Task<IActionResult> ApiV1AgentsConnectPatchAsync (string machineName, string macAddresses)
+        /// <returns>Task of ConnectedViewModel</returns>
+        public async System.Threading.Tasks.Task<ConnectedViewModel> ApiV1AgentsConnectPatchAsync (string machineName, string macAddresses)
         {
-             ApiResponse<IActionResult> localVarResponse = await ApiV1AgentsConnectPatchAsyncWithHttpInfo(machineName, macAddresses);
+             ApiResponse<ConnectedViewModel> localVarResponse = await ApiV1AgentsConnectPatchAsyncWithHttpInfo(machineName, macAddresses);
              return localVarResponse.Data;
 
         }
 
         /// <summary>
-        /// Provides an Agent id if the provided machine matches an Agent and updates the isConnected field 
+        /// Provides an Agent id and Name if the provided machine matches an Agent and updates the isConnected field 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="machineName"></param>
         /// <param name="macAddresses"></param>
-        /// <returns>Task of ApiResponse (IActionResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AgentsConnectPatchAsyncWithHttpInfo (string machineName, string macAddresses)
+        /// <returns>Task of ApiResponse (ConnectedViewModel)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<ConnectedViewModel>> ApiV1AgentsConnectPatchAsyncWithHttpInfo (string machineName, string macAddresses)
         {
             // verify the required parameter 'machineName' is set
             if (machineName == null)
@@ -688,9 +772,134 @@ namespace OpenBots.Service.API.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<IActionResult>(localVarStatusCode,
+            return new ApiResponse<ConnectedViewModel>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (IActionResult) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(IActionResult)));
+                (ConnectedViewModel) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(ConnectedViewModel)));
+        }
+
+        /// <summary>
+        /// Provides a Count of Agents 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>int?</returns>
+        public int? ApiV1AgentsCountGet (string filter = null)
+        {
+             ApiResponse<int?> localVarResponse = ApiV1AgentsCountGetWithHttpInfo(filter);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Provides a Count of Agents 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>ApiResponse of int?</returns>
+        public ApiResponse< int? > ApiV1AgentsCountGetWithHttpInfo (string filter = null)
+        {
+
+            var localVarPath = "/api/v1/Agents/Count";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (filter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$filter", filter)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AgentsCountGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<int?>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (int?) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int?)));
+        }
+
+        /// <summary>
+        /// Provides a Count of Agents 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of int?</returns>
+        public async System.Threading.Tasks.Task<int?> ApiV1AgentsCountGetAsync (string filter = null)
+        {
+             ApiResponse<int?> localVarResponse = await ApiV1AgentsCountGetAsyncWithHttpInfo(filter);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Provides a Count of Agents 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of ApiResponse (int?)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<int?>> ApiV1AgentsCountGetAsyncWithHttpInfo (string filter = null)
+        {
+
+            var localVarPath = "/api/v1/Agents/Count";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (filter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$filter", filter)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AgentsCountGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<int?>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (int?) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int?)));
         }
 
         /// <summary>
@@ -744,6 +953,10 @@ namespace OpenBots.Service.API.Api
             String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            String localVarHttpHeaderAuthorization = $"Bearer {this.Configuration.AccessToken}";
+            if (localVarHttpHeaderAuthorization != null)
+                localVarHeaderParams.Add("Authorization", localVarHttpHeaderAuthorization);
 
             if (machineName != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "MachineName", machineName)); // query parameter
             if (macAddresses != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "MacAddresses", macAddresses)); // query parameter
@@ -890,6 +1103,10 @@ namespace OpenBots.Service.API.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
+            String localVarHttpHeaderAuthorization = $"Bearer {this.Configuration.AccessToken}";
+            if (localVarHttpHeaderAuthorization != null)
+                localVarHeaderParams.Add("Authorization", localVarHttpHeaderAuthorization);
+
             if (filter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$filter", filter)); // query parameter
             if (orderby != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$orderby", orderby)); // query parameter
             if (top != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$top", top)); // query parameter
@@ -983,6 +1200,125 @@ namespace OpenBots.Service.API.Api
             return new ApiResponse<AgentModelPaginatedList>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
                 (AgentModelPaginatedList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(AgentModelPaginatedList)));
+        }
+
+        /// <summary>
+        /// Lookup list of all agents 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>List&lt;JobAgentsLookup&gt;</returns>
+        public List<JobAgentsLookup> ApiV1AgentsGetLookupGet ()
+        {
+             ApiResponse<List<JobAgentsLookup>> localVarResponse = ApiV1AgentsGetLookupGetWithHttpInfo();
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Lookup list of all agents 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>ApiResponse of List&lt;JobAgentsLookup&gt;</returns>
+        public ApiResponse< List<JobAgentsLookup> > ApiV1AgentsGetLookupGetWithHttpInfo ()
+        {
+
+            var localVarPath = "/api/v1/Agents/GetLookup";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AgentsGetLookupGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<List<JobAgentsLookup>>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (List<JobAgentsLookup>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<JobAgentsLookup>)));
+        }
+
+        /// <summary>
+        /// Lookup list of all agents 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of List&lt;JobAgentsLookup&gt;</returns>
+        public async System.Threading.Tasks.Task<List<JobAgentsLookup>> ApiV1AgentsGetLookupGetAsync ()
+        {
+             ApiResponse<List<JobAgentsLookup>> localVarResponse = await ApiV1AgentsGetLookupGetAsyncWithHttpInfo();
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Lookup list of all agents 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <returns>Task of ApiResponse (List&lt;JobAgentsLookup&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<List<JobAgentsLookup>>> ApiV1AgentsGetLookupGetAsyncWithHttpInfo ()
+        {
+
+            var localVarPath = "/api/v1/Agents/GetLookup";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1AgentsGetLookupGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<List<JobAgentsLookup>>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (List<JobAgentsLookup>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<JobAgentsLookup>)));
         }
 
         /// <summary>
@@ -1121,9 +1457,9 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent identifier</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Heartbeat values to be updated. (optional)</param>
         /// <returns>IActionResult</returns>
-        public IActionResult ApiV1AgentsIdHeartbeatPatch (string id, List<Operation> body = null)
+        public IActionResult ApiV1AgentsIdHeartbeatPatch (string id, HeartbeatViewModel body = null)
         {
              ApiResponse<IActionResult> localVarResponse = ApiV1AgentsIdHeartbeatPatchWithHttpInfo(id, body);
              return localVarResponse.Data;
@@ -1134,9 +1470,9 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent identifier</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Heartbeat values to be updated. (optional)</param>
         /// <returns>ApiResponse of IActionResult</returns>
-        public ApiResponse< IActionResult > ApiV1AgentsIdHeartbeatPatchWithHttpInfo (string id, List<Operation> body = null)
+        public ApiResponse< IActionResult > ApiV1AgentsIdHeartbeatPatchWithHttpInfo (string id, HeartbeatViewModel body = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1166,6 +1502,10 @@ namespace OpenBots.Service.API.Api
             String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            String localVarHttpHeaderAuthorization = $"Bearer {this.Configuration.AccessToken}";
+            if (localVarHttpHeaderAuthorization != null)
+                localVarHeaderParams.Add("Authorization", localVarHttpHeaderAuthorization);
 
             if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
             if (body != null && body.GetType() != typeof(byte[]))
@@ -1200,9 +1540,9 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent identifier</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Heartbeat values to be updated. (optional)</param>
         /// <returns>Task of IActionResult</returns>
-        public async System.Threading.Tasks.Task<IActionResult> ApiV1AgentsIdHeartbeatPatchAsync (string id, List<Operation> body = null)
+        public async System.Threading.Tasks.Task<IActionResult> ApiV1AgentsIdHeartbeatPatchAsync (string id, HeartbeatViewModel body = null)
         {
              ApiResponse<IActionResult> localVarResponse = await ApiV1AgentsIdHeartbeatPatchAsyncWithHttpInfo(id, body);
              return localVarResponse.Data;
@@ -1214,9 +1554,9 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent identifier</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Heartbeat values to be updated. (optional)</param>
         /// <returns>Task of ApiResponse (IActionResult)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AgentsIdHeartbeatPatchAsyncWithHttpInfo (string id, List<Operation> body = null)
+        public async System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1AgentsIdHeartbeatPatchAsyncWithHttpInfo (string id, HeartbeatViewModel body = null)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1594,24 +1934,24 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Adds a new Agent to the existing Agents Adds the Agent with unique Agent Id to the existing Agents
+        /// Adds a new Agent to the existing Agents and create a new Agent Application user Adds the Agent with unique Agent Id to the existing Agents
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body"> (optional)</param>
         /// <returns>AgentModel</returns>
-        public AgentModel ApiV1AgentsPost (AgentModel body = null)
+        public AgentModel ApiV1AgentsPost (CreateAgentViewModel body = null)
         {
              ApiResponse<AgentModel> localVarResponse = ApiV1AgentsPostWithHttpInfo(body);
              return localVarResponse.Data;
         }
 
         /// <summary>
-        /// Adds a new Agent to the existing Agents Adds the Agent with unique Agent Id to the existing Agents
+        /// Adds a new Agent to the existing Agents and create a new Agent Application user Adds the Agent with unique Agent Id to the existing Agents
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body"> (optional)</param>
         /// <returns>ApiResponse of AgentModel</returns>
-        public ApiResponse< AgentModel > ApiV1AgentsPostWithHttpInfo (AgentModel body = null)
+        public ApiResponse< AgentModel > ApiV1AgentsPostWithHttpInfo (CreateAgentViewModel body = null)
         {
 
             var localVarPath = "/api/v1/Agents";
@@ -1638,6 +1978,10 @@ namespace OpenBots.Service.API.Api
             String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            String localVarHttpHeaderAuthorization = $"Bearer {this.Configuration.AccessToken}";
+            if (localVarHttpHeaderAuthorization != null)
+                localVarHeaderParams.Add("Authorization", localVarHttpHeaderAuthorization);
 
             if (body != null && body.GetType() != typeof(byte[]))
             {
@@ -1667,12 +2011,12 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Adds a new Agent to the existing Agents Adds the Agent with unique Agent Id to the existing Agents
+        /// Adds a new Agent to the existing Agents and create a new Agent Application user Adds the Agent with unique Agent Id to the existing Agents
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body"> (optional)</param>
         /// <returns>Task of AgentModel</returns>
-        public async System.Threading.Tasks.Task<AgentModel> ApiV1AgentsPostAsync (AgentModel body = null)
+        public async System.Threading.Tasks.Task<AgentModel> ApiV1AgentsPostAsync (CreateAgentViewModel body = null)
         {
              ApiResponse<AgentModel> localVarResponse = await ApiV1AgentsPostAsyncWithHttpInfo(body);
              return localVarResponse.Data;
@@ -1680,12 +2024,12 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Adds a new Agent to the existing Agents Adds the Agent with unique Agent Id to the existing Agents
+        /// Adds a new Agent to the existing Agents and create a new Agent Application user Adds the Agent with unique Agent Id to the existing Agents
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="body"> (optional)</param>
         /// <returns>Task of ApiResponse (AgentModel)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<AgentModel>> ApiV1AgentsPostAsyncWithHttpInfo (AgentModel body = null)
+        public async System.Threading.Tasks.Task<ApiResponse<AgentModel>> ApiV1AgentsPostAsyncWithHttpInfo (CreateAgentViewModel body = null)
         {
 
             var localVarPath = "/api/v1/Agents";
@@ -1745,10 +2089,10 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent id</param>
-        /// <returns>AgentModelPaginatedList</returns>
-        public AgentModelPaginatedList GetAgentModel (string id)
+        /// <returns>AgentViewModel</returns>
+        public AgentViewModel GetAgentModel (string id)
         {
-             ApiResponse<AgentModelPaginatedList> localVarResponse = GetAgentModelWithHttpInfo(id);
+             ApiResponse<AgentViewModel> localVarResponse = GetAgentModelWithHttpInfo(id);
              return localVarResponse.Data;
         }
 
@@ -1757,8 +2101,8 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent id</param>
-        /// <returns>ApiResponse of AgentModelPaginatedList</returns>
-        public ApiResponse< AgentModelPaginatedList > GetAgentModelWithHttpInfo (string id)
+        /// <returns>ApiResponse of AgentViewModel</returns>
+        public ApiResponse< AgentViewModel > GetAgentModelWithHttpInfo (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1800,9 +2144,9 @@ namespace OpenBots.Service.API.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<AgentModelPaginatedList>(localVarStatusCode,
+            return new ApiResponse<AgentViewModel>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (AgentModelPaginatedList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(AgentModelPaginatedList)));
+                (AgentViewModel) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(AgentViewModel)));
         }
 
         /// <summary>
@@ -1810,10 +2154,10 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent id</param>
-        /// <returns>Task of AgentModelPaginatedList</returns>
-        public async System.Threading.Tasks.Task<AgentModelPaginatedList> GetAgentModelAsync (string id)
+        /// <returns>Task of AgentViewModel</returns>
+        public async System.Threading.Tasks.Task<AgentViewModel> GetAgentModelAsync (string id)
         {
-             ApiResponse<AgentModelPaginatedList> localVarResponse = await GetAgentModelAsyncWithHttpInfo(id);
+             ApiResponse<AgentViewModel> localVarResponse = await GetAgentModelAsyncWithHttpInfo(id);
              return localVarResponse.Data;
 
         }
@@ -1823,8 +2167,8 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Agent id</param>
-        /// <returns>Task of ApiResponse (AgentModelPaginatedList)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<AgentModelPaginatedList>> GetAgentModelAsyncWithHttpInfo (string id)
+        /// <returns>Task of ApiResponse (AgentViewModel)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<AgentViewModel>> GetAgentModelAsyncWithHttpInfo (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1866,9 +2210,9 @@ namespace OpenBots.Service.API.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<AgentModelPaginatedList>(localVarStatusCode,
+            return new ApiResponse<AgentViewModel>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (AgentModelPaginatedList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(AgentModelPaginatedList)));
+                (AgentViewModel) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(AgentViewModel)));
         }
 
     }

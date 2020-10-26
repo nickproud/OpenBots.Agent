@@ -24,6 +24,48 @@ namespace OpenBots.Service.API.Api
     {
         #region Synchronous Operations
         /// <summary>
+        /// Provides a Key value pair of Status and Count
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Dictionary&lt;string, int?&gt;</returns>
+        Dictionary<string, int?> ApiV1JobsCountByStatusGet (string filter = null);
+
+        /// <summary>
+        /// Provides a Key value pair of Status and Count
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>ApiResponse of Dictionary&lt;string, int?&gt;</returns>
+        ApiResponse<Dictionary<string, int?>> ApiV1JobsCountByStatusGetWithHttpInfo (string filter = null);
+        /// <summary>
+        /// Provides a Count of Jobs
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>int?</returns>
+        int? ApiV1JobsCountGet (string filter = null);
+
+        /// <summary>
+        /// Provides a Count of Jobs
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>ApiResponse of int?</returns>
+        ApiResponse<int?> ApiV1JobsCountGetWithHttpInfo (string filter = null);
+        /// <summary>
         /// Provides a list of all Jobs
         /// </summary>
         /// <remarks>
@@ -95,28 +137,55 @@ namespace OpenBots.Service.API.Api
         /// <returns>ApiResponse of IActionResult</returns>
         ApiResponse<IActionResult> ApiV1JobsIdPatchWithHttpInfo (string id, List<Operation> body = null);
         /// <summary>
-        /// Updates an Job
+        /// Updates a Job
         /// </summary>
         /// <remarks>
         /// Provides an action to update a Job, when Job id and the new details of Job are given
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Job details to be updated (optional)</param>
         /// <returns>IActionResult</returns>
         IActionResult ApiV1JobsIdPut (string id, Job body = null);
 
         /// <summary>
-        /// Updates an Job
+        /// Updates a Job
         /// </summary>
         /// <remarks>
         /// Provides an action to update a Job, when Job id and the new details of Job are given
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Job details to be updated (optional)</param>
         /// <returns>ApiResponse of IActionResult</returns>
         ApiResponse<IActionResult> ApiV1JobsIdPutWithHttpInfo (string id, Job body = null);
+        /// <summary>
+        /// Updates a Job with the specified status
+        /// </summary>
+        /// <remarks>
+        /// Provides an action to update a Job status, when Job id and the new details of Job are given
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Id of Agent that is updating Job Status</param>
+        /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
+        /// <param name="status">Status value for the specified JobId</param>
+        /// <param name="body"> (optional)</param>
+        /// <returns>Job</returns>
+        Job ApiV1JobsIdStatusStatusPut (string agentId, string id, JobStatusType status, JobErrorViewModel body = null);
+
+        /// <summary>
+        /// Updates a Job with the specified status
+        /// </summary>
+        /// <remarks>
+        /// Provides an action to update a Job status, when Job id and the new details of Job are given
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Id of Agent that is updating Job Status</param>
+        /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
+        /// <param name="status">Status value for the specified JobId</param>
+        /// <param name="body"> (optional)</param>
+        /// <returns>ApiResponse of Job</returns>
+        ApiResponse<Job> ApiV1JobsIdStatusStatusPutWithHttpInfo (string agentId, string id, JobStatusType status, JobErrorViewModel body = null);
         /// <summary>
         /// Provides a lookup list of all Jobs agents and processes
         /// </summary>
@@ -136,6 +205,27 @@ namespace OpenBots.Service.API.Api
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>ApiResponse of JobsLookupViewModel</returns>
         ApiResponse<JobsLookupViewModel> ApiV1JobsJobAgentsLookupGetWithHttpInfo ();
+        /// <summary>
+        /// Gets the next avalibale job for the provided agentId
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Agent id (optional)</param>
+        /// <returns>NextJobViewModel</returns>
+        NextJobViewModel ApiV1JobsNextGet (string agentId = null);
+
+        /// <summary>
+        /// Gets the next avalibale job for the provided agentId
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Agent id (optional)</param>
+        /// <returns>ApiResponse of NextJobViewModel</returns>
+        ApiResponse<NextJobViewModel> ApiV1JobsNextGetWithHttpInfo (string agentId = null);
         /// <summary>
         /// Adds a new Job to the existing Jobs
         /// </summary>
@@ -192,8 +282,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>JobPaginatedList</returns>
-        JobPaginatedList ApiV1JobsViewIdGet (string id);
+        /// <returns>JobViewModel</returns>
+        JobViewModel ApiV1JobsViewIdGet (string id);
 
         /// <summary>
         /// Provides a Job&#x27;s details for a particular Job Id.
@@ -203,8 +293,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>ApiResponse of JobPaginatedList</returns>
-        ApiResponse<JobPaginatedList> ApiV1JobsViewIdGetWithHttpInfo (string id);
+        /// <returns>ApiResponse of JobViewModel</returns>
+        ApiResponse<JobViewModel> ApiV1JobsViewIdGetWithHttpInfo (string id);
         /// <summary>
         /// Provides a Job&#x27;s details for a particular Job Id.
         /// </summary>
@@ -213,8 +303,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>JobPaginatedList</returns>
-        JobPaginatedList GetJob (string id);
+        /// <returns>Job</returns>
+        Job GetJob (string id);
 
         /// <summary>
         /// Provides a Job&#x27;s details for a particular Job Id.
@@ -224,10 +314,52 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>ApiResponse of JobPaginatedList</returns>
-        ApiResponse<JobPaginatedList> GetJobWithHttpInfo (string id);
+        /// <returns>ApiResponse of Job</returns>
+        ApiResponse<Job> GetJobWithHttpInfo (string id);
         #endregion Synchronous Operations
         #region Asynchronous Operations
+        /// <summary>
+        /// Provides a Key value pair of Status and Count
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of Dictionary&lt;string, int?&gt;</returns>
+        System.Threading.Tasks.Task<Dictionary<string, int?>> ApiV1JobsCountByStatusGetAsync (string filter = null);
+
+        /// <summary>
+        /// Provides a Key value pair of Status and Count
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of ApiResponse (Dictionary&lt;string, int?&gt;)</returns>
+        System.Threading.Tasks.Task<ApiResponse<Dictionary<string, int?>>> ApiV1JobsCountByStatusGetAsyncWithHttpInfo (string filter = null);
+        /// <summary>
+        /// Provides a Count of Jobs
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of int?</returns>
+        System.Threading.Tasks.Task<int?> ApiV1JobsCountGetAsync (string filter = null);
+
+        /// <summary>
+        /// Provides a Count of Jobs
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of ApiResponse (int?)</returns>
+        System.Threading.Tasks.Task<ApiResponse<int?>> ApiV1JobsCountGetAsyncWithHttpInfo (string filter = null);
         /// <summary>
         /// Provides a list of all Jobs
         /// </summary>
@@ -300,28 +432,55 @@ namespace OpenBots.Service.API.Api
         /// <returns>Task of ApiResponse (IActionResult)</returns>
         System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1JobsIdPatchAsyncWithHttpInfo (string id, List<Operation> body = null);
         /// <summary>
-        /// Updates an Job
+        /// Updates a Job
         /// </summary>
         /// <remarks>
         /// Provides an action to update a Job, when Job id and the new details of Job are given
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Job details to be updated (optional)</param>
         /// <returns>Task of IActionResult</returns>
         System.Threading.Tasks.Task<IActionResult> ApiV1JobsIdPutAsync (string id, Job body = null);
 
         /// <summary>
-        /// Updates an Job
+        /// Updates a Job
         /// </summary>
         /// <remarks>
         /// Provides an action to update a Job, when Job id and the new details of Job are given
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Job details to be updated (optional)</param>
         /// <returns>Task of ApiResponse (IActionResult)</returns>
         System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1JobsIdPutAsyncWithHttpInfo (string id, Job body = null);
+        /// <summary>
+        /// Updates a Job with the specified status
+        /// </summary>
+        /// <remarks>
+        /// Provides an action to update a Job status, when Job id and the new details of Job are given
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Id of Agent that is updating Job Status</param>
+        /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
+        /// <param name="status">Status value for the specified JobId</param>
+        /// <param name="body"> (optional)</param>
+        /// <returns>Task of Job</returns>
+        System.Threading.Tasks.Task<Job> ApiV1JobsIdStatusStatusPutAsync (string agentId, string id, JobStatusType status, JobErrorViewModel body = null);
+
+        /// <summary>
+        /// Updates a Job with the specified status
+        /// </summary>
+        /// <remarks>
+        /// Provides an action to update a Job status, when Job id and the new details of Job are given
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Id of Agent that is updating Job Status</param>
+        /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
+        /// <param name="status">Status value for the specified JobId</param>
+        /// <param name="body"> (optional)</param>
+        /// <returns>Task of ApiResponse (Job)</returns>
+        System.Threading.Tasks.Task<ApiResponse<Job>> ApiV1JobsIdStatusStatusPutAsyncWithHttpInfo (string agentId, string id, JobStatusType status, JobErrorViewModel body = null);
         /// <summary>
         /// Provides a lookup list of all Jobs agents and processes
         /// </summary>
@@ -341,6 +500,27 @@ namespace OpenBots.Service.API.Api
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <returns>Task of ApiResponse (JobsLookupViewModel)</returns>
         System.Threading.Tasks.Task<ApiResponse<JobsLookupViewModel>> ApiV1JobsJobAgentsLookupGetAsyncWithHttpInfo ();
+        /// <summary>
+        /// Gets the next avalibale job for the provided agentId
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Agent id (optional)</param>
+        /// <returns>Task of NextJobViewModel</returns>
+        System.Threading.Tasks.Task<NextJobViewModel> ApiV1JobsNextGetAsync (string agentId = null);
+
+        /// <summary>
+        /// Gets the next avalibale job for the provided agentId
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Agent id (optional)</param>
+        /// <returns>Task of ApiResponse (NextJobViewModel)</returns>
+        System.Threading.Tasks.Task<ApiResponse<NextJobViewModel>> ApiV1JobsNextGetAsyncWithHttpInfo (string agentId = null);
         /// <summary>
         /// Adds a new Job to the existing Jobs
         /// </summary>
@@ -397,8 +577,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>Task of JobPaginatedList</returns>
-        System.Threading.Tasks.Task<JobPaginatedList> ApiV1JobsViewIdGetAsync (string id);
+        /// <returns>Task of JobViewModel</returns>
+        System.Threading.Tasks.Task<JobViewModel> ApiV1JobsViewIdGetAsync (string id);
 
         /// <summary>
         /// Provides a Job&#x27;s details for a particular Job Id.
@@ -408,8 +588,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>Task of ApiResponse (JobPaginatedList)</returns>
-        System.Threading.Tasks.Task<ApiResponse<JobPaginatedList>> ApiV1JobsViewIdGetAsyncWithHttpInfo (string id);
+        /// <returns>Task of ApiResponse (JobViewModel)</returns>
+        System.Threading.Tasks.Task<ApiResponse<JobViewModel>> ApiV1JobsViewIdGetAsyncWithHttpInfo (string id);
         /// <summary>
         /// Provides a Job&#x27;s details for a particular Job Id.
         /// </summary>
@@ -418,8 +598,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>Task of JobPaginatedList</returns>
-        System.Threading.Tasks.Task<JobPaginatedList> GetJobAsync (string id);
+        /// <returns>Task of Job</returns>
+        System.Threading.Tasks.Task<Job> GetJobAsync (string id);
 
         /// <summary>
         /// Provides a Job&#x27;s details for a particular Job Id.
@@ -429,8 +609,8 @@ namespace OpenBots.Service.API.Api
         /// </remarks>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>Task of ApiResponse (JobPaginatedList)</returns>
-        System.Threading.Tasks.Task<ApiResponse<JobPaginatedList>> GetJobAsyncWithHttpInfo (string id);
+        /// <returns>Task of ApiResponse (Job)</returns>
+        System.Threading.Tasks.Task<ApiResponse<Job>> GetJobAsyncWithHttpInfo (string id);
         #endregion Asynchronous Operations
     }
 
@@ -543,6 +723,256 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
+        /// Provides a Key value pair of Status and Count 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Dictionary&lt;string, int?&gt;</returns>
+        public Dictionary<string, int?> ApiV1JobsCountByStatusGet (string filter = null)
+        {
+             ApiResponse<Dictionary<string, int?>> localVarResponse = ApiV1JobsCountByStatusGetWithHttpInfo(filter);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Provides a Key value pair of Status and Count 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>ApiResponse of Dictionary&lt;string, int?&gt;</returns>
+        public ApiResponse< Dictionary<string, int?> > ApiV1JobsCountByStatusGetWithHttpInfo (string filter = null)
+        {
+
+            var localVarPath = "/api/v1/Jobs/CountByStatus";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (filter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$filter", filter)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1JobsCountByStatusGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Dictionary<string, int?>>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (Dictionary<string, int?>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(Dictionary<string, int?>)));
+        }
+
+        /// <summary>
+        /// Provides a Key value pair of Status and Count 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of Dictionary&lt;string, int?&gt;</returns>
+        public async System.Threading.Tasks.Task<Dictionary<string, int?>> ApiV1JobsCountByStatusGetAsync (string filter = null)
+        {
+             ApiResponse<Dictionary<string, int?>> localVarResponse = await ApiV1JobsCountByStatusGetAsyncWithHttpInfo(filter);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Provides a Key value pair of Status and Count 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of ApiResponse (Dictionary&lt;string, int?&gt;)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Dictionary<string, int?>>> ApiV1JobsCountByStatusGetAsyncWithHttpInfo (string filter = null)
+        {
+
+            var localVarPath = "/api/v1/Jobs/CountByStatus";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (filter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$filter", filter)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1JobsCountByStatusGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Dictionary<string, int?>>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (Dictionary<string, int?>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(Dictionary<string, int?>)));
+        }
+
+        /// <summary>
+        /// Provides a Count of Jobs 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>int?</returns>
+        public int? ApiV1JobsCountGet (string filter = null)
+        {
+             ApiResponse<int?> localVarResponse = ApiV1JobsCountGetWithHttpInfo(filter);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Provides a Count of Jobs 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>ApiResponse of int?</returns>
+        public ApiResponse< int? > ApiV1JobsCountGetWithHttpInfo (string filter = null)
+        {
+
+            var localVarPath = "/api/v1/Jobs/Count";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (filter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$filter", filter)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1JobsCountGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<int?>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (int?) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int?)));
+        }
+
+        /// <summary>
+        /// Provides a Count of Jobs 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of int?</returns>
+        public async System.Threading.Tasks.Task<int?> ApiV1JobsCountGetAsync (string filter = null)
+        {
+             ApiResponse<int?> localVarResponse = await ApiV1JobsCountGetAsyncWithHttpInfo(filter);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Provides a Count of Jobs 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of ApiResponse (int?)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<int?>> ApiV1JobsCountGetAsyncWithHttpInfo (string filter = null)
+        {
+
+            var localVarPath = "/api/v1/Jobs/Count";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (filter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$filter", filter)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1JobsCountGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<int?>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (int?) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int?)));
+        }
+
+        /// <summary>
         /// Provides a list of all Jobs 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
@@ -589,6 +1019,10 @@ namespace OpenBots.Service.API.Api
             String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            String localVarHttpHeaderAuthorization = $"Bearer {this.Configuration.AccessToken}";
+            if (localVarHttpHeaderAuthorization != null)
+                localVarHeaderParams.Add("Authorization", localVarHttpHeaderAuthorization);
 
             if (filter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$filter", filter)); // query parameter
             if (orderby != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$orderby", orderby)); // query parameter
@@ -867,6 +1301,10 @@ namespace OpenBots.Service.API.Api
             if (localVarHttpHeaderAccept != null)
                 localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
 
+            String localVarHttpHeaderAuthorization = $"Bearer {this.Configuration.AccessToken}";
+            if (localVarHttpHeaderAuthorization != null)
+                localVarHeaderParams.Add("Authorization", localVarHttpHeaderAuthorization);
+
             if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
             if (body != null && body.GetType() != typeof(byte[]))
             {
@@ -976,11 +1414,11 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Updates an Job Provides an action to update a Job, when Job id and the new details of Job are given
+        /// Updates a Job Provides an action to update a Job, when Job id and the new details of Job are given
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Job details to be updated (optional)</param>
         /// <returns>IActionResult</returns>
         public IActionResult ApiV1JobsIdPut (string id, Job body = null)
         {
@@ -989,11 +1427,11 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Updates an Job Provides an action to update a Job, when Job id and the new details of Job are given
+        /// Updates a Job Provides an action to update a Job, when Job id and the new details of Job are given
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Job details to be updated (optional)</param>
         /// <returns>ApiResponse of IActionResult</returns>
         public ApiResponse< IActionResult > ApiV1JobsIdPutWithHttpInfo (string id, Job body = null)
         {
@@ -1055,11 +1493,11 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Updates an Job Provides an action to update a Job, when Job id and the new details of Job are given
+        /// Updates a Job Provides an action to update a Job, when Job id and the new details of Job are given
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Job details to be updated (optional)</param>
         /// <returns>Task of IActionResult</returns>
         public async System.Threading.Tasks.Task<IActionResult> ApiV1JobsIdPutAsync (string id, Job body = null)
         {
@@ -1069,11 +1507,11 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Updates an Job Provides an action to update a Job, when Job id and the new details of Job are given
+        /// Updates a Job Provides an action to update a Job, when Job id and the new details of Job are given
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
-        /// <param name="body"> (optional)</param>
+        /// <param name="body">Job details to be updated (optional)</param>
         /// <returns>Task of ApiResponse (IActionResult)</returns>
         public async System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1JobsIdPutAsyncWithHttpInfo (string id, Job body = null)
         {
@@ -1132,6 +1570,193 @@ namespace OpenBots.Service.API.Api
             return new ApiResponse<IActionResult>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
                 (IActionResult) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(IActionResult)));
+        }
+
+        /// <summary>
+        /// Updates a Job with the specified status Provides an action to update a Job status, when Job id and the new details of Job are given
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Id of Agent that is updating Job Status</param>
+        /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
+        /// <param name="status">Status value for the specified JobId</param>
+        /// <param name="body"> (optional)</param>
+        /// <returns>Job</returns>
+        public Job ApiV1JobsIdStatusStatusPut (string agentId, string id, JobStatusType status, JobErrorViewModel body = null)
+        {
+             ApiResponse<Job> localVarResponse = ApiV1JobsIdStatusStatusPutWithHttpInfo(agentId, id, status, body);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Updates a Job with the specified status Provides an action to update a Job status, when Job id and the new details of Job are given
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Id of Agent that is updating Job Status</param>
+        /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
+        /// <param name="status">Status value for the specified JobId</param>
+        /// <param name="body"> (optional)</param>
+        /// <returns>ApiResponse of Job</returns>
+        public ApiResponse< Job > ApiV1JobsIdStatusStatusPutWithHttpInfo (string agentId, string id, JobStatusType status, JobErrorViewModel body = null)
+        {
+            // verify the required parameter 'agentId' is set
+            if (agentId == null)
+                throw new ApiException(400, "Missing required parameter 'agentId' when calling JobsApi->ApiV1JobsIdStatusStatusPut");
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling JobsApi->ApiV1JobsIdStatusStatusPut");
+            // verify the required parameter 'status' is set
+            if (status == null)
+                throw new ApiException(400, "Missing required parameter 'status' when calling JobsApi->ApiV1JobsIdStatusStatusPut");
+
+            var localVarPath = "/api/v1/Jobs/{id}/Status/{status}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json-patch+json", 
+                "application/json", 
+                "text/json", 
+                "application/_*+json"
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            String localVarHttpHeaderAuthorization = $"Bearer {this.Configuration.AccessToken}";
+            if (localVarHttpHeaderAuthorization != null)
+                localVarHeaderParams.Add("Authorization", localVarHttpHeaderAuthorization);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (status != null) localVarPathParams.Add("status", this.Configuration.ApiClient.ParameterToString(status)); // path parameter
+            if (agentId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "agentId", agentId)); // query parameter
+            if (body != null && body.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = this.Configuration.ApiClient.Serialize(body); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = body; // byte array
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1JobsIdStatusStatusPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Job>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (Job) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(Job)));
+        }
+
+        /// <summary>
+        /// Updates a Job with the specified status Provides an action to update a Job status, when Job id and the new details of Job are given
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Id of Agent that is updating Job Status</param>
+        /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
+        /// <param name="status">Status value for the specified JobId</param>
+        /// <param name="body"> (optional)</param>
+        /// <returns>Task of Job</returns>
+        public async System.Threading.Tasks.Task<Job> ApiV1JobsIdStatusStatusPutAsync (string agentId, string id, JobStatusType status, JobErrorViewModel body = null)
+        {
+             ApiResponse<Job> localVarResponse = await ApiV1JobsIdStatusStatusPutAsyncWithHttpInfo(agentId, id, status, body);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Updates a Job with the specified status Provides an action to update a Job status, when Job id and the new details of Job are given
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Id of Agent that is updating Job Status</param>
+        /// <param name="id">Job Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
+        /// <param name="status">Status value for the specified JobId</param>
+        /// <param name="body"> (optional)</param>
+        /// <returns>Task of ApiResponse (Job)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Job>> ApiV1JobsIdStatusStatusPutAsyncWithHttpInfo (string agentId, string id, JobStatusType status, JobErrorViewModel body = null)
+        {
+            // verify the required parameter 'agentId' is set
+            if (agentId == null)
+                throw new ApiException(400, "Missing required parameter 'agentId' when calling JobsApi->ApiV1JobsIdStatusStatusPut");
+            // verify the required parameter 'id' is set
+            if (id == null)
+                throw new ApiException(400, "Missing required parameter 'id' when calling JobsApi->ApiV1JobsIdStatusStatusPut");
+            // verify the required parameter 'status' is set
+            if (status == null)
+                throw new ApiException(400, "Missing required parameter 'status' when calling JobsApi->ApiV1JobsIdStatusStatusPut");
+
+            var localVarPath = "/api/v1/Jobs/{id}/Status/{status}";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+                "application/json-patch+json", 
+                "application/json", 
+                "text/json", 
+                "application/_*+json"
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (id != null) localVarPathParams.Add("id", this.Configuration.ApiClient.ParameterToString(id)); // path parameter
+            if (status != null) localVarPathParams.Add("status", this.Configuration.ApiClient.ParameterToString(status)); // path parameter
+            if (agentId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "agentId", agentId)); // query parameter
+            if (body != null && body.GetType() != typeof(byte[]))
+            {
+                localVarPostBody = this.Configuration.ApiClient.Serialize(body); // http body (model) parameter
+            }
+            else
+            {
+                localVarPostBody = body; // byte array
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1JobsIdStatusStatusPut", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<Job>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (Job) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(Job)));
         }
 
         /// <summary>
@@ -1251,6 +1876,131 @@ namespace OpenBots.Service.API.Api
             return new ApiResponse<JobsLookupViewModel>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
                 (JobsLookupViewModel) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(JobsLookupViewModel)));
+        }
+
+        /// <summary>
+        /// Gets the next avalibale job for the provided agentId 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Agent id (optional)</param>
+        /// <returns>NextJobViewModel</returns>
+        public NextJobViewModel ApiV1JobsNextGet (string agentId = null)
+        {
+             ApiResponse<NextJobViewModel> localVarResponse = ApiV1JobsNextGetWithHttpInfo(agentId);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Gets the next avalibale job for the provided agentId 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Agent id (optional)</param>
+        /// <returns>ApiResponse of NextJobViewModel</returns>
+        public ApiResponse< NextJobViewModel > ApiV1JobsNextGetWithHttpInfo (string agentId = null)
+        {
+
+            var localVarPath = "/api/v1/Jobs/Next";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (agentId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "agentId", agentId)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1JobsNextGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<NextJobViewModel>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (NextJobViewModel) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(NextJobViewModel)));
+        }
+
+        /// <summary>
+        /// Gets the next avalibale job for the provided agentId 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Agent id (optional)</param>
+        /// <returns>Task of NextJobViewModel</returns>
+        public async System.Threading.Tasks.Task<NextJobViewModel> ApiV1JobsNextGetAsync (string agentId = null)
+        {
+             ApiResponse<NextJobViewModel> localVarResponse = await ApiV1JobsNextGetAsyncWithHttpInfo(agentId);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Gets the next avalibale job for the provided agentId 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="agentId">Agent id (optional)</param>
+        /// <returns>Task of ApiResponse (NextJobViewModel)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<NextJobViewModel>> ApiV1JobsNextGetAsyncWithHttpInfo (string agentId = null)
+        {
+
+            var localVarPath = "/api/v1/Jobs/Next";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (agentId != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "agentId", agentId)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1JobsNextGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<NextJobViewModel>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (NextJobViewModel) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(NextJobViewModel)));
         }
 
         /// <summary>
@@ -1548,10 +2298,10 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>JobPaginatedList</returns>
-        public JobPaginatedList ApiV1JobsViewIdGet (string id)
+        /// <returns>JobViewModel</returns>
+        public JobViewModel ApiV1JobsViewIdGet (string id)
         {
-             ApiResponse<JobPaginatedList> localVarResponse = ApiV1JobsViewIdGetWithHttpInfo(id);
+             ApiResponse<JobViewModel> localVarResponse = ApiV1JobsViewIdGetWithHttpInfo(id);
              return localVarResponse.Data;
         }
 
@@ -1560,8 +2310,8 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>ApiResponse of JobPaginatedList</returns>
-        public ApiResponse< JobPaginatedList > ApiV1JobsViewIdGetWithHttpInfo (string id)
+        /// <returns>ApiResponse of JobViewModel</returns>
+        public ApiResponse< JobViewModel > ApiV1JobsViewIdGetWithHttpInfo (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1603,9 +2353,9 @@ namespace OpenBots.Service.API.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<JobPaginatedList>(localVarStatusCode,
+            return new ApiResponse<JobViewModel>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (JobPaginatedList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(JobPaginatedList)));
+                (JobViewModel) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(JobViewModel)));
         }
 
         /// <summary>
@@ -1613,10 +2363,10 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>Task of JobPaginatedList</returns>
-        public async System.Threading.Tasks.Task<JobPaginatedList> ApiV1JobsViewIdGetAsync (string id)
+        /// <returns>Task of JobViewModel</returns>
+        public async System.Threading.Tasks.Task<JobViewModel> ApiV1JobsViewIdGetAsync (string id)
         {
-             ApiResponse<JobPaginatedList> localVarResponse = await ApiV1JobsViewIdGetAsyncWithHttpInfo(id);
+             ApiResponse<JobViewModel> localVarResponse = await ApiV1JobsViewIdGetAsyncWithHttpInfo(id);
              return localVarResponse.Data;
 
         }
@@ -1626,8 +2376,8 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>Task of ApiResponse (JobPaginatedList)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<JobPaginatedList>> ApiV1JobsViewIdGetAsyncWithHttpInfo (string id)
+        /// <returns>Task of ApiResponse (JobViewModel)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<JobViewModel>> ApiV1JobsViewIdGetAsyncWithHttpInfo (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1669,9 +2419,9 @@ namespace OpenBots.Service.API.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<JobPaginatedList>(localVarStatusCode,
+            return new ApiResponse<JobViewModel>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (JobPaginatedList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(JobPaginatedList)));
+                (JobViewModel) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(JobViewModel)));
         }
 
         /// <summary>
@@ -1679,10 +2429,10 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>JobPaginatedList</returns>
-        public JobPaginatedList GetJob (string id)
+        /// <returns>Job</returns>
+        public Job GetJob (string id)
         {
-             ApiResponse<JobPaginatedList> localVarResponse = GetJobWithHttpInfo(id);
+             ApiResponse<Job> localVarResponse = GetJobWithHttpInfo(id);
              return localVarResponse.Data;
         }
 
@@ -1691,8 +2441,8 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>ApiResponse of JobPaginatedList</returns>
-        public ApiResponse< JobPaginatedList > GetJobWithHttpInfo (string id)
+        /// <returns>ApiResponse of Job</returns>
+        public ApiResponse< Job > GetJobWithHttpInfo (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1734,9 +2484,9 @@ namespace OpenBots.Service.API.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<JobPaginatedList>(localVarStatusCode,
+            return new ApiResponse<Job>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (JobPaginatedList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(JobPaginatedList)));
+                (Job) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(Job)));
         }
 
         /// <summary>
@@ -1744,10 +2494,10 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>Task of JobPaginatedList</returns>
-        public async System.Threading.Tasks.Task<JobPaginatedList> GetJobAsync (string id)
+        /// <returns>Task of Job</returns>
+        public async System.Threading.Tasks.Task<Job> GetJobAsync (string id)
         {
-             ApiResponse<JobPaginatedList> localVarResponse = await GetJobAsyncWithHttpInfo(id);
+             ApiResponse<Job> localVarResponse = await GetJobAsyncWithHttpInfo(id);
              return localVarResponse.Data;
 
         }
@@ -1757,8 +2507,8 @@ namespace OpenBots.Service.API.Api
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Job id</param>
-        /// <returns>Task of ApiResponse (JobPaginatedList)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<JobPaginatedList>> GetJobAsyncWithHttpInfo (string id)
+        /// <returns>Task of ApiResponse (Job)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<Job>> GetJobAsyncWithHttpInfo (string id)
         {
             // verify the required parameter 'id' is set
             if (id == null)
@@ -1800,9 +2550,9 @@ namespace OpenBots.Service.API.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<JobPaginatedList>(localVarStatusCode,
+            return new ApiResponse<Job>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (JobPaginatedList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(JobPaginatedList)));
+                (Job) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(Job)));
         }
 
     }

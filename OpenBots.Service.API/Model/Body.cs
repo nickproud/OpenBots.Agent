@@ -32,20 +32,16 @@ namespace OpenBots.Service.API.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="Body" /> class.
         /// </summary>
+        /// <param name="id">id.</param>
         /// <param name="name">name (required).</param>
-        /// <param name="organization">organization.</param>
-        /// <param name="department">department.</param>
-        /// <param name="email">email (required).</param>
-        /// <param name="password">password (required).</param>
-        /// <param name="createNewOrganization">createNewOrganization.</param>
-        /// <param name="utmSource">utmSource.</param>
-        /// <param name="utmMedium">utmMedium.</param>
-        /// <param name="utmCampaign">utmCampaign.</param>
-        /// <param name="utmTerm">utmTerm.</param>
-        /// <param name="utmContent">utmContent.</param>
-        /// <param name="plan">plan.</param>
-        /// <param name="apiKey">apiKey.</param>
-        public Body(string name = default(string), string organization = default(string), string department = default(string), string email = default(string), string password = default(string), bool? createNewOrganization = default(bool?), string utmSource = default(string), string utmMedium = default(string), string utmCampaign = default(string), string utmTerm = default(string), string utmContent = default(string), string plan = default(string), Guid? apiKey = default(Guid?))
+        /// <param name="type">type (required).</param>
+        /// <param name="textValue">textValue.</param>
+        /// <param name="numberValue">numberValue.</param>
+        /// <param name="jsonValue">jsonValue.</param>
+        /// <param name="binaryObjectID">binaryObjectID.</param>
+        /// <param name="_file">_file.</param>
+        /// <param name="organizationId">organizationId.</param>
+        public Body(Guid? id = default(Guid?), string name = default(string), string type = default(string), string textValue = default(string), double? numberValue = default(double?), string jsonValue = default(string), Guid? binaryObjectID = default(Guid?), byte[] _file = default(byte[]), Guid? organizationId = default(Guid?))
         {
             // to ensure "name" is required (not null)
             if (name == null)
@@ -56,36 +52,30 @@ namespace OpenBots.Service.API.Model
             {
                 this.Name = name;
             }
-            // to ensure "email" is required (not null)
-            if (email == null)
+            // to ensure "type" is required (not null)
+            if (type == null)
             {
-                throw new InvalidDataException("email is a required property for Body and cannot be null");
+                throw new InvalidDataException("type is a required property for Body and cannot be null");
             }
             else
             {
-                this.Email = email;
+                this.Type = type;
             }
-            // to ensure "password" is required (not null)
-            if (password == null)
-            {
-                throw new InvalidDataException("password is a required property for Body and cannot be null");
-            }
-            else
-            {
-                this.Password = password;
-            }
-            this.Organization = organization;
-            this.Department = department;
-            this.CreateNewOrganization = createNewOrganization;
-            this.UtmSource = utmSource;
-            this.UtmMedium = utmMedium;
-            this.UtmCampaign = utmCampaign;
-            this.UtmTerm = utmTerm;
-            this.UtmContent = utmContent;
-            this.Plan = plan;
-            this.ApiKey = apiKey;
+            this.Id = id;
+            this.TextValue = textValue;
+            this.NumberValue = numberValue;
+            this.JsonValue = jsonValue;
+            this.BinaryObjectID = binaryObjectID;
+            this.File = _file;
+            this.OrganizationId = organizationId;
         }
         
+        /// <summary>
+        /// Gets or Sets Id
+        /// </summary>
+        [DataMember(Name="Id", EmitDefaultValue=false)]
+        public Guid? Id { get; set; }
+
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
@@ -93,76 +83,46 @@ namespace OpenBots.Service.API.Model
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or Sets Organization
+        /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name="Organization", EmitDefaultValue=false)]
-        public string Organization { get; set; }
+        [DataMember(Name="Type", EmitDefaultValue=false)]
+        public string Type { get; set; }
 
         /// <summary>
-        /// Gets or Sets Department
+        /// Gets or Sets TextValue
         /// </summary>
-        [DataMember(Name="Department", EmitDefaultValue=false)]
-        public string Department { get; set; }
+        [DataMember(Name="TextValue", EmitDefaultValue=false)]
+        public string TextValue { get; set; }
 
         /// <summary>
-        /// Gets or Sets Email
+        /// Gets or Sets NumberValue
         /// </summary>
-        [DataMember(Name="Email", EmitDefaultValue=false)]
-        public string Email { get; set; }
+        [DataMember(Name="NumberValue", EmitDefaultValue=false)]
+        public double? NumberValue { get; set; }
 
         /// <summary>
-        /// Gets or Sets Password
+        /// Gets or Sets JsonValue
         /// </summary>
-        [DataMember(Name="Password", EmitDefaultValue=false)]
-        public string Password { get; set; }
+        [DataMember(Name="JsonValue", EmitDefaultValue=false)]
+        public string JsonValue { get; set; }
 
         /// <summary>
-        /// Gets or Sets CreateNewOrganization
+        /// Gets or Sets BinaryObjectID
         /// </summary>
-        [DataMember(Name="CreateNewOrganization", EmitDefaultValue=false)]
-        public bool? CreateNewOrganization { get; set; }
+        [DataMember(Name="BinaryObjectID", EmitDefaultValue=false)]
+        public Guid? BinaryObjectID { get; set; }
 
         /// <summary>
-        /// Gets or Sets UtmSource
+        /// Gets or Sets File
         /// </summary>
-        [DataMember(Name="Utm_Source", EmitDefaultValue=false)]
-        public string UtmSource { get; set; }
+        [DataMember(Name="file", EmitDefaultValue=false)]
+        public byte[] File { get; set; }
 
         /// <summary>
-        /// Gets or Sets UtmMedium
+        /// Gets or Sets OrganizationId
         /// </summary>
-        [DataMember(Name="Utm_Medium", EmitDefaultValue=false)]
-        public string UtmMedium { get; set; }
-
-        /// <summary>
-        /// Gets or Sets UtmCampaign
-        /// </summary>
-        [DataMember(Name="Utm_Campaign", EmitDefaultValue=false)]
-        public string UtmCampaign { get; set; }
-
-        /// <summary>
-        /// Gets or Sets UtmTerm
-        /// </summary>
-        [DataMember(Name="Utm_Term", EmitDefaultValue=false)]
-        public string UtmTerm { get; set; }
-
-        /// <summary>
-        /// Gets or Sets UtmContent
-        /// </summary>
-        [DataMember(Name="Utm_Content", EmitDefaultValue=false)]
-        public string UtmContent { get; set; }
-
-        /// <summary>
-        /// Gets or Sets Plan
-        /// </summary>
-        [DataMember(Name="Plan", EmitDefaultValue=false)]
-        public string Plan { get; set; }
-
-        /// <summary>
-        /// Gets or Sets ApiKey
-        /// </summary>
-        [DataMember(Name="ApiKey", EmitDefaultValue=false)]
-        public Guid? ApiKey { get; set; }
+        [DataMember(Name="OrganizationId", EmitDefaultValue=false)]
+        public Guid? OrganizationId { get; set; }
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -172,19 +132,15 @@ namespace OpenBots.Service.API.Model
         {
             var sb = new StringBuilder();
             sb.Append("class Body {\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Organization: ").Append(Organization).Append("\n");
-            sb.Append("  Department: ").Append(Department).Append("\n");
-            sb.Append("  Email: ").Append(Email).Append("\n");
-            sb.Append("  Password: ").Append(Password).Append("\n");
-            sb.Append("  CreateNewOrganization: ").Append(CreateNewOrganization).Append("\n");
-            sb.Append("  UtmSource: ").Append(UtmSource).Append("\n");
-            sb.Append("  UtmMedium: ").Append(UtmMedium).Append("\n");
-            sb.Append("  UtmCampaign: ").Append(UtmCampaign).Append("\n");
-            sb.Append("  UtmTerm: ").Append(UtmTerm).Append("\n");
-            sb.Append("  UtmContent: ").Append(UtmContent).Append("\n");
-            sb.Append("  Plan: ").Append(Plan).Append("\n");
-            sb.Append("  ApiKey: ").Append(ApiKey).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
+            sb.Append("  TextValue: ").Append(TextValue).Append("\n");
+            sb.Append("  NumberValue: ").Append(NumberValue).Append("\n");
+            sb.Append("  JsonValue: ").Append(JsonValue).Append("\n");
+            sb.Append("  BinaryObjectID: ").Append(BinaryObjectID).Append("\n");
+            sb.Append("  File: ").Append(File).Append("\n");
+            sb.Append("  OrganizationId: ").Append(OrganizationId).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
         }
@@ -220,69 +176,49 @@ namespace OpenBots.Service.API.Model
 
             return 
                 (
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
+                ) && 
+                (
                     this.Name == input.Name ||
                     (this.Name != null &&
                     this.Name.Equals(input.Name))
                 ) && 
                 (
-                    this.Organization == input.Organization ||
-                    (this.Organization != null &&
-                    this.Organization.Equals(input.Organization))
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 ) && 
                 (
-                    this.Department == input.Department ||
-                    (this.Department != null &&
-                    this.Department.Equals(input.Department))
+                    this.TextValue == input.TextValue ||
+                    (this.TextValue != null &&
+                    this.TextValue.Equals(input.TextValue))
                 ) && 
                 (
-                    this.Email == input.Email ||
-                    (this.Email != null &&
-                    this.Email.Equals(input.Email))
+                    this.NumberValue == input.NumberValue ||
+                    (this.NumberValue != null &&
+                    this.NumberValue.Equals(input.NumberValue))
                 ) && 
                 (
-                    this.Password == input.Password ||
-                    (this.Password != null &&
-                    this.Password.Equals(input.Password))
+                    this.JsonValue == input.JsonValue ||
+                    (this.JsonValue != null &&
+                    this.JsonValue.Equals(input.JsonValue))
                 ) && 
                 (
-                    this.CreateNewOrganization == input.CreateNewOrganization ||
-                    (this.CreateNewOrganization != null &&
-                    this.CreateNewOrganization.Equals(input.CreateNewOrganization))
+                    this.BinaryObjectID == input.BinaryObjectID ||
+                    (this.BinaryObjectID != null &&
+                    this.BinaryObjectID.Equals(input.BinaryObjectID))
                 ) && 
                 (
-                    this.UtmSource == input.UtmSource ||
-                    (this.UtmSource != null &&
-                    this.UtmSource.Equals(input.UtmSource))
+                    this.File == input.File ||
+                    (this.File != null &&
+                    this.File.Equals(input.File))
                 ) && 
                 (
-                    this.UtmMedium == input.UtmMedium ||
-                    (this.UtmMedium != null &&
-                    this.UtmMedium.Equals(input.UtmMedium))
-                ) && 
-                (
-                    this.UtmCampaign == input.UtmCampaign ||
-                    (this.UtmCampaign != null &&
-                    this.UtmCampaign.Equals(input.UtmCampaign))
-                ) && 
-                (
-                    this.UtmTerm == input.UtmTerm ||
-                    (this.UtmTerm != null &&
-                    this.UtmTerm.Equals(input.UtmTerm))
-                ) && 
-                (
-                    this.UtmContent == input.UtmContent ||
-                    (this.UtmContent != null &&
-                    this.UtmContent.Equals(input.UtmContent))
-                ) && 
-                (
-                    this.Plan == input.Plan ||
-                    (this.Plan != null &&
-                    this.Plan.Equals(input.Plan))
-                ) && 
-                (
-                    this.ApiKey == input.ApiKey ||
-                    (this.ApiKey != null &&
-                    this.ApiKey.Equals(input.ApiKey))
+                    this.OrganizationId == input.OrganizationId ||
+                    (this.OrganizationId != null &&
+                    this.OrganizationId.Equals(input.OrganizationId))
                 );
         }
 
@@ -295,32 +231,24 @@ namespace OpenBots.Service.API.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
+                if (this.Id != null)
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
                 if (this.Name != null)
                     hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.Organization != null)
-                    hashCode = hashCode * 59 + this.Organization.GetHashCode();
-                if (this.Department != null)
-                    hashCode = hashCode * 59 + this.Department.GetHashCode();
-                if (this.Email != null)
-                    hashCode = hashCode * 59 + this.Email.GetHashCode();
-                if (this.Password != null)
-                    hashCode = hashCode * 59 + this.Password.GetHashCode();
-                if (this.CreateNewOrganization != null)
-                    hashCode = hashCode * 59 + this.CreateNewOrganization.GetHashCode();
-                if (this.UtmSource != null)
-                    hashCode = hashCode * 59 + this.UtmSource.GetHashCode();
-                if (this.UtmMedium != null)
-                    hashCode = hashCode * 59 + this.UtmMedium.GetHashCode();
-                if (this.UtmCampaign != null)
-                    hashCode = hashCode * 59 + this.UtmCampaign.GetHashCode();
-                if (this.UtmTerm != null)
-                    hashCode = hashCode * 59 + this.UtmTerm.GetHashCode();
-                if (this.UtmContent != null)
-                    hashCode = hashCode * 59 + this.UtmContent.GetHashCode();
-                if (this.Plan != null)
-                    hashCode = hashCode * 59 + this.Plan.GetHashCode();
-                if (this.ApiKey != null)
-                    hashCode = hashCode * 59 + this.ApiKey.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.TextValue != null)
+                    hashCode = hashCode * 59 + this.TextValue.GetHashCode();
+                if (this.NumberValue != null)
+                    hashCode = hashCode * 59 + this.NumberValue.GetHashCode();
+                if (this.JsonValue != null)
+                    hashCode = hashCode * 59 + this.JsonValue.GetHashCode();
+                if (this.BinaryObjectID != null)
+                    hashCode = hashCode * 59 + this.BinaryObjectID.GetHashCode();
+                if (this.File != null)
+                    hashCode = hashCode * 59 + this.File.GetHashCode();
+                if (this.OrganizationId != null)
+                    hashCode = hashCode * 59 + this.OrganizationId.GetHashCode();
                 return hashCode;
             }
         }

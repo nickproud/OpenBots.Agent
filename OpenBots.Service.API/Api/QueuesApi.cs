@@ -24,6 +24,27 @@ namespace OpenBots.Service.API.Api
     {
         #region Synchronous Operations
         /// <summary>
+        /// Gets count of Queues in database
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>int?</returns>
+        int? ApiV1QueuesCountGet (string filter = null);
+
+        /// <summary>
+        /// Gets count of Queues in database
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>ApiResponse of int?</returns>
+        ApiResponse<int?> ApiV1QueuesCountGetWithHttpInfo (string filter = null);
+        /// <summary>
         /// Provides a list of all Queues
         /// </summary>
         /// <remarks>
@@ -51,7 +72,7 @@ namespace OpenBots.Service.API.Api
         /// <returns>ApiResponse of QueuePaginatedList</returns>
         ApiResponse<QueuePaginatedList> ApiV1QueuesGetWithHttpInfo (string filter = null, string orderby = null, int? top = null, int? skip = null);
         /// <summary>
-        /// Deletes an Queue with a specified id from the Queues.
+        /// Deletes a Queue with a specified id from the Queues.
         /// </summary>
         /// <remarks>
         /// 
@@ -62,7 +83,7 @@ namespace OpenBots.Service.API.Api
         IActionResult ApiV1QueuesIdDelete (string id);
 
         /// <summary>
-        /// Deletes an Queue with a specified id from the Queues.
+        /// Deletes a Queue with a specified id from the Queues.
         /// </summary>
         /// <remarks>
         /// 
@@ -95,7 +116,7 @@ namespace OpenBots.Service.API.Api
         /// <returns>ApiResponse of IActionResult</returns>
         ApiResponse<IActionResult> ApiV1QueuesIdPatchWithHttpInfo (string id, List<Operation> body = null);
         /// <summary>
-        /// Updates an Queue
+        /// Updates a Queue
         /// </summary>
         /// <remarks>
         /// Provides an action to update an Queue, when Queue id and the new details of Queue are given
@@ -107,7 +128,7 @@ namespace OpenBots.Service.API.Api
         IActionResult ApiV1QueuesIdPut (string id, QueueViewModel body = null);
 
         /// <summary>
-        /// Updates an Queue
+        /// Updates a Queue
         /// </summary>
         /// <remarks>
         /// Provides an action to update an Queue, when Queue id and the new details of Queue are given
@@ -162,6 +183,27 @@ namespace OpenBots.Service.API.Api
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
+        /// Gets count of Queues in database
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of int?</returns>
+        System.Threading.Tasks.Task<int?> ApiV1QueuesCountGetAsync (string filter = null);
+
+        /// <summary>
+        /// Gets count of Queues in database
+        /// </summary>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of ApiResponse (int?)</returns>
+        System.Threading.Tasks.Task<ApiResponse<int?>> ApiV1QueuesCountGetAsyncWithHttpInfo (string filter = null);
+        /// <summary>
         /// Provides a list of all Queues
         /// </summary>
         /// <remarks>
@@ -189,7 +231,7 @@ namespace OpenBots.Service.API.Api
         /// <returns>Task of ApiResponse (QueuePaginatedList)</returns>
         System.Threading.Tasks.Task<ApiResponse<QueuePaginatedList>> ApiV1QueuesGetAsyncWithHttpInfo (string filter = null, string orderby = null, int? top = null, int? skip = null);
         /// <summary>
-        /// Deletes an Queue with a specified id from the Queues.
+        /// Deletes a Queue with a specified id from the Queues.
         /// </summary>
         /// <remarks>
         /// 
@@ -200,7 +242,7 @@ namespace OpenBots.Service.API.Api
         System.Threading.Tasks.Task<IActionResult> ApiV1QueuesIdDeleteAsync (string id);
 
         /// <summary>
-        /// Deletes an Queue with a specified id from the Queues.
+        /// Deletes a Queue with a specified id from the Queues.
         /// </summary>
         /// <remarks>
         /// 
@@ -233,7 +275,7 @@ namespace OpenBots.Service.API.Api
         /// <returns>Task of ApiResponse (IActionResult)</returns>
         System.Threading.Tasks.Task<ApiResponse<IActionResult>> ApiV1QueuesIdPatchAsyncWithHttpInfo (string id, List<Operation> body = null);
         /// <summary>
-        /// Updates an Queue
+        /// Updates a Queue
         /// </summary>
         /// <remarks>
         /// Provides an action to update an Queue, when Queue id and the new details of Queue are given
@@ -245,7 +287,7 @@ namespace OpenBots.Service.API.Api
         System.Threading.Tasks.Task<IActionResult> ApiV1QueuesIdPutAsync (string id, QueueViewModel body = null);
 
         /// <summary>
-        /// Updates an Queue
+        /// Updates a Queue
         /// </summary>
         /// <remarks>
         /// Provides an action to update an Queue, when Queue id and the new details of Queue are given
@@ -409,6 +451,131 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
+        /// Gets count of Queues in database 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>int?</returns>
+        public int? ApiV1QueuesCountGet (string filter = null)
+        {
+             ApiResponse<int?> localVarResponse = ApiV1QueuesCountGetWithHttpInfo(filter);
+             return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Gets count of Queues in database 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>ApiResponse of int?</returns>
+        public ApiResponse< int? > ApiV1QueuesCountGetWithHttpInfo (string filter = null)
+        {
+
+            var localVarPath = "/api/v1/Queues/count";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (filter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$filter", filter)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1QueuesCountGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<int?>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (int?) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int?)));
+        }
+
+        /// <summary>
+        /// Gets count of Queues in database 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of int?</returns>
+        public async System.Threading.Tasks.Task<int?> ApiV1QueuesCountGetAsync (string filter = null)
+        {
+             ApiResponse<int?> localVarResponse = await ApiV1QueuesCountGetAsyncWithHttpInfo(filter);
+             return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Gets count of Queues in database 
+        /// </summary>
+        /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="filter"> (optional)</param>
+        /// <returns>Task of ApiResponse (int?)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<int?>> ApiV1QueuesCountGetAsyncWithHttpInfo (string filter = null)
+        {
+
+            var localVarPath = "/api/v1/Queues/count";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (filter != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "$filter", filter)); // query parameter
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int) localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("ApiV1QueuesCountGet", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<int?>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (int?) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(int?)));
+        }
+
+        /// <summary>
         /// Provides a list of all Queues 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
@@ -552,7 +719,7 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Deletes an Queue with a specified id from the Queues. 
+        /// Deletes a Queue with a specified id from the Queues. 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Queue ID to be deleted- throws BadRequest if null or empty Guid/</param>
@@ -564,7 +731,7 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Deletes an Queue with a specified id from the Queues. 
+        /// Deletes a Queue with a specified id from the Queues. 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Queue ID to be deleted- throws BadRequest if null or empty Guid/</param>
@@ -617,7 +784,7 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Deletes an Queue with a specified id from the Queues. 
+        /// Deletes a Queue with a specified id from the Queues. 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Queue ID to be deleted- throws BadRequest if null or empty Guid/</param>
@@ -630,7 +797,7 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Deletes an Queue with a specified id from the Queues. 
+        /// Deletes a Queue with a specified id from the Queues. 
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Queue ID to be deleted- throws BadRequest if null or empty Guid/</param>
@@ -842,7 +1009,7 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Updates an Queue Provides an action to update an Queue, when Queue id and the new details of Queue are given
+        /// Updates a Queue Provides an action to update an Queue, when Queue id and the new details of Queue are given
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Queue Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
@@ -855,7 +1022,7 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Updates an Queue Provides an action to update an Queue, when Queue id and the new details of Queue are given
+        /// Updates a Queue Provides an action to update an Queue, when Queue id and the new details of Queue are given
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Queue Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
@@ -921,7 +1088,7 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Updates an Queue Provides an action to update an Queue, when Queue id and the new details of Queue are given
+        /// Updates a Queue Provides an action to update an Queue, when Queue id and the new details of Queue are given
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Queue Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>
@@ -935,7 +1102,7 @@ namespace OpenBots.Service.API.Api
         }
 
         /// <summary>
-        /// Updates an Queue Provides an action to update an Queue, when Queue id and the new details of Queue are given
+        /// Updates a Queue Provides an action to update an Queue, when Queue id and the new details of Queue are given
         /// </summary>
         /// <exception cref="OpenBots.Service.API.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="id">Queue Id,produces Bad request if Id is null or Id&#x27;s don&#x27;t match</param>

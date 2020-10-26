@@ -32,10 +32,9 @@ namespace OpenBots.Service.API.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="AgentModel" /> class.
         /// </summary>
-        /// <param name="machineCredentials">machineCredentials.</param>
         /// <param name="machineName">machineName (required).</param>
-        /// <param name="macAddresses">macAddresses (required).</param>
-        /// <param name="ipAddresses">ipAddresses (required).</param>
+        /// <param name="macAddresses">macAddresses.</param>
+        /// <param name="ipAddresses">ipAddresses.</param>
         /// <param name="isEnabled">isEnabled (required).</param>
         /// <param name="lastReportedOn">lastReportedOn.</param>
         /// <param name="lastReportedStatus">lastReportedStatus.</param>
@@ -43,6 +42,7 @@ namespace OpenBots.Service.API.Model
         /// <param name="lastReportedMessage">lastReportedMessage.</param>
         /// <param name="isHealthy">isHealthy.</param>
         /// <param name="isConnected">isConnected (required).</param>
+        /// <param name="credentialId">credentialId.</param>
         /// <param name="name">name (required).</param>
         /// <param name="id">id.</param>
         /// <param name="isDeleted">isDeleted (default to false).</param>
@@ -53,7 +53,7 @@ namespace OpenBots.Service.API.Model
         /// <param name="timestamp">timestamp.</param>
         /// <param name="updatedOn">updatedOn.</param>
         /// <param name="updatedBy">updatedBy.</param>
-        public AgentModel(Guid? machineCredentials = default(Guid?), string machineName = default(string), string macAddresses = default(string), string ipAddresses = default(string), bool? isEnabled = default(bool?), DateTime? lastReportedOn = default(DateTime?), string lastReportedStatus = default(string), string lastReportedWork = default(string), string lastReportedMessage = default(string), bool? isHealthy = default(bool?), bool? isConnected = default(bool?), string name = default(string), Guid? id = default(Guid?), bool? isDeleted = false, string createdBy = default(string), DateTime? createdOn = default(DateTime?), string deletedBy = default(string), DateTime? deleteOn = default(DateTime?), byte[] timestamp = default(byte[]), DateTime? updatedOn = default(DateTime?), string updatedBy = default(string))
+        public AgentModel(string machineName = default(string), string macAddresses = default(string), string ipAddresses = default(string), bool? isEnabled = default(bool?), DateTime? lastReportedOn = default(DateTime?), string lastReportedStatus = default(string), string lastReportedWork = default(string), string lastReportedMessage = default(string), bool? isHealthy = default(bool?), bool? isConnected = default(bool?), Guid? credentialId = default(Guid?), string name = default(string), Guid? id = default(Guid?), bool? isDeleted = false, string createdBy = default(string), DateTime? createdOn = default(DateTime?), string deletedBy = default(string), DateTime? deleteOn = default(DateTime?), byte[] timestamp = default(byte[]), DateTime? updatedOn = default(DateTime?), string updatedBy = default(string))
         {
             // to ensure "machineName" is required (not null)
             if (machineName == null)
@@ -63,24 +63,6 @@ namespace OpenBots.Service.API.Model
             else
             {
                 this.MachineName = machineName;
-            }
-            // to ensure "macAddresses" is required (not null)
-            if (macAddresses == null)
-            {
-                throw new InvalidDataException("macAddresses is a required property for AgentModel and cannot be null");
-            }
-            else
-            {
-                this.MacAddresses = macAddresses;
-            }
-            // to ensure "ipAddresses" is required (not null)
-            if (ipAddresses == null)
-            {
-                throw new InvalidDataException("ipAddresses is a required property for AgentModel and cannot be null");
-            }
-            else
-            {
-                this.IpAddresses = ipAddresses;
             }
             // to ensure "isEnabled" is required (not null)
             if (isEnabled == null)
@@ -109,12 +91,14 @@ namespace OpenBots.Service.API.Model
             {
                 this.Name = name;
             }
-            this.MachineCredentials = machineCredentials;
+            this.MacAddresses = macAddresses;
+            this.IpAddresses = ipAddresses;
             this.LastReportedOn = lastReportedOn;
             this.LastReportedStatus = lastReportedStatus;
             this.LastReportedWork = lastReportedWork;
             this.LastReportedMessage = lastReportedMessage;
             this.IsHealthy = isHealthy;
+            this.CredentialId = credentialId;
             this.Id = id;
             // use default value if no "isDeleted" provided
             if (isDeleted == null)
@@ -134,12 +118,6 @@ namespace OpenBots.Service.API.Model
             this.UpdatedBy = updatedBy;
         }
         
-        /// <summary>
-        /// Gets or Sets MachineCredentials
-        /// </summary>
-        [DataMember(Name="machineCredentials", EmitDefaultValue=false)]
-        public Guid? MachineCredentials { get; set; }
-
         /// <summary>
         /// Gets or Sets MachineName
         /// </summary>
@@ -199,6 +177,12 @@ namespace OpenBots.Service.API.Model
         /// </summary>
         [DataMember(Name="isConnected", EmitDefaultValue=false)]
         public bool? IsConnected { get; set; }
+
+        /// <summary>
+        /// Gets or Sets CredentialId
+        /// </summary>
+        [DataMember(Name="credentialId", EmitDefaultValue=false)]
+        public Guid? CredentialId { get; set; }
 
         /// <summary>
         /// Gets or Sets Name
@@ -268,7 +252,6 @@ namespace OpenBots.Service.API.Model
         {
             var sb = new StringBuilder();
             sb.Append("class AgentModel {\n");
-            sb.Append("  MachineCredentials: ").Append(MachineCredentials).Append("\n");
             sb.Append("  MachineName: ").Append(MachineName).Append("\n");
             sb.Append("  MacAddresses: ").Append(MacAddresses).Append("\n");
             sb.Append("  IpAddresses: ").Append(IpAddresses).Append("\n");
@@ -279,6 +262,7 @@ namespace OpenBots.Service.API.Model
             sb.Append("  LastReportedMessage: ").Append(LastReportedMessage).Append("\n");
             sb.Append("  IsHealthy: ").Append(IsHealthy).Append("\n");
             sb.Append("  IsConnected: ").Append(IsConnected).Append("\n");
+            sb.Append("  CredentialId: ").Append(CredentialId).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  IsDeleted: ").Append(IsDeleted).Append("\n");
@@ -323,11 +307,6 @@ namespace OpenBots.Service.API.Model
                 return false;
 
             return 
-                (
-                    this.MachineCredentials == input.MachineCredentials ||
-                    (this.MachineCredentials != null &&
-                    this.MachineCredentials.Equals(input.MachineCredentials))
-                ) && 
                 (
                     this.MachineName == input.MachineName ||
                     (this.MachineName != null &&
@@ -377,6 +356,11 @@ namespace OpenBots.Service.API.Model
                     this.IsConnected == input.IsConnected ||
                     (this.IsConnected != null &&
                     this.IsConnected.Equals(input.IsConnected))
+                ) && 
+                (
+                    this.CredentialId == input.CredentialId ||
+                    (this.CredentialId != null &&
+                    this.CredentialId.Equals(input.CredentialId))
                 ) && 
                 (
                     this.Name == input.Name ||
@@ -439,8 +423,6 @@ namespace OpenBots.Service.API.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                if (this.MachineCredentials != null)
-                    hashCode = hashCode * 59 + this.MachineCredentials.GetHashCode();
                 if (this.MachineName != null)
                     hashCode = hashCode * 59 + this.MachineName.GetHashCode();
                 if (this.MacAddresses != null)
@@ -461,6 +443,8 @@ namespace OpenBots.Service.API.Model
                     hashCode = hashCode * 59 + this.IsHealthy.GetHashCode();
                 if (this.IsConnected != null)
                     hashCode = hashCode * 59 + this.IsConnected.GetHashCode();
+                if (this.CredentialId != null)
+                    hashCode = hashCode * 59 + this.CredentialId.GetHashCode();
                 if (this.Name != null)
                     hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Id != null)

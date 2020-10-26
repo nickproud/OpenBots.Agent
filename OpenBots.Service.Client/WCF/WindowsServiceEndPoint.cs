@@ -1,32 +1,25 @@
 ﻿using OpenBots.Agent.Core.Infrastructure;
 using OpenBots.Agent.Core.Model;
 using OpenBots.Service.Client.Server;
+using System;
 
 namespace OpenBots.Service.Client
 {
     public class WindowsServiceEndPoint : IWindowsServiceEndPoint
     {
-        public ServerResponse ConnectToServer(ServerConnectionSettings settings)
+        public ServerResponse ConnectToServer(ServerConnectionSettings settings, string agentDataDirectoryPath)
         {
-            // HttpServerClient.Instance.Connect() -> APIHandler.Connect()
-            //|-> Update _serverSettings
-            //|-> Return _serverSettings
-
-            return HttpServerClient.Instance.Connect(settings);
+            return HttpServerClient.Instance.Connect(settings, agentDataDirectoryPath);
         }
 
         public ServerResponse DisconnectFromServer(ServerConnectionSettings settings)
         {
-            // HttpServerClient.Instance.Disconnect() -> APIHandler.Disconnect()
-            //|-> Update _serverSettings
-            //|-> Return _serverSettings
-
             return HttpServerClient.Instance.Disconnect(settings);
         }
 
         public ServerConnectionSettings GetConnectionSettings()
         {
-            return HttpServerClient.Instance?.ServerSettings ?? null;
+            return ConnectionSettingsManager.Instance?.ConnectionSettings ?? null;
         }
 
         public bool IsAlive()
@@ -36,7 +29,19 @@ namespace OpenBots.Service.Client
 
         public bool IsConnected()
         {
-            return HttpServerClient.Instance?.ServerSettings?.ServerConnectionEnabled ?? false;
+            return ConnectionSettingsManager.Instance?.ConnectionSettings?.ServerConnectionEnabled ?? false;
+        }
+
+        public void SetEnvironmentVariable(string environmentVariable, string settingsFilePath)
+        {
+            try
+            {
+                Environment.SetEnvironmentVariable(environmentVariable, settingsFilePath, EnvironmentVariableTarget.Machine);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

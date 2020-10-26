@@ -32,18 +32,18 @@ namespace OpenBots.Service.API.Model
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginModel" /> class.
         /// </summary>
-        /// <param name="email">email (required).</param>
+        /// <param name="userName">userName (required).</param>
         /// <param name="password">password (required).</param>
-        public LoginModel(string email = default(string), string password = default(string))
+        public LoginModel(string userName = default(string), string password = default(string))
         {
-            // to ensure "email" is required (not null)
-            if (email == null)
+            // to ensure "userName" is required (not null)
+            if (userName == null)
             {
-                throw new InvalidDataException("email is a required property for LoginModel and cannot be null");
+                throw new InvalidDataException("userName is a required property for LoginModel and cannot be null");
             }
             else
             {
-                this.Email = email;
+                this.UserName = userName;
             }
             // to ensure "password" is required (not null)
             if (password == null)
@@ -57,10 +57,10 @@ namespace OpenBots.Service.API.Model
         }
         
         /// <summary>
-        /// Gets or Sets Email
+        /// Gets or Sets UserName
         /// </summary>
-        [DataMember(Name="email", EmitDefaultValue=false)]
-        public string Email { get; set; }
+        [DataMember(Name="userName", EmitDefaultValue=false)]
+        public string UserName { get; set; }
 
         /// <summary>
         /// Gets or Sets Password
@@ -76,7 +76,7 @@ namespace OpenBots.Service.API.Model
         {
             var sb = new StringBuilder();
             sb.Append("class LoginModel {\n");
-            sb.Append("  Email: ").Append(Email).Append("\n");
+            sb.Append("  UserName: ").Append(UserName).Append("\n");
             sb.Append("  Password: ").Append(Password).Append("\n");
             sb.Append("}\n");
             return sb.ToString();
@@ -113,9 +113,9 @@ namespace OpenBots.Service.API.Model
 
             return 
                 (
-                    this.Email == input.Email ||
-                    (this.Email != null &&
-                    this.Email.Equals(input.Email))
+                    this.UserName == input.UserName ||
+                    (this.UserName != null &&
+                    this.UserName.Equals(input.UserName))
                 ) && 
                 (
                     this.Password == input.Password ||
@@ -133,8 +133,8 @@ namespace OpenBots.Service.API.Model
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = 41;
-                if (this.Email != null)
-                    hashCode = hashCode * 59 + this.Email.GetHashCode();
+                if (this.UserName != null)
+                    hashCode = hashCode * 59 + this.UserName.GetHashCode();
                 if (this.Password != null)
                     hashCode = hashCode * 59 + this.Password.GetHashCode();
                 return hashCode;
