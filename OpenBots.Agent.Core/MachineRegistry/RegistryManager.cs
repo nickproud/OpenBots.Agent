@@ -39,7 +39,7 @@ namespace OpenBots.Agent.Core.MachineRegistry
         private string GetKeyValue(string key)
         {
             string keyValue = null;
-            var registryKey = Registry.LocalMachine.OpenSubKey(_registryKeys.SubKey, true);
+            var registryKey = Registry.CurrentUser.OpenSubKey(_registryKeys.SubKey, true);
 
             try
             {
@@ -60,12 +60,12 @@ namespace OpenBots.Agent.Core.MachineRegistry
 
         private void SetKeyValue(string key, string value)
         {
-            var registryKey = Registry.LocalMachine.OpenSubKey(_registryKeys.SubKey, true);
+            var registryKey = Registry.CurrentUser.OpenSubKey(_registryKeys.SubKey, true);
 
             try
             {
                 if (registryKey == null)
-                    registryKey = Registry.LocalMachine.CreateSubKey(_registryKeys.SubKey);
+                    registryKey = Registry.CurrentUser.CreateSubKey(_registryKeys.SubKey);
 
                 registryKey.SetValue(key, value);
             }
