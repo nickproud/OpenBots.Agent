@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Management;
 using System.Runtime.InteropServices;
 using System.Security;
 
@@ -16,7 +17,7 @@ namespace OpenBots.Service.Client.Manager.Execution
         [StructLayout(LayoutKind.Sequential)]
         public struct SECURITY_ATTRIBUTES
         {
-            public int Length;
+            public uint nLength;
             public IntPtr lpSecurityDescriptor;
             public bool bInheritHandle;
         }
@@ -53,6 +54,31 @@ namespace OpenBots.Service.Client.Manager.Execution
             public uint dwThreadId;
         }
 
+        private enum WTS_CONNECTSTATE_CLASS
+        {
+            WTSActive,
+            WTSConnected,
+            WTSConnectQuery,
+            WTSShadow,
+            WTSDisconnected,
+            WTSIdle,
+            WTSListen,
+            WTSReset,
+            WTSDown,
+            WTSInit
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct WTS_SESSION_INFO
+        {
+            public readonly UInt32 SessionID;
+
+            [MarshalAs(UnmanagedType.LPStr)]
+            public readonly String pWinStationName;
+
+            public readonly WTS_CONNECTSTATE_CLASS State;
+        }
+
         #endregion
 
         #region Enumerations
@@ -79,6 +105,13 @@ namespace OpenBots.Service.Client.Manager.Execution
         public const uint MAXIMUM_ALLOWED = 0x2000000;
         public const int CREATE_NEW_CONSOLE = 0x00000010;
         public const int CREATE_NO_WINDOW = 0x08000000;
+        private const int CREATE_UNICODE_ENVIRONMENT = 0x00000400;
+
+        private const uint INVALID_SESSION_ID = 0xFFFFFFFF;
+        private static readonly IntPtr WTS_CURRENT_SERVER_HANDLE = IntPtr.Zero;
+
+        private const uint TOKEN_QUERY = 0x0008;
+        private const uint TOKEN_ASSIGN_PRIMARY = 0x0001;
 
         public const int IDLE_PRIORITY_CLASS = 0x40;
         public const int NORMAL_PRIORITY_CLASS = 0x20;
@@ -102,19 +135,10 @@ namespace OpenBots.Service.Client.Manager.Execution
             ref SECURITY_ATTRIBUTES lpThreadAttributes, bool bInheritHandle, int dwCreationFlags, IntPtr lpEnvironment,
             String lpCurrentDirectory, ref STARTUPINFO lpStartupInfo, out PROCESS_INFORMATION lpProcessInformation);
 
-        [DllImport("kernel32.dll")]
-        static extern bool ProcessIdToSessionId(uint dwProcessId, ref uint pSessionId);
-
         [DllImport("advapi32.dll", EntryPoint = "DuplicateTokenEx")]
         public extern static bool DuplicateTokenEx(IntPtr ExistingTokenHandle, uint dwDesiredAccess,
             ref SECURITY_ATTRIBUTES lpThreadAttributes, int TokenType,
             int ImpersonationLevel, ref IntPtr DuplicateTokenHandle);
-
-        [DllImport("kernel32.dll")]
-        static extern IntPtr OpenProcess(uint dwDesiredAccess, bool bInheritHandle, uint dwProcessId);
-
-        [DllImport("advapi32", SetLastError = true), SuppressUnmanagedCodeSecurityAttribute]
-        static extern bool OpenProcessToken(IntPtr ProcessHandle, int DesiredAccess, ref IntPtr TokenHandle);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern UInt32 WaitForSingleObject
@@ -125,7 +149,77 @@ namespace OpenBots.Service.Client.Manager.Execution
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern bool GetExitCodeProcess(IntPtr hProcess, out uint ExitCode);
+
+        [DllImport("userenv.dll", SetLastError = true)]
+        private static extern bool CreateEnvironmentBlock(ref IntPtr lpEnvironment, IntPtr hToken, bool bInherit);
+
+        [DllImport("Wtsapi32.dll")]
+        private static extern uint WTSQueryUserToken(uint SessionId, ref IntPtr phToken);
+
+        [DllImport("wtsapi32.dll", SetLastError = true)]
+        private static extern int WTSEnumerateSessions(
+            IntPtr hServer,
+            int Reserved,
+            int Version,
+            ref IntPtr ppSessionInfo,
+            ref int pCount);
+
+        [DllImport("userenv.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool DestroyEnvironmentBlock(IntPtr lpEnvironment);
         #endregion
+
+        #region Helping Methods
+
+        private static bool GetSessionUserToken(ref IntPtr phUserToken)
+        {
+            var bResult = false;
+            var hImpersonationToken = IntPtr.Zero;
+            var activeSessionId = INVALID_SESSION_ID;
+            var pSessionInfo = IntPtr.Zero;
+            var sessionCount = 0;
+
+            SECURITY_ATTRIBUTES sa = new SECURITY_ATTRIBUTES();
+            sa.nLength = (uint)Marshal.SizeOf(sa);
+
+            // Get a handle to the user access token for the current active session.
+            if (WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE, 0, 1, ref pSessionInfo, ref sessionCount) != 0)
+            {
+                var arrayElementSize = Marshal.SizeOf(typeof(WTS_SESSION_INFO));
+                var current = pSessionInfo;
+
+                for (var i = 0; i < sessionCount; i++)
+                {
+                    var si = (WTS_SESSION_INFO)Marshal.PtrToStructure((IntPtr)current, typeof(WTS_SESSION_INFO));
+                    current += arrayElementSize;
+
+                    if (si.State == WTS_CONNECTSTATE_CLASS.WTSActive)
+                    {
+                        activeSessionId = si.SessionID;
+                    }
+                }
+            }
+
+            // If enumerating did not work, fall back to the old method
+            if (activeSessionId == INVALID_SESSION_ID)
+            {
+                activeSessionId = WTSGetActiveConsoleSessionId();
+            }
+
+            if (WTSQueryUserToken(activeSessionId, ref hImpersonationToken) != 0)
+            {
+                // Convert the impersonation token to a primary token
+                bResult = DuplicateTokenEx(hImpersonationToken, 0, ref sa,
+                    (int)SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation, (int)TOKEN_TYPE.TokenPrimary,
+                    ref phUserToken);
+
+                CloseHandle(hImpersonationToken);
+            }
+
+            return bResult;
+        }
+
+        #endregion Helping Methods
 
         /// <summary>
         /// Launches the given application with full admin rights, and in addition bypasses the Vista UAC prompt
@@ -135,38 +229,18 @@ namespace OpenBots.Service.Client.Manager.Execution
         /// <returns>Exit Code of the Process</returns>
         public static bool LaunchProcess(String commandLine, out PROCESS_INFORMATION processInfo)
         {
-            uint winlogonPid = 0;
             uint exitCode = 0;
             Boolean pResult = false;
-            IntPtr hUserTokenDup = IntPtr.Zero, hPToken = IntPtr.Zero, hProcess = IntPtr.Zero;
+            IntPtr hUserTokenDup = IntPtr.Zero, hPToken = IntPtr.Zero, hProcess = IntPtr.Zero, envBlock = IntPtr.Zero;
             UInt32 pResultWait = WAIT_FAILED;
 
             processInfo = new PROCESS_INFORMATION();
 
             try
             {
-                // obtain the currently active session id; every logged on user in the system has a unique session id
-                uint dwSessionId = WTSGetActiveConsoleSessionId();
-
-                // obtain the process id of the winlogon process that is running within the currently active session
-                Process[] processes = Process.GetProcessesByName("winlogon");
-                foreach (Process p in processes)
-                {
-                    if ((uint)p.SessionId == dwSessionId)
-                    {
-                        winlogonPid = (uint)p.Id;
-                    }
-                }
-
-                // obtain a handle to the winlogon process
-                hProcess = OpenProcess(MAXIMUM_ALLOWED, false, winlogonPid);
-
-                // obtain a handle to the access token of the winlogon process
-                if (!OpenProcessToken(hProcess, TOKEN_DUPLICATE, ref hPToken))
-                {
-                    CloseHandle(hProcess);
-                    return false;
-                }
+                // obtain the currently active session id, then use it to generate an inpersonation token; every logged on user in the system has a unique session id
+                GetSessionUserToken(ref hPToken);
+             
 
                 // Security attibute structure used in DuplicateTokenEx and CreateProcessAsUser
                 // I would prefer to not have to use a security attribute variable and to just 
@@ -174,15 +248,7 @@ namespace OpenBots.Service.Client.Manager.Execution
                 // of the existing token. However, in C# structures are value types and therefore
                 // cannot be assigned the null value.
                 SECURITY_ATTRIBUTES sa = new SECURITY_ATTRIBUTES();
-                sa.Length = Marshal.SizeOf(sa);
-
-                // copy the access token of the winlogon process; the newly created token will be a primary token
-                if (!DuplicateTokenEx(hPToken, MAXIMUM_ALLOWED, ref sa, (int)SECURITY_IMPERSONATION_LEVEL.SecurityIdentification, (int)TOKEN_TYPE.TokenPrimary, ref hUserTokenDup))
-                {
-                    CloseHandle(hProcess);
-                    CloseHandle(hPToken);
-                    return false;
-                }
+                sa.nLength = (uint) Marshal.SizeOf(sa);
 
                 // By default CreateProcessAsUser creates a process on a non-interactive window station, meaning
                 // the window station has a desktop that is invisible and the process is incapable of receiving
@@ -193,17 +259,24 @@ namespace OpenBots.Service.Client.Manager.Execution
                 si.lpDesktop = @"winsta0\default"; // interactive window station parameter; basically this indicates that the process created can display a GUI on the desktop
 
                 // flags that specify the priority and creation method of the process
-                int dwCreationFlags = NORMAL_PRIORITY_CLASS | CREATE_NEW_CONSOLE;
+                int dwCreationFlags = NORMAL_PRIORITY_CLASS | CREATE_NEW_CONSOLE | CREATE_UNICODE_ENVIRONMENT;
+
+                envBlock = IntPtr.Zero;// = GetEnvironmentBlock(hPToken);
+
+                if (!CreateEnvironmentBlock(ref envBlock, hPToken, false))
+                {
+                    throw new Exception("StartProcessAsCurrentUser: CreateEnvironmentBlock failed.");
+                }
 
                 // create a new process in the current user's logon session
-                pResult = CreateProcessAsUser(hUserTokenDup,            // client's access token
+                pResult = CreateProcessAsUser(hPToken,            // client's access token
                                                 null,                   // file to execute
                                                 commandLine,            // command line
                                                 ref sa,                 // pointer to process SECURITY_ATTRIBUTES
                                                 ref sa,                 // pointer to thread SECURITY_ATTRIBUTES
                                                 false,                  // handles are not inheritable
                                                 dwCreationFlags,        // creation flags
-                                                IntPtr.Zero,            // pointer to new environment block 
+                                                envBlock,            // pointer to new environment block 
                                                 null,                   // name of current directory 
                                                 ref si,                 // pointer to STARTUPINFO structure
                                                 out processInfo         // receives information about new process
@@ -222,6 +295,11 @@ namespace OpenBots.Service.Client.Manager.Execution
                 CloseHandle(hProcess);
                 CloseHandle(hPToken);
                 CloseHandle(hUserTokenDup);
+
+                if(envBlock != IntPtr.Zero)
+                {
+                    DestroyEnvironmentBlock(envBlock);
+                }
             }
 
             return pResult; // return the result
