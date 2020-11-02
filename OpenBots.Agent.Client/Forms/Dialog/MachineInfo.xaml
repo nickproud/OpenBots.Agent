@@ -1,0 +1,87 @@
+﻿<Window x:Class="OpenBots.Agent.Client.Forms.Dialog.MachineInfo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenBots.Agent.Client.Forms.Dialog"
+        mc:Ignorable="d"
+        Title="Machine Info" ResizeMode="NoResize" SizeToContent="Height" WindowStartupLocation="CenterScreen" Width="420">
+    <Window.Resources>
+        <Style TargetType="{x:Type Image}">
+            <Setter Property="Source" Value="/resources/copy_gray_color_512.png"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Width" Value="25"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="ToolTip" Value="Copy to ClipBoard"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Source" Value="/resources/copy_black_color_512.png"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+    <Grid Name="grd_Main" Margin="17,0,17,10">
+        <StackPanel Name="pnl_MachineInfo">
+            <Grid Name="grd_MachineInfo" Margin="0,10,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Name="pnl_MachineInfo_WhoAmI" Height="29">
+                    <Grid Name="grd_MachineInfo_WhoAmI" Margin="0,0,10,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="115"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="70"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Domain\Username:" FontWeight="DemiBold"/>
+                        <Label Name="lbl_MachineInfo_WhoAmI" Content="" Grid.Column="1" VerticalContentAlignment="Center"/>
+                        <Image x:Name="img_whoami" Grid.Column="2" MouseLeftButtonDown="OnClick_CopyImage" />
+                    </Grid>
+                </StackPanel>
+                <StackPanel Name="pnl_MachineInfo_MachineName" Grid.Row="1" Height="29">
+                    <Grid Name="grd_MachineInfo_MachineName" Margin="0,0,10,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="115"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="70"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="Machine Name:" FontWeight="DemiBold"/>
+                        <Label Name="lbl_MachineInfo_MachineName" Content="" Grid.Column="1" VerticalContentAlignment="Center"/>
+                        <Image x:Name="img_machineName" Grid.Column="2" MouseLeftButtonDown="OnClick_CopyImage"/>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Name="pnl_MachineInfo_MACAddress" Grid.Row="2" Height="29">
+                    <Grid Name="grd_MachineInfo_MACAddress" Margin="0,0,10,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="115"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="70"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="MAC Address:" FontWeight="DemiBold"/>
+                        <Label Name="lbl_MachineInfo_MACAddress" Content="" Grid.Column="1" VerticalContentAlignment="Center"/>
+                        <Image x:Name="img_macAddress" Grid.Column="2" MouseLeftButtonDown="OnClick_CopyImage"/>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Name="pnl_SinkType_Logging3" Grid.Row="3" Height="29">
+                    <Grid Name="grd_MachineInfo_IPAddress" Margin="0,0,10,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="115"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="70"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Content="IP Address:" FontWeight="DemiBold"/>
+                        <Label Name="lbl_MachineInfo_IPAddress" Content="" Grid.Column="1" VerticalContentAlignment="Center"/>
+                        <Image x:Name="img_ipAddress" Grid.Column="2" MouseLeftButtonDown="OnClick_CopyImage"/>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Name="pnl_MachineInfo_Copy" Grid.Row="4" Margin="0,5,0,0" Height="29">
+                    <Label Name="lbl_CopytoClipboard" Content="Copied to Clipboard!" Visibility="Collapsed" FontWeight="DemiBold" Foreground="#808080"/>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</Window>
