@@ -1,8 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using System.Management;
+﻿using OpenBots.Service.API.Model;
+using System;
 using System.Runtime.InteropServices;
-using System.Security;
 
 namespace OpenBots.Service.Client.Manager.Execution
 {
@@ -68,6 +66,35 @@ namespace OpenBots.Service.Client.Manager.Execution
             WTSInit
         }
 
+        private enum WTS_INFO_CLASS
+        {
+            WTSInitialProgram,
+            WTSApplicationName,
+            WTSWorkingDirectory,
+            WTSOEMId,
+            WTSSessionId,
+            WTSUserName,
+            WTSWinStationName,
+            WTSDomainName,
+            WTSConnectState,
+            WTSClientBuildNumber,
+            WTSClientName,
+            WTSClientDirectory,
+            WTSClientProductId,
+            WTSClientHardwareId,
+            WTSClientAddress,
+            WTSClientDisplay,
+            WTSClientProtocolType,
+            WTSIdleTime,
+            WTSLogonTime,
+            WTSIncomingBytes,
+            WTSOutgoingBytes,
+            WTSIncomingFrames,
+            WTSOutgoingFrames,
+            WTSClientInfo,
+            WTSSessionInfo,
+        }
+
         [StructLayout(LayoutKind.Sequential)]
         private struct WTS_SESSION_INFO
         {
@@ -120,6 +147,9 @@ namespace OpenBots.Service.Client.Manager.Execution
 
         const UInt32 INFINITE = 0xFFFFFFFF;
         const UInt32 WAIT_FAILED = 0xFFFFFFFF;
+
+        const int LOGON32_PROVIDER_DEFAULT = 0;
+        const int LOGON32_LOGON_INTERACTIVE = 2;
         #endregion
 
         #region Win32 API Imports
@@ -153,8 +183,21 @@ namespace OpenBots.Service.Client.Manager.Execution
         [DllImport("userenv.dll", SetLastError = true)]
         private static extern bool CreateEnvironmentBlock(ref IntPtr lpEnvironment, IntPtr hToken, bool bInherit);
 
-        [DllImport("Wtsapi32.dll")]
+        [DllImport("wtsapi32.dll")]
         private static extern uint WTSQueryUserToken(uint SessionId, ref IntPtr phToken);
+
+        [DllImport("wtsapi32.dll")]
+        private static extern bool WTSQuerySessionInformation(IntPtr hServer, uint sessionId, WTS_INFO_CLASS wtsInfoClass, out System.IntPtr ppBuffer, out int pBytesReturned);
+
+        [DllImport("wtsapi32.dll")]
+        private static extern void WTSFreeMemory(IntPtr pointer);
+
+        // obtains user token
+        [DllImport("advapi32.dll", SetLastError = true)]
+        public static extern bool LogonUser(string username, string domain, string password, int logonType, int logonProvider, ref IntPtr phToken);
+
+        [DllImport("wtsapi32.dll", SetLastError = true)]
+        static extern bool WTSLogoffSession(IntPtr hServer, int SessionId, bool bWait);
 
         [DllImport("wtsapi32.dll", SetLastError = true)]
         private static extern int WTSEnumerateSessions(
@@ -171,18 +214,33 @@ namespace OpenBots.Service.Client.Manager.Execution
 
         #region Helping Methods
 
-        private static bool GetSessionUserToken(ref IntPtr phUserToken)
+        public static string GetUsernameBySessionId(uint sessionId, bool prependDomain)
         {
-            var bResult = false;
-            var hImpersonationToken = IntPtr.Zero;
+            IntPtr buffer;
+            int strLen;
+            string username = string.Empty;
+            if (WTSQuerySessionInformation(IntPtr.Zero, sessionId, WTS_INFO_CLASS.WTSUserName, out buffer, out strLen) && strLen > 1)
+            {
+                username = Marshal.PtrToStringAnsi(buffer);
+                WTSFreeMemory(buffer);
+                if (prependDomain)
+                {
+                    if (WTSQuerySessionInformation(IntPtr.Zero, sessionId, WTS_INFO_CLASS.WTSDomainName, out buffer, out strLen) && strLen > 1)
+                    {
+                        username = Marshal.PtrToStringAnsi(buffer) + "\\" + username;
+                        WTSFreeMemory(buffer);
+                    }
+                }
+            }
+            return username;
+        }
+
+        private static uint GetActiveUserSessionId(string domainUsername)
+        {
             var activeSessionId = INVALID_SESSION_ID;
             var pSessionInfo = IntPtr.Zero;
             var sessionCount = 0;
 
-            SECURITY_ATTRIBUTES sa = new SECURITY_ATTRIBUTES();
-            sa.nLength = (uint)Marshal.SizeOf(sa);
-
-            // Get a handle to the user access token for the current active session.
             if (WTSEnumerateSessions(WTS_CURRENT_SERVER_HANDLE, 0, 1, ref pSessionInfo, ref sessionCount) != 0)
             {
                 var arrayElementSize = Marshal.SizeOf(typeof(WTS_SESSION_INFO));
@@ -190,28 +248,49 @@ namespace OpenBots.Service.Client.Manager.Execution
 
                 for (var i = 0; i < sessionCount; i++)
                 {
+                    // Get Session Info
                     var si = (WTS_SESSION_INFO)Marshal.PtrToStructure((IntPtr)current, typeof(WTS_SESSION_INFO));
                     current += arrayElementSize;
 
-                    if (si.State == WTS_CONNECTSTATE_CLASS.WTSActive)
+                    // Get Domain\Username by Session Id
+                    var sessionUsername = GetUsernameBySessionId(si.SessionID, true);
+
+                    // If there is an Active Session for the Assigned User
+                    if (si.State == WTS_CONNECTSTATE_CLASS.WTSActive && sessionUsername.ToLower() == domainUsername.ToLower())
                     {
                         activeSessionId = si.SessionID;
+                        break;
                     }
                 }
             }
 
-            // If enumerating did not work, fall back to the old method
+            return activeSessionId;
+        }
+
+        private static bool GetSessionUserToken(Credential machineCredential, ref IntPtr phUserToken, ref bool userLoggedOn)
+        {
+            var bResult = false;
+            var hImpersonationToken = IntPtr.Zero;
+            string domainUsername = $"{machineCredential.Domain}\\{machineCredential.UserName}";
+
+            SECURITY_ATTRIBUTES sa = new SECURITY_ATTRIBUTES();
+            sa.nLength = (uint)Marshal.SizeOf(sa);
+
+            // Get Session Id of the active session.
+            var activeSessionId = GetActiveUserSessionId(domainUsername);
+
+            // If activeSessionId is invalid (No Active Session found for the Assigned User)
             if (activeSessionId == INVALID_SESSION_ID)
             {
-                activeSessionId = WTSGetActiveConsoleSessionId();
+                // Logon with the given user credentials (creating an active console session)
+                bResult = userLoggedOn = LogonUser(machineCredential.UserName, machineCredential.Domain,
+                        machineCredential.PasswordSecret, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, ref phUserToken);
             }
-
-            if (WTSQueryUserToken(activeSessionId, ref hImpersonationToken) != 0)
+            else if (WTSQueryUserToken(activeSessionId, ref hImpersonationToken) != 0)
             {
                 // Convert the impersonation token to a primary token
-                bResult = DuplicateTokenEx(hImpersonationToken, 0, ref sa,
-                    (int)SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation, (int)TOKEN_TYPE.TokenPrimary,
-                    ref phUserToken);
+                bResult = DuplicateTokenEx(hImpersonationToken, 0, ref sa, (int)SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation, 
+                    (int)TOKEN_TYPE.TokenPrimary, ref phUserToken);
 
                 CloseHandle(hImpersonationToken);
             }
@@ -227,20 +306,25 @@ namespace OpenBots.Service.Client.Manager.Execution
         /// <param name="commandLine">The name of the application to launch</param>
         /// <param name="processInfo">Process information regarding the launched application that gets returned to the caller</param>
         /// <returns>Exit Code of the Process</returns>
-        public static bool LaunchProcess(String commandLine, out PROCESS_INFORMATION processInfo)
+        public static bool LaunchProcess(String commandLine, Credential machineCredential, out PROCESS_INFORMATION processInfo)
         {
             uint exitCode = 0;
+            bool userLoggedOn = false;
             Boolean pResult = false;
             IntPtr hUserTokenDup = IntPtr.Zero, hPToken = IntPtr.Zero, hProcess = IntPtr.Zero, envBlock = IntPtr.Zero;
             UInt32 pResultWait = WAIT_FAILED;
+            string domainUsername = $"{machineCredential.Domain}\\{machineCredential.UserName}";
 
             processInfo = new PROCESS_INFORMATION();
 
             try
             {
                 // obtain the currently active session id, then use it to generate an inpersonation token; every logged on user in the system has a unique session id
-                GetSessionUserToken(ref hPToken);
-             
+                bool sessionFound = GetSessionUserToken(machineCredential, ref hPToken, ref userLoggedOn);
+
+                // If unable to find/create an Active User Session
+                if (!sessionFound)
+                    throw new Exception($"Unable to Find/Create an Active User Session for provided Credential \"{machineCredential.Name}\" ");
 
                 // Security attibute structure used in DuplicateTokenEx and CreateProcessAsUser
                 // I would prefer to not have to use a security attribute variable and to just 
@@ -248,7 +332,7 @@ namespace OpenBots.Service.Client.Manager.Execution
                 // of the existing token. However, in C# structures are value types and therefore
                 // cannot be assigned the null value.
                 SECURITY_ATTRIBUTES sa = new SECURITY_ATTRIBUTES();
-                sa.nLength = (uint) Marshal.SizeOf(sa);
+                sa.nLength = (uint)Marshal.SizeOf(sa);
 
                 // By default CreateProcessAsUser creates a process on a non-interactive window station, meaning
                 // the window station has a desktop that is invisible and the process is incapable of receiving
@@ -260,8 +344,6 @@ namespace OpenBots.Service.Client.Manager.Execution
 
                 // flags that specify the priority and creation method of the process
                 int dwCreationFlags = NORMAL_PRIORITY_CLASS | CREATE_NEW_CONSOLE | CREATE_UNICODE_ENVIRONMENT;
-
-                envBlock = IntPtr.Zero;// = GetEnvironmentBlock(hPToken);
 
                 if (!CreateEnvironmentBlock(ref envBlock, hPToken, false))
                 {
@@ -282,21 +364,29 @@ namespace OpenBots.Service.Client.Manager.Execution
                                                 out processInfo         // receives information about new process
                                                 );
 
-                if (!pResult) { throw new Exception("CreateProcessAsUser error #" + Marshal.GetLastWin32Error()); }
+                if (!pResult)
+                    throw new Exception("CreateProcessAsUser error #" + Marshal.GetLastWin32Error());
 
                 pResultWait = WaitForSingleObject(processInfo.hProcess, INFINITE);
-                if (pResultWait == WAIT_FAILED) { throw new Exception("WaitForSingleObject error #" + Marshal.GetLastWin32Error()); }
+                if (pResultWait == WAIT_FAILED)
+                    throw new Exception("WaitForSingleObject error #" + Marshal.GetLastWin32Error());
 
                 GetExitCodeProcess(processInfo.hProcess, out exitCode);
             }
             finally
             {
+                if (userLoggedOn)
+                {
+                    var activeConsoleSessionId = WTSGetActiveConsoleSessionId();
+                    WTSLogoffSession(WTS_CURRENT_SERVER_HANDLE, (int)activeConsoleSessionId, true);
+                }
+
                 // invalidate the handles
                 CloseHandle(hProcess);
                 CloseHandle(hPToken);
                 CloseHandle(hUserTokenDup);
 
-                if(envBlock != IntPtr.Zero)
+                if (envBlock != IntPtr.Zero)
                 {
                     DestroyEnvironmentBlock(envBlock);
                 }
@@ -304,6 +394,5 @@ namespace OpenBots.Service.Client.Manager.Execution
 
             return pResult; // return the result
         }
-
     }
 }
