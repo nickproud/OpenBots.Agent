@@ -1,23 +1,23 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OpenBots.Agent.Client.Forms.Dialog;
 using OpenBots.Agent.Client.Utilities;
-using OpenBots.Agent.Core.Model;
-using OpenBots.Agent.Core.MachineRegistry;
 using OpenBots.Agent.Core.Enums;
+using OpenBots.Agent.Core.UserRegistry;
+using OpenBots.Agent.Core.Model;
 using Serilog.Events;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Principal;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Drawing = System.Drawing;
 using SystemForms = System.Windows.Forms;
-using System.IO;
-using OpenBots.Agent.Client.Forms.Dialog;
-using System.Security.Principal;
 
 namespace OpenBots.Agent.Client
 {
@@ -176,7 +176,7 @@ namespace OpenBots.Agent.Client
                 _connectionSettings = new ServerConnectionSettings()
                 {
                     ServerConnectionEnabled = false,
-                    ServerURL = string.Empty,
+                    ServerURL = _registryManager.ServerURL ?? string.Empty,          // Load Server URL from User Registry,
                     AgentUsername = _registryManager.AgentUsername ?? string.Empty,  // Load Username from User Registry
                     AgentPassword = _registryManager.AgentPassword ?? string.Empty,  // Load Password from User Registry
                     SinkType = string.IsNullOrEmpty(_agentSettings.SinkType) ? SinkType.File.ToString() : _agentSettings.SinkType,
@@ -499,12 +499,19 @@ namespace OpenBots.Agent.Client
                             UpdateUIOnConnect();
 
                             //Set Registry Keys if NOT already Set
-                            if (string.IsNullOrEmpty(_registryManager.AgentUsername) || string.IsNullOrEmpty(_registryManager.AgentPassword))
+                            if (string.IsNullOrEmpty(_registryManager.AgentUsername) || string.IsNullOrEmpty(_registryManager.AgentPassword) ||
+                                string.IsNullOrEmpty(_registryManager.ServerURL))
                             {
                                 _registryManager.AgentUsername = _connectionSettings.AgentUsername;
                                 _registryManager.AgentPassword = _connectionSettings.AgentPassword;
+                                _registryManager.ServerURL = _connectionSettings.ServerURL;
 
                                 OnSetRegistryKeys();
+                            }
+                            else if(_registryManager.ServerURL != _connectionSettings.ServerURL)
+                            {
+                                // If Server URL is updated
+                                _registryManager.ServerURL = _connectionSettings.ServerURL;
                             }
 
                             // Update OpenBots.settings file

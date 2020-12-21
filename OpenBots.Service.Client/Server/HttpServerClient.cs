@@ -1,15 +1,12 @@
 ﻿using OpenBots.Agent.Core.Model;
-using OpenBots.Service.Client.Manager.API;
 using OpenBots.Service.API.Model;
-using System;
-using System.Collections.Generic;
-using System.Timers;
-using OpenBots.Service.Client.Manager.Execution;
 using OpenBots.Service.Client.Manager;
-using System.Security.Authentication;
-using OpenBots.Service.API.Client;
+using OpenBots.Service.Client.Manager.API;
+using OpenBots.Service.Client.Manager.Execution;
 using OpenBots.Service.Client.Manager.Logs;
 using Serilog.Events;
+using System;
+using System.Timers;
 
 namespace OpenBots.Service.Client.Server
 {
@@ -18,7 +15,6 @@ namespace OpenBots.Service.Client.Server
         private Timer _heartbeatTimer;
         private JobsPolling _jobsPolling;
 
-        //public ServerConnectionSettings ServerSettings { get; set; }
         public static HttpServerClient Instance
         {
             get
@@ -81,19 +77,22 @@ namespace OpenBots.Service.Client.Server
 
         private void Heartbeat_Elapsed(object sender, ElapsedEventArgs e)
         {
+            int statusCode = 0;
             try
             {
-                int statusCode = AgentsAPIManager.SendAgentHeartBeat(
+                statusCode = AgentsAPIManager.SendAgentHeartBeat(
                     AuthAPIManager.Instance,
                     ConnectionSettingsManager.Instance.ConnectionSettings.AgentId,
-                    new HeartbeatViewModel(DateTime.Now, "", "", "", true));
+                    new AgentHeartbeat(null, null, null, null, null, null, null, null, null, null, DateTime.Now, "", "", "", true));
 
-                if (statusCode != 200)
+                if (statusCode != 201)
                     ConnectionSettingsManager.Instance.ConnectionSettings.ServerConnectionEnabled = false;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                FileLogger.Instance.LogEvent("HeartBeat", $"Status Code: {statusCode} || Exception: {ex.ToString()}", LogEventLevel.Error);
                 ConnectionSettingsManager.Instance.ConnectionSettings.ServerConnectionEnabled = false;
+                UnInitialize();
             }
         }
         #endregion HeartBeat
