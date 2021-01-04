@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using OpenBots.Agent.Client.Forms;
 using OpenBots.Agent.Client.Forms.Dialog;
 using OpenBots.Agent.Client.Utilities;
 using OpenBots.Agent.Core.Enums;
-using OpenBots.Agent.Core.UserRegistry;
 using OpenBots.Agent.Core.Model;
+using OpenBots.Agent.Core.UserRegistry;
 using Serilog.Events;
 using System;
 using System.Collections.Generic;
@@ -739,5 +740,30 @@ namespace OpenBots.Agent.Client
         }
 
         #endregion
+
+        private void OnClick_NugetFeedManager(object sender, RoutedEventArgs e)
+        {
+            string appDataPath = new EnvironmentSettings().GetEnvironmentVariable();
+            string appSettingsPath = Path.Combine(Directory.GetParent(appDataPath).Parent.FullName, "AppSettings.json");
+
+            if(File.Exists(appSettingsPath))
+            {
+                var appSettings = JObject.Parse(File.ReadAllText(appSettingsPath));
+                var packageSourcesJArray = (JArray)appSettings["ClientSettings"]["PackageSourceDT"];
+                var packageSourcesList = packageSourcesJArray.ToObject<List<NugetPackageSource>>();
+                NugetFeedManager nugetFeedManager = new NugetFeedManager(packageSourcesList);
+                nugetFeedManager.Owner = this;
+                nugetFeedManager.ShowDialog();
+
+                var updatedPackageSources = nugetFeedManager.GetPackageSourcesData();
+                appSettings["ClientSettings"]["PackageSourceDT"] = JArray.FromObject(updatedPackageSources);
+                File.WriteAllText(appSettingsPath, appSettings.ToString(Formatting.Indented));
+            }
+            else
+                ShowErrorDialog("An error occurred while retrieving the App Settings",
+                                string.Empty,
+                                $"App Settings file not found at the specified path \"{appSettingsPath}\".",
+                                Application.Current.MainWindow);
+        }
     }
 }
