@@ -6,16 +6,18 @@
         xmlns:local="clr-namespace:OpenBots.Agent.Client.Forms"
         mc:Ignorable="d"
         Title="NugetFeedManager" SizeToContent="Height" Width="630" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+    
     <Grid Name="grd_main">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
         <StackPanel Name="pnl_Header">
             <Label Content="Package Sources" Margin="5,0,5,0" FontSize="18" 
                    Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type StackPanel}}, Path=ActualHeight}"/>
         </StackPanel>
-        <StackPanel Name="pnl_DataGrid" Grid.Row="1" Margin="10,5,10,10">
+        <StackPanel Name="pnl_DataGrid" Grid.Row="1" Margin="10,5,10,5">
             <DataGrid x:Name="dtGrd_NugetSources" AlternatingRowBackground="LightBlue" AlternationCount="2" AutoGenerateColumns="False" BorderBrush="#FF688CAF">
                 <DataGrid.Resources>
                     <Style TargetType="DataGridColumnHeader">
@@ -31,6 +33,31 @@
                     <DataGridTextColumn Header="Package Source" Width="8*" Binding="{Binding PackageSource}"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Margin="0,0,5,10">
+            <Grid HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <Button Content="OK" Grid.Column="0" Margin="5" Background="White" VerticalContentAlignment="Center" Click="OnClick_OKBtn">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="4"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+                <Button Content="Cancel" Grid.Column="1" Margin="5" Background="White" VerticalContentAlignment="Center" Click="OnClick_CancelBtn">
+                    <Button.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="4"/>
+                            <Setter Property="BorderThickness" Value="2"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+            
         </StackPanel>
     </Grid>
 </Window>

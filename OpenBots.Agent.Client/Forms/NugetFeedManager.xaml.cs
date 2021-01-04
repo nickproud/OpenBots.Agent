@@ -13,6 +13,7 @@ namespace OpenBots.Agent.Client.Forms
     /// </summary>
     public partial class NugetFeedManager : Window
     {
+        public bool isDataUpdated { get; private set; } = false;
         public NugetFeedManager(List<NugetPackageSource> packageSources)
         {
             InitializeComponent();
@@ -23,6 +24,18 @@ namespace OpenBots.Agent.Client.Forms
         {
             var packageSources = dtGrd_NugetSources.ItemsSource.Cast<NugetPackageSource>().ToList();
             return packageSources;
+        }
+
+        private void OnClick_OKBtn(object sender, RoutedEventArgs e)
+        {
+            isDataUpdated = true;
+            this.Close();
+        }
+
+        private void OnClick_CancelBtn(object sender, RoutedEventArgs e)
+        {
+            isDataUpdated = false;
+            this.Close();
         }
     }
 }

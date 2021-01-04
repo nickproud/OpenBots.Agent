@@ -717,9 +717,12 @@ namespace OpenBots.Agent.Client
                 nugetFeedManager.Owner = this;
                 nugetFeedManager.ShowDialog();
 
-                var updatedPackageSources = nugetFeedManager.GetPackageSourcesData();
-                appSettings["ClientSettings"]["PackageSourceDT"] = JArray.FromObject(updatedPackageSources);
-                File.WriteAllText(appSettingsPath, appSettings.ToString(Formatting.Indented));
+                if (nugetFeedManager.isDataUpdated)
+                {
+                    var updatedPackageSources = nugetFeedManager.GetPackageSourcesData();
+                    appSettings["ClientSettings"]["PackageSourceDT"] = JArray.FromObject(updatedPackageSources);
+                    File.WriteAllText(appSettingsPath, appSettings.ToString(Formatting.Indented));
+                }
             }
             else
                 ShowErrorDialog("An error occurred while retrieving the App Settings",
