@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using OpenBots.Core.Settings;
 
 namespace OpenBots.Executor.Utilities
 {
@@ -12,16 +13,8 @@ namespace OpenBots.Executor.Utilities
     {
         public static ContainerBuilder LoadBuilder(List<string> assemblyPaths)
         {
-            List<string> filteredPaths = new List<string>();
-            foreach (string path in assemblyPaths)
-            {
-                if (filteredPaths.Where(a => a.Contains(path.Split('/').Last()) && FileVersionInfo.GetVersionInfo(a).FileVersion ==
-                                        FileVersionInfo.GetVersionInfo(path).FileVersion).FirstOrDefault() == null)
-                    filteredPaths.Add(path);
-            }
-
             List<Assembly> existingAssemblies = new List<Assembly>();
-            foreach (var path in filteredPaths)
+            foreach (var path in assemblyPaths)
             {
                 try
                 {
@@ -32,12 +25,12 @@ namespace OpenBots.Executor.Utilities
                                                                  x.GetName().Version.ToString() == AssemblyName.GetAssemblyName(path).Version.ToString())
                                                      .FirstOrDefault();
 
-                    if (existingAssembly == null && name != "RestSharp" && name != "WebDriver")
+                    if (existingAssembly == null && name != "RestSharp" && name != "WebDriver" && name != "OpenBots.Core")
                     {
-                        var assembly = Assembly.LoadFrom(path);
+                        var assembly = Assembly.LoadFile(path);
                         existingAssemblies.Add(assembly);
                     }
-                    else if (name != "RestSharp" && name != "WebDriver")
+                    else if (existingAssembly != null)
                         existingAssemblies.Add(existingAssembly);
                 }
                 catch (Exception ex)

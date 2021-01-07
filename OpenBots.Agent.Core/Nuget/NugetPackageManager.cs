@@ -11,9 +11,11 @@ using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.Versioning;
 using OpenBots.Agent.Core.Model;
+using OpenBots.Core.Settings;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -128,19 +130,24 @@ namespace OpenBots.Agent.Core.Nuget
                 exceptionsList.Add("Please install this package using the OpenBots Studio Package Manager");
                 throw new Exception(string.Join("\n", exceptionsList));
             }
-            return assemblyPaths;
+
+            List<string> filteredPaths = new List<string>();
+            foreach (string path in assemblyPaths)
+            {
+                if (filteredPaths.Where(a => a.Contains(path.Split('/').Last()) && FileVersionInfo.GetVersionInfo(a).FileVersion ==
+                                        FileVersionInfo.GetVersionInfo(path).FileVersion).FirstOrDefault() == null)
+                    filteredPaths.Add(path);
+            }
+
+            return filteredPaths;
         }
         public static async Task InstallPackage(string packageId, string version, Dictionary<string, string> projectDependenciesDict)
         {
-            string appDataPath = Directory.GetParent(new EnvironmentSettings().GetEnvironmentVariable()).Parent.FullName;
-            string appSettingsFilePath = Path.Combine(appDataPath, "AppSettings.json");
-
-            if (!File.Exists(appSettingsFilePath))
-                throw new FileNotFoundException($"OpenBots AppSettings file \"{appSettingsFilePath}\" not found");
-
-            var appSettings = File.ReadAllText(appSettingsFilePath);
-            var packageSources = ((JArray)JObject.Parse(appSettings)["ClientSettings"]["PackageSourceDT"]).ToObject<List<NugetPackageSource>>();
-            packageSources = packageSources.Where(x => x.Enabled == true).ToList();
+            string appSettingsDirPath = Directory.GetParent(new EnvironmentSettings().GetEnvironmentVariable()).Parent.FullName;
+            var appSettings = new ApplicationSettings().GetOrCreateApplicationSettings(appSettingsDirPath);
+            var packageSources = appSettings.ClientSettings.PackageSourceDT.AsEnumerable()
+                            .Where(r => r.Field<string>(0) == "True")
+                            .CopyToDataTable();
 
             var packageVersion = NuGetVersion.Parse(version);
             var nuGetFramework = NuGetFramework.ParseFolder("net48");
@@ -150,10 +157,9 @@ namespace OpenBots.Agent.Core.Nuget
             using (var cacheContext = new SourceCacheContext())
             {
                 var repositories = new List<SourceRepository>();
-                foreach (var packageSource in packageSources)
+                foreach (DataRow row in packageSources.Rows)
                 {
-                    var sourceRepo = sourceRepositoryProvider.CreateRepository(
-                        new PackageSource(packageSource.PackageSource, packageSource.PackageName, true));
+                    var sourceRepo = sourceRepositoryProvider.CreateRepository(new PackageSource(row[2].ToString(), row[1].ToString(), true));
                     repositories.Add(sourceRepo);
                 }
 
@@ -175,7 +181,7 @@ namespace OpenBots.Agent.Core.Nuget
                 var resolver = new PackageResolver();
                 var packagesToInstall = resolver.Resolve(resolverContext, CancellationToken.None)
                     .Select(p => availablePackages.Single(x => PackageIdentityComparer.Default.Equals(x, p)));
-                var packagePathResolver = new PackagePathResolver(Path.Combine(appDataPath, "packages"));
+                var packagePathResolver = new PackagePathResolver(Path.Combine(appSettingsDirPath, "packages"));
                 var packageExtractionContext = new PackageExtractionContext(
                     PackageSaveMode.Defaultv3,
                     XmlDocFileSaveMode.None,
