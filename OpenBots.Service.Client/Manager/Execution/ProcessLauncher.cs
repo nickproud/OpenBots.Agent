@@ -313,7 +313,6 @@ namespace OpenBots.Service.Client.Manager.Execution
             Boolean pResult = false;
             IntPtr hUserTokenDup = IntPtr.Zero, hPToken = IntPtr.Zero, hProcess = IntPtr.Zero, envBlock = IntPtr.Zero;
             UInt32 pResultWait = WAIT_FAILED;
-            string domainUsername = $"{machineCredential.Domain}\\{machineCredential.UserName}";
 
             processInfo = new PROCESS_INFORMATION();
 

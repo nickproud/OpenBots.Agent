@@ -1,13 +1,16 @@
 ﻿using OpenBots.Agent.Core.Infrastructure;
 using OpenBots.Agent.Core.Model;
 using OpenBots.Service.Client.Manager;
+using OpenBots.Service.Client.Manager.Execution;
 using OpenBots.Service.Client.Server;
 using System;
+using System.Threading.Tasks;
 
 namespace OpenBots.Service.Client
 {
     public class WindowsServiceEndPoint : IWindowsServiceEndPoint
     {
+        
         public ServerResponse ConnectToServer(ServerConnectionSettings settings)
         {
             return HttpServerClient.Instance.Connect(settings);
@@ -16,6 +19,15 @@ namespace OpenBots.Service.Client
         public ServerResponse DisconnectFromServer(ServerConnectionSettings settings)
         {
             return HttpServerClient.Instance.Disconnect(settings);
+        }
+
+        public async Task<bool> ExecuteAttendedTask(string projectPath, ServerConnectionSettings settings)
+        {
+            var task = Task.Factory.StartNew(()=>
+            {
+                return AttendedExecutionManager.Instance.ExecuteTask(projectPath, settings);
+            });
+            return await task.ConfigureAwait(false);
         }
 
         public ServerConnectionSettings GetConnectionSettings()
@@ -31,6 +43,11 @@ namespace OpenBots.Service.Client
         public bool IsConnected()
         {
             return ConnectionSettingsManager.Instance?.ConnectionSettings?.ServerConnectionEnabled ?? false;
+        }
+
+        public bool IsEngineBusy()
+        {
+            return ExecutionManager.Instance?.IsEngineBusy ?? false;
         }
 
         public ServerResponse PingServer(ServerConnectionSettings serverSettings)
@@ -64,5 +81,23 @@ namespace OpenBots.Service.Client
                 throw ex;
             }
         }
+
+        //public IAsyncResult BeginAsyncAttendedExecution(string projectPath, AsyncCallback callback, object asyncState)
+        //{
+        //    try
+        //    {
+        //        AttendedExecutionManager.Instance.ExecuteTask(projectPath);
+        //        return new CompletedAsyncResult<bool>(true);
+        //    }
+        //    catch
+        //    {
+        //        return new CompletedAsyncResult<bool>(false);
+        //    }
+        //}
+        //public bool EndAsyncAttendedExecution(IAsyncResult res)
+        //{
+        //    CompletedAsyncResult<bool> result = res as CompletedAsyncResult<bool>;
+        //    return result.Data;
+        //}
     }
 }

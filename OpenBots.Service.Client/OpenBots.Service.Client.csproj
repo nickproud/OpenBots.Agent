@@ -198,6 +198,7 @@
   <ItemGroup>
     <Compile Include="Manager\API\ExecutionLogsAPIManager.cs" />
     <Compile Include="Manager\API\CredentialsAPIManager.cs" />
+    <Compile Include="Manager\Execution\AttendedExecutionManager.cs" />
     <Compile Include="Manager\Execution\ExecutionManager.cs" />
     <Compile Include="Manager\Execution\JobsQueueManager.cs" />
     <Compile Include="Manager\Execution\ProcessLauncher.cs" />

@@ -118,5 +118,35 @@ namespace OpenBots.Service.Client.Manager.Execution
                 file.Close();
             }
         }
+
+        public static string GetMainScriptFilePath(string projectPackagePath, out string configFilePath)
+        {
+            var unpackagedProjectDir = UnpackageNugetProjectFile(projectPackagePath);
+
+            configFilePath = Directory.GetFiles(unpackagedProjectDir, "project.config", SearchOption.AllDirectories).First();
+            var mainFileName = JObject.Parse(File.ReadAllText(configFilePath))["Main"].ToString();
+
+            // Return "Main" Script File Path of the Automation
+            return Directory.GetFiles(unpackagedProjectDir, mainFileName, SearchOption.AllDirectories).First();
+        }
+
+        private static string UnpackageNugetProjectFile(string processNugetFilePath)
+        {
+            var processZipFilePath = Path.ChangeExtension(processNugetFilePath, ".zip");
+
+            // Create .zip file if it doesn't exist
+            if (!File.Exists(processZipFilePath))
+                File.Copy(processNugetFilePath, processZipFilePath);
+
+            var extractToDirectoryPath = Path.ChangeExtension(processZipFilePath, null);
+
+            // Extract Files/Folders from (.zip) file
+            DecompressFile(processZipFilePath, extractToDirectoryPath);
+
+            // Delete .zip File
+            File.Delete(processZipFilePath);
+
+            return extractToDirectoryPath;
+        }
     }
 }
