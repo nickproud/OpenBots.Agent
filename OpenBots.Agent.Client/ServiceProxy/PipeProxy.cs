@@ -45,8 +45,7 @@ namespace OpenBots.Agent.Client
 
         public ServerResponse ConnectToServer(ServerConnectionSettings connectionSettings)
         {
-            string agentDataDirectoryPath = SettingsManager.Instance.EnvironmentSettings.EnvironmentVariableValue;
-            return _pipeProxy.ConnectToServer(connectionSettings, agentDataDirectoryPath);
+            return _pipeProxy.ConnectToServer(connectionSettings);
         }
 
         public ServerResponse DisconnectFromServer(ServerConnectionSettings connectionSettings)
@@ -80,6 +79,11 @@ namespace OpenBots.Agent.Client
         public void SetConfigFilePath(string environmentVariable, string settingsFilePath)
         {
             _pipeProxy.SetEnvironmentVariable(environmentVariable, settingsFilePath);
+        }
+
+        public ServerResponse PingServer(ServerConnectionSettings connectionSettings)
+        {
+            return _pipeProxy.PingServer(connectionSettings);
         }
     }
 }
