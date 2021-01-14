@@ -35,25 +35,36 @@ namespace OpenBots.Service.Client.Manager.Execution
 
         public bool ExecuteTask(string projectPackagePath, ServerConnectionSettings settings)
         {
+            bool isSuccessful;
+            string projectDirectoryPath = string.Empty;
             try
             {
                 IsAttendedJobRunning = true;
                 string configFilePath;
                 string mainScriptFilePath = AutomationManager.GetMainScriptFilePath(projectPackagePath, out configFilePath);
+                projectDirectoryPath = Path.GetDirectoryName(mainScriptFilePath);
 
                 NugetPackageManager.InstallProjectDependencies(configFilePath);
                 var assembliesList = NugetPackageManager.LoadPackageAssemblies(configFilePath);
 
                 RunAttendedAutomation(mainScriptFilePath, settings, assembliesList);
 
-                IsAttendedJobRunning = false;
-                return true;
+                isSuccessful = true;
             }
             catch (Exception)
             {
-                IsAttendedJobRunning = false;
-                return false;
+                isSuccessful = false;
             }
+            finally
+            {
+                // Delete Project Directory
+                if(Directory.Exists(projectDirectoryPath))
+                    Directory.Delete(projectDirectoryPath, true);
+
+                IsAttendedJobRunning = false;
+            }
+
+            return isSuccessful;
         }
 
         private void RunAttendedAutomation(string mainScriptFilePath, ServerConnectionSettings settings, List<string> projectDependencies)
