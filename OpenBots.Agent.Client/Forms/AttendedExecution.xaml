@@ -27,7 +27,7 @@
                     <ColumnDefinition Width="5*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Label Content="Something" FontWeight="Normal" Foreground="Green" Name="lbl_ExecutionStatus" Grid.Column="0"/>
+                <Label Content="" FontWeight="Normal" Foreground="Green" Name="lbl_ExecutionStatus" Grid.Column="0"/>
                 <Button Content="Run" Name="btn_Run" Grid.Column="1" HorizontalAlignment="Right" FontSize="16" Height="26" Width="80" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Background="White" Click="OnClick_RunBtn">
                     <Button.Resources>
                         <Style TargetType="{x:Type Border}">
