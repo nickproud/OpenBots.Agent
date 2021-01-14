@@ -2,6 +2,7 @@
 using OpenBots.Agent.Core.Model;
 using System;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace OpenBots.Agent.Client
@@ -9,6 +10,8 @@ namespace OpenBots.Agent.Client
     public class PipeProxy
     {
         IWindowsServiceEndPoint _pipeProxy;
+        public event EventHandler<bool> TaskFinishedEvent;
+
         public static PipeProxy Instance
         {
             get
@@ -84,6 +87,17 @@ namespace OpenBots.Agent.Client
         public ServerResponse PingServer(ServerConnectionSettings connectionSettings)
         {
             return _pipeProxy.PingServer(connectionSettings);
+        }
+
+        public async void ExecuteAttendedTask(string projectPackagePath, ServerConnectionSettings settings)
+        {
+            var task = _pipeProxy.ExecuteAttendedTask(projectPackagePath, settings);
+            await task.ContinueWith(e => TaskFinishedEvent?.Invoke(this, task.Result));
+        }
+
+        public bool IsEngineBusy()
+        {
+            return _pipeProxy.IsEngineBusy();
         }
     }
 }

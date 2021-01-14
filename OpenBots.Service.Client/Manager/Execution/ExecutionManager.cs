@@ -70,8 +70,8 @@ namespace OpenBots.Service.Client.Manager.Execution
         {
             try
             {
-                // If Jobs Queue is not Empty & No Job is being executed
-                if(!JobsQueueManager.Instance.IsQueueEmpty() && !IsEngineBusy)
+                // If Jobs Queue is not Empty & No (Server or Attended) Job is being executed
+                if(!JobsQueueManager.Instance.IsQueueEmpty() && !IsEngineBusy && !AttendedExecutionManager.Instance.IsAttendedJobRunning)
                 {
                     SetEngineStatus(true);
                     ExecuteJob();
@@ -263,7 +263,7 @@ namespace OpenBots.Service.Client.Manager.Execution
             return;
         }
         
-        private void SetEngineStatus(bool isBusy)
+        public void SetEngineStatus(bool isBusy)
         {
             IsEngineBusy = isBusy;
             if (!IsEngineBusy)

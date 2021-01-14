@@ -1,4 +1,6 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
+using System.Threading.Tasks;
 using OpenBots.Agent.Core.Model;
 
 namespace OpenBots.Agent.Core.Infrastructure
@@ -28,5 +30,11 @@ namespace OpenBots.Agent.Core.Infrastructure
 
         [OperationContract]
         ServerResponse PingServer(ServerConnectionSettings settings);
+
+        [OperationContract]
+        bool IsEngineBusy();
+
+        [OperationContract]
+        Task<bool> ExecuteAttendedTask(string projectPath, ServerConnectionSettings settings);
     }
 }

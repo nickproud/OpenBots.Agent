@@ -6,6 +6,8 @@ using OpenBots.Agent.Core.Enums;
 using OpenBots.Agent.Core.Model;
 using OpenBots.Agent.Core.UserRegistry;
 using OpenBots.Agent.Core.Utilities;
+using CoreEnums = OpenBots.Core.Enums;
+using OpenBots.Core.IO;
 using OpenBots.Core.Settings;
 using Serilog.Events;
 using System;
@@ -41,6 +43,7 @@ namespace OpenBots.Agent.Client
         private bool _isServiceUP = false;
         private bool _logInfoChanged = false;
 
+        private AttendedExecution _attendedExecutionWindow;
         public MainWindow()
         {
             InitializeComponent();
@@ -165,6 +168,7 @@ namespace OpenBots.Agent.Client
                     SinkType = string.IsNullOrEmpty(_agentSettings.SinkType) ? SinkType.File.ToString() : _agentSettings.SinkType,
                     TracingLevel = string.IsNullOrEmpty(_agentSettings.TracingLevel) ? LogEventLevel.Information.ToString() : _agentSettings.TracingLevel,
                     DNSHost = Dns.GetHostName(),
+                    UserName = Environment.UserName,
                     WhoAmI = WindowsIdentity.GetCurrent().Name.ToLower(),
                     MachineName = Environment.MachineName,
                     AgentId = string.Empty,
@@ -722,6 +726,20 @@ namespace OpenBots.Agent.Client
                 appSettings.Save(appSettings, appSettingsDirPath);
             }
         }
+        private void OnClick_AttendedExecution(object sender, RoutedEventArgs e)
+        {
+            if(_attendedExecutionWindow == null)
+            {
+                _attendedExecutionWindow = new AttendedExecution(false);
+                _attendedExecutionWindow.Closed += (s, args) => this._attendedExecutionWindow = null;
+                _attendedExecutionWindow.Show();
+            }
+            else
+                _attendedExecutionWindow.Activate();
+
+            this.WindowState = WindowState.Minimized;
+
+        }
         private void OnClick_ClearCredentials(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(_registryManager.AgentUsername))
@@ -758,5 +776,7 @@ namespace OpenBots.Agent.Client
             this.Close();
         }
         #endregion
+
+        
     }
 }

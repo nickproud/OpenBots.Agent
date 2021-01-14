@@ -225,6 +225,9 @@
     <Compile Include="ErrorDialog.xaml.cs">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AttendedExecution.xaml.cs">
+      <DependentUpon>AttendedExecution.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Dialog\MachineInfo.xaml.cs">
       <DependentUpon>MachineInfo.xaml</DependentUpon>
     </Compile>
@@ -244,6 +247,10 @@
     <Compile Include="Settings\SettingsManager.cs" />
     <Compile Include="Utilities\WindowHelper.cs" />
     <Page Include="ErrorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Forms\AttendedExecution.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -374,6 +381,9 @@
     <Resource Include="resources\Icons\Commands\command-window-close.png" />
     <Resource Include="resources\Icons\Commands\command-window.png" />
     <Content Include="resources\Samples\HTMLInputSample.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
