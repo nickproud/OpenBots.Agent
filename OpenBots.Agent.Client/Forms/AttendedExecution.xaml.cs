@@ -6,6 +6,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace OpenBots.Agent.Client.Forms
@@ -15,6 +17,7 @@ namespace OpenBots.Agent.Client.Forms
     /// </summary>
     public partial class AttendedExecution : Window
     {
+        private string _lastTask;
         private bool _isEngineBusy;
         private string[] _publishedProjects;
         private FileSystemWatcher _publishedProjectsWatcher;
@@ -48,6 +51,7 @@ namespace OpenBots.Agent.Client.Forms
             _publishedProjectsWatcher.Renamed += new RenamedEventHandler(OnFileRenamed);
             _publishedProjectsWatcher.EnableRaisingEvents = true;
 
+            lbl_ExecutionStatus.Visibility = Visibility.Collapsed;
             LoadPublishedProjects();
             OpenUpInBottomRight();
         }
@@ -77,11 +81,28 @@ namespace OpenBots.Agent.Client.Forms
             LoadPublishedProjects();
         }
 
-        private void OnClick_RunBtn(object sender, RoutedEventArgs e)
+        private async void OnClick_RunBtn(object sender, RoutedEventArgs e)
         {
-            var selectedProjectName = cmb_PublishedProjects.SelectedItem.ToString();
-            var selectedProjectPath = _publishedProjects.Where(x => x.EndsWith(selectedProjectName)).FirstOrDefault();
-            PipeProxy.Instance.ExecuteAttendedTask(selectedProjectPath, _connectionSettings);
+            _lastTask = cmb_PublishedProjects.SelectedItem.ToString();
+            var selectedProjectPath = _publishedProjects.Where(x => x.EndsWith(_lastTask)).FirstOrDefault();
+            PipeProxy.Instance.TaskFinishedEvent += OnAttendedTaskFinished;
+            await Task.Run(()=>PipeProxy.Instance.ExecuteAttendedTask(selectedProjectPath, _connectionSettings));
+
+            string executionStatus = "Running {0} . . .";
+            lbl_ExecutionStatus.Content = string.Format(executionStatus, $"\"{_lastTask}\"");
+            lbl_ExecutionStatus.Visibility = Visibility.Visible;
+        }
+
+        private void OnAttendedTaskFinished(object sender, bool isJobSuccessful)
+        {
+            Dispatcher.Invoke(() => 
+            {
+                string lastRunStatus = "Last Run: {0} - Status: {1}";
+                if (isJobSuccessful)
+                    lbl_ExecutionStatus.Content = string.Format(lastRunStatus, _lastTask, "Successful");
+                else
+                    lbl_ExecutionStatus.Content = string.Format(lastRunStatus, _lastTask, "Failed");
+            });
         }
 
         private void LoadPublishedProjects()

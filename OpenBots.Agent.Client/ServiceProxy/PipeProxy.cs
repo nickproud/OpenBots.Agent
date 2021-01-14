@@ -10,6 +10,8 @@ namespace OpenBots.Agent.Client
     public class PipeProxy
     {
         IWindowsServiceEndPoint _pipeProxy;
+        public event EventHandler<bool> TaskFinishedEvent;
+
         public static PipeProxy Instance
         {
             get
@@ -89,8 +91,8 @@ namespace OpenBots.Agent.Client
 
         public async void ExecuteAttendedTask(string projectPackagePath, ServerConnectionSettings settings)
         {
-            var task = Task.Factory.StartNew(() => _pipeProxy.ExecuteAttendedTask(projectPackagePath, settings));
-            await task.ContinueWith(e => MessageBox.Show("Execution Successful:" + task.Result.ToString()));
+            var task = _pipeProxy.ExecuteAttendedTask(projectPackagePath, settings);
+            await task.ContinueWith(e => TaskFinishedEvent?.Invoke(this, task.Result));
         }
 
         public bool IsEngineBusy()
