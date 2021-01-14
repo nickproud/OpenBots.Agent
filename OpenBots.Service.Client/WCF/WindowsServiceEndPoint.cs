@@ -81,23 +81,5 @@ namespace OpenBots.Service.Client
                 throw ex;
             }
         }
-
-        //public IAsyncResult BeginAsyncAttendedExecution(string projectPath, AsyncCallback callback, object asyncState)
-        //{
-        //    try
-        //    {
-        //        AttendedExecutionManager.Instance.ExecuteTask(projectPath);
-        //        return new CompletedAsyncResult<bool>(true);
-        //    }
-        //    catch
-        //    {
-        //        return new CompletedAsyncResult<bool>(false);
-        //    }
-        //}
-        //public bool EndAsyncAttendedExecution(IAsyncResult res)
-        //{
-        //    CompletedAsyncResult<bool> result = res as CompletedAsyncResult<bool>;
-        //    return result.Data;
-        //}
     }
 }
