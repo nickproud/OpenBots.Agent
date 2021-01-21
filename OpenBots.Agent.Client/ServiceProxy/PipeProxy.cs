@@ -1,6 +1,8 @@
-﻿using OpenBots.Agent.Core.Infrastructure;
+﻿using OpenBots.Agent.Client.Settings;
+using OpenBots.Agent.Core.Infrastructure;
 using OpenBots.Agent.Core.Model;
 using System;
+using System.Collections.Generic;
 using System.ServiceModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,9 +34,12 @@ namespace OpenBots.Agent.Client
         {
             try
             {
-                ChannelFactory<IWindowsServiceEndPoint> pipeFactory =
-                      new ChannelFactory<IWindowsServiceEndPoint>(
-                        new NetNamedPipeBinding(),
+                // Create NamedPipe Binding and Set SendTimeout
+                var namedPipeBinding = new NetNamedPipeBinding();
+                namedPipeBinding.SendTimeout = new TimeSpan(24, 0, 0);
+
+                ChannelFactory<IWindowsServiceEndPoint> pipeFactory = new ChannelFactory<IWindowsServiceEndPoint>(
+                        namedPipeBinding,
                         new EndpointAddress("net.pipe://localhost/OpenBots/WindowsServiceEndPoint"));
 
                 _pipeProxy = pipeFactory.CreateChannel();
@@ -46,14 +51,14 @@ namespace OpenBots.Agent.Client
             }
         }
 
-        public ServerResponse ConnectToServer(ServerConnectionSettings connectionSettings)
+        public ServerResponse ConnectToServer()
         {
-            return _pipeProxy.ConnectToServer(connectionSettings);
+            return _pipeProxy.ConnectToServer(ConnectionSettingsManager.Instance.ConnectionSettings);
         }
 
-        public ServerResponse DisconnectFromServer(ServerConnectionSettings connectionSettings)
+        public ServerResponse DisconnectFromServer()
         {
-            return _pipeProxy.DisconnectFromServer(connectionSettings);
+            return _pipeProxy.DisconnectFromServer(ConnectionSettingsManager.Instance.ConnectionSettings);
         }
 
         public bool IsServiceAlive()
@@ -84,15 +89,27 @@ namespace OpenBots.Agent.Client
             _pipeProxy.SetEnvironmentVariable(environmentVariable, settingsFilePath);
         }
 
-        public ServerResponse PingServer(ServerConnectionSettings connectionSettings)
+        public ServerResponse PingServer()
         {
-            return _pipeProxy.PingServer(connectionSettings);
+            return _pipeProxy.PingServer(ConnectionSettingsManager.Instance.ConnectionSettings);
         }
 
-        public async void ExecuteAttendedTask(string projectPackagePath, ServerConnectionSettings settings)
+        public async void ExecuteAttendedTask(string projectPackagePath, ServerConnectionSettings settings, bool isServerAutomation = false)
         {
-            var task = _pipeProxy.ExecuteAttendedTask(projectPackagePath, settings);
-            await task.ContinueWith(e => TaskFinishedEvent?.Invoke(this, task.Result));
+            try
+            {
+                var task = _pipeProxy.ExecuteAttendedTask(projectPackagePath, settings, isServerAutomation);
+                await task.ContinueWith(e => TaskFinishedEvent?.Invoke(this, task.Result));
+            }
+            catch (TimeoutException ex)
+            {
+                throw ex;
+            }
+        }
+
+        public List<string> GetAutomations()
+        {
+            return _pipeProxy.GetAutomations();
         }
 
         public bool IsEngineBusy()

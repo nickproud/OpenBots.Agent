@@ -3,6 +3,7 @@ using OpenBots.Agent.Core.Model;
 using OpenBots.Agent.Core.Nuget;
 using OpenBots.Agent.Core.Utilities;
 using OpenBots.Service.API.Model;
+using OpenBots.Service.Client.Manager.API;
 using OpenBots.Service.Client.Server;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,6 @@ namespace OpenBots.Service.Client.Manager.Execution
 {
     public class AttendedExecutionManager
     {
-        public bool IsAttendedJobRunning { get; set; } = false;
         public static AttendedExecutionManager Instance
         {
             get
@@ -33,44 +33,63 @@ namespace OpenBots.Service.Client.Manager.Execution
         {
         }
 
-        public bool ExecuteTask(string projectPackagePath, ServerConnectionSettings settings)
+        public bool ExecuteTask(string projectPackage, ServerConnectionSettings settings, bool isServerAutomation)
         {
-            bool isSuccessful;
-            string projectDirectoryPath = string.Empty;
-            try
+            if (!ExecutionManager.Instance.IsEngineBusy)
             {
-                IsAttendedJobRunning = true;
-                string configFilePath;
-                string mainScriptFilePath = AutomationManager.GetMainScriptFilePath(projectPackagePath, out configFilePath);
-                projectDirectoryPath = Path.GetDirectoryName(mainScriptFilePath);
+                bool isSuccessful;
+                string projectDirectoryPath, configFilePath, mainScriptFilePath;
+                projectDirectoryPath = configFilePath = mainScriptFilePath = string.Empty;
+                try
+                {
+                    ExecutionManager.Instance.SetEngineStatus(true);
+                    if (isServerAutomation)
+                    {
+                        // projectPackage is "Name" of the Project Package here
+                        string filter = $"originalPackageName eq '{projectPackage}'";
+                        var automation = AutomationsAPIManager.GetAutomations(AuthAPIManager.Instance, filter).Items.FirstOrDefault();
+                        mainScriptFilePath = AutomationManager.DownloadAndExtractAutomation(automation, out configFilePath);
+                    }
+                    else
+                    {
+                        // projectPackage is "Path" of the Project Package here
+                        mainScriptFilePath = AutomationManager.GetMainScriptFilePath(projectPackage, out configFilePath);
+                    }
+                    
+                    projectDirectoryPath = Path.GetDirectoryName(mainScriptFilePath);
+                    NugetPackageManager.InstallProjectDependencies(configFilePath);
+                    var assembliesList = NugetPackageManager.LoadPackageAssemblies(configFilePath);
 
-                NugetPackageManager.InstallProjectDependencies(configFilePath);
-                var assembliesList = NugetPackageManager.LoadPackageAssemblies(configFilePath);
+                    RunAttendedAutomation(mainScriptFilePath, settings, assembliesList);
 
-                RunAttendedAutomation(mainScriptFilePath, settings, assembliesList);
+                    isSuccessful = true;
+                }
+                catch (Exception)
+                {
+                    isSuccessful = false;
+                }
+                finally
+                {
+                    // Delete Project Directory
+                    if (Directory.Exists(projectDirectoryPath))
+                        Directory.Delete(projectDirectoryPath, true);
 
-                isSuccessful = true;
+                    ExecutionManager.Instance.SetEngineStatus(false);
+                }
+
+                return isSuccessful;
             }
-            catch (Exception)
-            {
-                isSuccessful = false;
-            }
-            finally
-            {
-                // Delete Project Directory
-                if(Directory.Exists(projectDirectoryPath))
-                    Directory.Delete(projectDirectoryPath, true);
-
-                IsAttendedJobRunning = false;
-            }
-
-            return isSuccessful;
+            return false;
         }
 
         private void RunAttendedAutomation(string mainScriptFilePath, ServerConnectionSettings settings, List<string> projectDependencies)
         {
             var executionParams = GetExecutionParams(mainScriptFilePath, settings, projectDependencies);
-            var userInfo = new Credential(settings.DNSHost, settings.UserName);
+            var userInfo = new MachineCredential
+            {
+                Domain = settings.DNSHost,
+                UserName = settings.UserName
+            };
 
             var executorPath = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "OpenBots.Executor.exe").FirstOrDefault();
             var cmdLine = $"\"{executorPath}\" \"{executionParams}\"";
