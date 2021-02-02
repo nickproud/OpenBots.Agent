@@ -142,18 +142,20 @@ namespace OpenBots.Service.Client.Manager.Execution
             // Log Event
             FileLogger.Instance.LogEvent("Job Execution", "Attempt to download/retrieve Automation");
 
+            string connectedUserName = ConnectionSettingsManager.Instance.ConnectionSettings.UserName;
+            string userDomainName = ConnectionSettingsManager.Instance.ConnectionSettings.DNSHost;
 
             // Download Automation and Extract Files and Return File Paths of ProjectConfig and MainScript 
             automation.AutomationEngine = string.IsNullOrEmpty(automation.AutomationEngine) ? "OpenBots" : automation.AutomationEngine;
             string configFilePath;
-            var mainScriptFilePath = AutomationManager.DownloadAndExtractAutomation(automation, out configFilePath);
+            var mainScriptFilePath = AutomationManager.DownloadAndExtractAutomation(automation, userDomainName, connectedUserName, out configFilePath);
 
             // Install Project Dependencies
             List<string> assembliesList = null;
             if (automation.AutomationEngine == "OpenBots")
             {
-                NugetPackageManager.InstallProjectDependencies(configFilePath);
-                assembliesList = NugetPackageManager.LoadPackageAssemblies(configFilePath);
+                NugetPackageManager.InstallProjectDependencies(configFilePath, userDomainName, connectedUserName);
+                assembliesList = NugetPackageManager.LoadPackageAssemblies(configFilePath, userDomainName, connectedUserName);
             }
 
             // Log Event
@@ -202,6 +204,7 @@ namespace OpenBots.Service.Client.Manager.Execution
                 new List<Operation>()
                 {
                     new Operation(){ Op = "replace", Path = "/endTime", Value = DateTime.UtcNow.ToString("yyyy-MM-dd'T'HH:mm:ss.fffffff'Z'")},
+                    new Operation(){ Op = "replace", Path = "/isSuccessful", Value = true}
                 });
 
             // Delete Automation Files Directory
