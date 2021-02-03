@@ -12,12 +12,12 @@ namespace OpenBots.Service.Client.Manager.Execution
 {
     public static class AutomationManager
     {
-        public static string DownloadAndExtractAutomation(Automation automation, out string configFilePath)
+        public static string DownloadAndExtractAutomation(Automation automation, string domainName, string userName, out string configFilePath)
         {
             configFilePath = "";
 
             // Check if (Root) Automations Directory Exists (under User's AppData Folder), If Not create it
-            var automationsDirectory = Path.Combine(new EnvironmentSettings().GetEnvironmentVariable(), "Automations",
+            var automationsDirectory = Path.Combine(new EnvironmentSettings().GetEnvironmentVariablePath(domainName, userName), "Automations",
                 automation.AutomationEngine);
 
             if (!Directory.Exists(automationsDirectory))
@@ -88,11 +88,12 @@ namespace OpenBots.Service.Client.Manager.Execution
             {
                 if (!zipEntry.IsFile)
                 {
-                    // Ignore directories
+                    // Ignore directories but create them in case they're empty
+                    Directory.CreateDirectory(Path.Combine(targetDirectory, Uri.UnescapeDataString(zipEntry.Name)));
                     continue;
                 }
 
-                string entryFileName = zipEntry.Name;
+                string entryFileName = Uri.UnescapeDataString(zipEntry.Name);
 
                 // 4K is optimum
                 byte[] buffer = new byte[4096];
@@ -117,6 +118,36 @@ namespace OpenBots.Service.Client.Manager.Execution
                 file.IsStreamOwner = true;
                 file.Close();
             }
+        }
+
+        public static string GetMainScriptFilePath(string projectPackagePath, out string configFilePath)
+        {
+            var unpackagedProjectDir = UnpackageNugetProjectFile(projectPackagePath);
+
+            configFilePath = Directory.GetFiles(unpackagedProjectDir, "project.config", SearchOption.AllDirectories).First();
+            var mainFileName = JObject.Parse(File.ReadAllText(configFilePath))["Main"].ToString();
+
+            // Return "Main" Script File Path of the Automation
+            return Directory.GetFiles(unpackagedProjectDir, mainFileName, SearchOption.AllDirectories).First();
+        }
+
+        private static string UnpackageNugetProjectFile(string processNugetFilePath)
+        {
+            var processZipFilePath = Path.ChangeExtension(processNugetFilePath, ".zip");
+
+            // Create .zip file if it doesn't exist
+            if (!File.Exists(processZipFilePath))
+                File.Copy(processNugetFilePath, processZipFilePath);
+
+            var extractToDirectoryPath = Path.ChangeExtension(processZipFilePath, null);
+
+            // Extract Files/Folders from (.zip) file
+            DecompressFile(processZipFilePath, extractToDirectoryPath);
+
+            // Delete .zip File
+            File.Delete(processZipFilePath);
+
+            return extractToDirectoryPath;
         }
     }
 }

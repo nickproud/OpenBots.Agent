@@ -1,5 +1,4 @@
 ﻿using OpenBots.Agent.Core.Model;
-using OpenBots.Service.API.Model;
 using OpenBots.Service.Client.Manager;
 using OpenBots.Service.Client.Manager.API;
 using OpenBots.Service.Client.Manager.Execution;
@@ -63,6 +62,8 @@ namespace OpenBots.Service.Client.Server
                 _heartbeatTimer.Interval = 30000;
                 _heartbeatTimer.Elapsed += Heartbeat_Elapsed;
                 _heartbeatTimer.Enabled = true;
+
+                HeartBeatManager.Instance.Initialize(ConnectionSettingsManager.Instance.ConnectionSettings.AgentId);
             }
         }
 
@@ -80,10 +81,14 @@ namespace OpenBots.Service.Client.Server
             int statusCode = 0;
             try
             {
+                // Update LastReportedOn
+                HeartBeatManager.Instance.Heartbeat.LastReportedOn = DateTime.UtcNow;
+
+                // Send HeartBeat to the Server
                 statusCode = AgentsAPIManager.SendAgentHeartBeat(
                     AuthAPIManager.Instance,
                     ConnectionSettingsManager.Instance.ConnectionSettings.AgentId,
-                    new AgentHeartbeat(null, null, null, null, null, null, null, null, null, null, DateTime.Now, "", "", "", true));
+                    HeartBeatManager.Instance.Heartbeat);
 
                 if (statusCode != 201)
                     ConnectionSettingsManager.Instance.ConnectionSettings.ServerConnectionEnabled = false;
@@ -115,7 +120,7 @@ namespace OpenBots.Service.Client.Server
         public ServerResponse Connect(ServerConnectionSettings connectionSettings)
         {
             // Initialize File Logger for Debug Purpose
-            FileLogger.Instance.Initialize(new EnvironmentSettings().GetEnvironmentVariable());
+            FileLogger.Instance.Initialize(new EnvironmentSettings().GetEnvironmentVariablePath(connectionSettings.DNSHost, connectionSettings.UserName));
 
             // Log Event
             FileLogger.Instance.LogEvent("Connect", "Attempt to connect to the Server");
@@ -154,10 +159,7 @@ namespace OpenBots.Service.Client.Server
                 string errorMessage;
                 var errorCode = ex.GetType().GetProperty("ErrorCode")?.GetValue(ex, null)?.ToString() ?? string.Empty;
 
-                if (errorCode == "401")
-                    errorMessage = "Authentication Error - \"Agent is not found for given credentials\"";
-                else
-                    errorMessage = ex.GetType().GetProperty("ErrorContent")?.GetValue(ex, null)?.ToString() ?? ex.Message;
+                errorMessage = ex.GetType().GetProperty("ErrorContent")?.GetValue(ex, null)?.ToString() ?? ex.Message;
 
                 // Log Event (Error)
                 FileLogger.Instance.LogEvent("Connect", $"Error occurred while connecting to the Server; " +

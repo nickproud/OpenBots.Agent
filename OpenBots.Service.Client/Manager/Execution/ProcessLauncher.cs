@@ -1,4 +1,5 @@
-﻿using OpenBots.Service.API.Model;
+﻿using OpenBots.Agent.Core.Model;
+using OpenBots.Service.API.Model;
 using System;
 using System.Runtime.InteropServices;
 
@@ -267,7 +268,7 @@ namespace OpenBots.Service.Client.Manager.Execution
             return activeSessionId;
         }
 
-        private static bool GetSessionUserToken(Credential machineCredential, ref IntPtr phUserToken, ref bool userLoggedOn)
+        private static bool GetSessionUserToken(MachineCredential machineCredential, ref IntPtr phUserToken, ref bool userLoggedOn)
         {
             var bResult = false;
             var hImpersonationToken = IntPtr.Zero;
@@ -306,14 +307,13 @@ namespace OpenBots.Service.Client.Manager.Execution
         /// <param name="commandLine">The name of the application to launch</param>
         /// <param name="processInfo">Process information regarding the launched application that gets returned to the caller</param>
         /// <returns>Exit Code of the Process</returns>
-        public static bool LaunchProcess(String commandLine, Credential machineCredential, out PROCESS_INFORMATION processInfo)
+        public static bool LaunchProcess(String commandLine, MachineCredential machineCredential, out PROCESS_INFORMATION processInfo)
         {
             uint exitCode = 0;
             bool userLoggedOn = false;
             Boolean pResult = false;
             IntPtr hUserTokenDup = IntPtr.Zero, hPToken = IntPtr.Zero, hProcess = IntPtr.Zero, envBlock = IntPtr.Zero;
             UInt32 pResultWait = WAIT_FAILED;
-            string domainUsername = $"{machineCredential.Domain}\\{machineCredential.UserName}";
 
             processInfo = new PROCESS_INFORMATION();
 

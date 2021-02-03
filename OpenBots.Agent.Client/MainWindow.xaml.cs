@@ -2,8 +2,10 @@
 using Newtonsoft.Json.Linq;
 using OpenBots.Agent.Client.Forms;
 using OpenBots.Agent.Client.Forms.Dialog;
+using OpenBots.Agent.Client.Settings;
 using OpenBots.Agent.Core.Enums;
 using OpenBots.Agent.Core.Model;
+using OpenBots.Agent.Core.Nuget;
 using OpenBots.Agent.Core.UserRegistry;
 using OpenBots.Agent.Core.Utilities;
 using OpenBots.Core.Settings;
@@ -28,7 +30,6 @@ namespace OpenBots.Agent.Client
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ServerConnectionSettings _connectionSettings;
         private OpenBotsSettings _agentSettings;
         private Timer _serviceHeartBeat;
         private RegistryManager _registryManager;
@@ -41,6 +42,7 @@ namespace OpenBots.Agent.Client
         private bool _isServiceUP = false;
         private bool _logInfoChanged = false;
 
+        private AttendedExecution _attendedExecutionWindow;
         public MainWindow()
         {
             InitializeComponent();
@@ -66,13 +68,13 @@ namespace OpenBots.Agent.Client
 
         private void OnLoad(object sender, RoutedEventArgs e)
         {
-            SetConfigFilePath();
+            this.WindowState = WindowState.Minimized;
+
+            SetAgentEnvironment();
             LoadConnectionSettings();
             UpdateConnectButtonState();
             UpdateSaveButtonState();
             StartServiceHeartBeatTimer();
-
-            this.WindowState = WindowState.Minimized;
         }
         private void OnUnload(object sender, RoutedEventArgs e)
         {
@@ -147,16 +149,16 @@ namespace OpenBots.Agent.Client
             if (PipeProxy.Instance.IsServerConnectionUp())
             {
                 // Retrieve Connection Settings from Server
-                _connectionSettings = PipeProxy.Instance.GetConnectionHistory();
+                ConnectionSettingsManager.Instance.ConnectionSettings = PipeProxy.Instance.GetConnectionHistory();
                 isServerAlive = true;
             }
 
-            if (_connectionSettings == null)
+            if (ConnectionSettingsManager.Instance.ConnectionSettings == null)
             {
                 if (!string.IsNullOrEmpty(_agentSettings.AgentId))
                     _agentSettings = SettingsManager.Instance.ResetToDefaultSettings();
 
-                _connectionSettings = new ServerConnectionSettings()
+                ConnectionSettingsManager.Instance.ConnectionSettings = new ServerConnectionSettings()
                 {
                     ServerConnectionEnabled = false,
                     ServerURL = _registryManager.ServerURL ?? string.Empty,          // Load Server URL from User Registry,
@@ -164,7 +166,8 @@ namespace OpenBots.Agent.Client
                     AgentPassword = _registryManager.AgentPassword ?? string.Empty,  // Load Password from User Registry
                     SinkType = string.IsNullOrEmpty(_agentSettings.SinkType) ? SinkType.File.ToString() : _agentSettings.SinkType,
                     TracingLevel = string.IsNullOrEmpty(_agentSettings.TracingLevel) ? LogEventLevel.Information.ToString() : _agentSettings.TracingLevel,
-                    DNSHost = Dns.GetHostName(),
+                    DNSHost = Dns.GetHostName().ToLower() == Environment.UserDomainName.ToLower() ? Dns.GetHostName() : Environment.UserDomainName,
+                    UserName = Environment.UserName,
                     WhoAmI = WindowsIdentity.GetCurrent().Name.ToLower(),
                     MachineName = Environment.MachineName,
                     AgentId = string.Empty,
@@ -174,13 +177,15 @@ namespace OpenBots.Agent.Client
             }
 
             // Loading settings in UI
-            txt_Username.Text = _connectionSettings.AgentUsername;
-            txt_Password.Password = _connectionSettings.AgentPassword;
-            txt_ServerURL.Text = _connectionSettings.ServerURL;
+            txt_Username.Text = ConnectionSettingsManager.Instance.ConnectionSettings.AgentUsername;
+            txt_Password.Password = ConnectionSettingsManager.Instance.ConnectionSettings.AgentPassword;
+            txt_ServerURL.Text = ConnectionSettingsManager.Instance.ConnectionSettings.ServerURL;
             cmb_LogLevel.ItemsSource = Enum.GetValues(typeof(LogEventLevel));
-            cmb_LogLevel.SelectedIndex = Array.IndexOf((Array)cmb_LogLevel.ItemsSource, Enum.Parse(typeof(LogEventLevel), _connectionSettings.TracingLevel));
+            cmb_LogLevel.SelectedIndex = Array.IndexOf((Array)cmb_LogLevel.ItemsSource, Enum.Parse(typeof(LogEventLevel),
+                ConnectionSettingsManager.Instance.ConnectionSettings.TracingLevel));
             cmb_SinkType.ItemsSource = Enum.GetValues(typeof(SinkType));
-            cmb_SinkType.SelectedIndex = Array.IndexOf((Array)cmb_SinkType.ItemsSource, Enum.Parse(typeof(SinkType), _connectionSettings.SinkType));
+            cmb_SinkType.SelectedIndex = Array.IndexOf((Array)cmb_SinkType.ItemsSource, Enum.Parse(typeof(SinkType),
+                ConnectionSettingsManager.Instance.ConnectionSettings.SinkType));
 
             // Update UI Controls after loading settings
             OnSetRegistryKeys();
@@ -192,47 +197,84 @@ namespace OpenBots.Agent.Client
                 UpdateUIOnConnect();
             }
         }
-        private void SetConfigFilePath()
+
+        private void SetEnvironmentVariable()
         {
-            if (_isServiceUP)
+            try
             {
-                try
+                // Get Agent's User Environment Variable Path
+                string environmentVariablePath = SettingsManager.Instance.EnvironmentSettings.GetEnvironmentVariablePath();
+
+                // Create Environment Variable if It doesn't exist 
+                // or Update the existing one it is not valid for the current user
+                if (string.IsNullOrEmpty(environmentVariablePath) ||
+                    !SettingsManager.Instance.EnvironmentSettings.isValidEnvironmentVariable())
                 {
-                    // Get Settings file Path from Environment Variable
-                    string environmentVariableValue = SettingsManager.Instance.EnvironmentSettings.GetEnvironmentVariable();
-
-                    // Create Environment Variable if It doesn't exist
-                    if (string.IsNullOrEmpty(environmentVariableValue))
-                    {
-                        string settingsFilePath = SettingsManager.Instance.GetSettingsFilePath();
-
-                        if (File.Exists(settingsFilePath))
-                            PipeProxy.Instance.SetConfigFilePath(SettingsManager.Instance.EnvironmentSettings.EnvironmentVariableName, settingsFilePath);
-                        else
-                            throw new FileNotFoundException($"OpenBots Agent Settings file not found at \"{settingsFilePath}\"");
-                    }
+                    SettingsManager.Instance.EnvironmentSettings.SetEnvironmentVariablePath();
                 }
-                catch (FileNotFoundException ex)
-                {
-                    ShowErrorDialog("An error occurred while setting up OpenBots Agent Settings File Path " +
-                        "to an Environment Variable.",
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("An error occurred while setting up OpenBots Agent Environment Variable.",
+                    "",
+                    ex.Message,
+                    Application.Current.MainWindow);
+
+                ShutDownApplication();
+            }
+        }
+
+        private void CreateSettingsFile()
+        {
+            try
+            {
+                SettingsManager.Instance.CreateAgentSettingsFile();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorDialog("An error occurred while creating Agent's Settings File.",
                         "",
                         ex.Message,
                         Application.Current.MainWindow);
 
-                    ShutDownApplication();
-                }
-                catch (Exception ex)
-                {
-                    ShowErrorDialog("An error occurred while setting up OpenBots.Settings (Config File Path)" +
-                        $"to an Environment Variable. Please add the variable \"{SettingsManager.Instance.EnvironmentSettings.EnvironmentVariableName}\" " +
-                        "manually and re-run the agent.",
+                ShutDownApplication();
+            }
+        }
+        private void SetAgentEnvironment()
+        {
+            MessageDialog messageDialog = new MessageDialog(
+                        "Environment Setup",
+                        "Please wait while the environment is being set up for the Agent.",
+                        false);
+            try
+            {
+                messageDialog.Topmost = true;
+                messageDialog.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                messageDialog.Show();
+
+                // Set Environment Variable Path
+                SetEnvironmentVariable();
+
+                // Create Settings File
+                CreateSettingsFile();
+
+                // Install Default Packages for the First Time
+                NugetPackageManager.SetupFirstTimeUserEnvironment(Environment.UserDomainName, Environment.UserName, SystemForms.Application.ProductVersion);
+
+                messageDialog.CloseManually = true;
+                messageDialog.Close();
+            }
+            catch (Exception ex)
+            {
+                messageDialog.CloseManually = true;
+                messageDialog.Close();
+
+                ShowErrorDialog("An error occurred while setting up environment for the Agent.",
                         "",
                         ex.Message,
                         Application.Current.MainWindow);
 
-                    ShutDownApplication();
-                }
+                ShutDownApplication();
             }
         }
         private void ConnectToService()
@@ -318,10 +360,10 @@ namespace OpenBots.Agent.Client
         private void ShowMachineInfoDialog(string serverIP)
         {
             MachineInfo machineInfoDialog = new MachineInfo(
-                    _connectionSettings.WhoAmI,
-                    _connectionSettings.DNSHost,
-                    _connectionSettings.MACAddress,
-                    _connectionSettings.IPAddress,
+                    ConnectionSettingsManager.Instance.ConnectionSettings.WhoAmI,
+                    ConnectionSettingsManager.Instance.ConnectionSettings.MachineName,
+                    ConnectionSettingsManager.Instance.ConnectionSettings.MACAddress,
+                    ConnectionSettingsManager.Instance.ConnectionSettings.IPAddress,
                     serverIP);
 
             machineInfoDialog.Owner = Application.Current.MainWindow;
@@ -374,11 +416,11 @@ namespace OpenBots.Agent.Client
             if (isSinkURLModified)
             {
                 if (isConnectedToServer)
-                    _agentSettings.LoggingValue1 = _connectionSettings.LoggingValue1;
+                    _agentSettings.LoggingValue1 = ConnectionSettingsManager.Instance.ConnectionSettings.LoggingValue1;
                 else
                 {
                     _agentSettings.LoggingValue1 = string.Empty;
-                    _connectionSettings.LoggingValue1 = string.Empty;
+                    ConnectionSettingsManager.Instance.ConnectionSettings.LoggingValue1 = string.Empty;
                     txt_SinkType_Logging1.Text = string.Empty;
                     btn_Save.IsEnabled = false;
                 }
@@ -401,24 +443,25 @@ namespace OpenBots.Agent.Client
                 var isSinkURLModified = UpdateHttpSinkURL();
 
                 // Server Configuration
-                _connectionSettings.ServerURL = txt_ServerURL.Text;
-                _connectionSettings.AgentUsername = txt_Username.Text;
-                _connectionSettings.AgentPassword = txt_Password.Password;
+                ConnectionSettingsManager.Instance.ConnectionSettings.ServerURL = txt_ServerURL.Text;
+                ConnectionSettingsManager.Instance.ConnectionSettings.AgentUsername = txt_Username.Text;
+                ConnectionSettingsManager.Instance.ConnectionSettings.AgentPassword = txt_Password.Password;
 
                 // Logging
-                _connectionSettings.TracingLevel = cmb_LogLevel.Text;
-                _connectionSettings.SinkType = cmb_SinkType.Text;
-                _connectionSettings.LoggingValue1 = txt_SinkType_Logging1.Text;
+                ConnectionSettingsManager.Instance.ConnectionSettings.TracingLevel = cmb_LogLevel.Text;
+                ConnectionSettingsManager.Instance.ConnectionSettings.SinkType = cmb_SinkType.Text;
+                ConnectionSettingsManager.Instance.ConnectionSettings.LoggingValue1 = txt_SinkType_Logging1.Text;
 
                 try
                 {
                     // Calling Service Method to Connect to Server
-                    var serverResponse = PipeProxy.Instance.ConnectToServer(_connectionSettings);
+                    var serverResponse = PipeProxy.Instance.ConnectToServer();
                     if (serverResponse != null)
                     {
                         if (serverResponse.Data != null)
                         {
-                            _agentSettings.OpenBotsServerUrl = _connectionSettings.ServerURL;
+                            ConnectionSettingsManager.Instance.ConnectionSettings = (ServerConnectionSettings)serverResponse.Data;
+                            _agentSettings.OpenBotsServerUrl = ConnectionSettingsManager.Instance.ConnectionSettings.ServerURL;
                             _agentSettings.AgentId = ((ServerConnectionSettings)serverResponse.Data).AgentId.ToString();
                             _agentSettings.AgentName = ((ServerConnectionSettings)serverResponse.Data).AgentName.ToString();
                             OnUpdateHttpSinkURL(isSinkURLModified, true);
@@ -429,16 +472,16 @@ namespace OpenBots.Agent.Client
                             if (string.IsNullOrEmpty(_registryManager.AgentUsername) || string.IsNullOrEmpty(_registryManager.AgentPassword) ||
                                 string.IsNullOrEmpty(_registryManager.ServerURL))
                             {
-                                _registryManager.AgentUsername = _connectionSettings.AgentUsername;
-                                _registryManager.AgentPassword = _connectionSettings.AgentPassword;
-                                _registryManager.ServerURL = _connectionSettings.ServerURL;
+                                _registryManager.AgentUsername = ConnectionSettingsManager.Instance.ConnectionSettings.AgentUsername;
+                                _registryManager.AgentPassword = ConnectionSettingsManager.Instance.ConnectionSettings.AgentPassword;
+                                _registryManager.ServerURL = ConnectionSettingsManager.Instance.ConnectionSettings.ServerURL;
 
                                 OnSetRegistryKeys();
                             }
-                            else if(_registryManager.ServerURL != _connectionSettings.ServerURL)
+                            else if (_registryManager.ServerURL != ConnectionSettingsManager.Instance.ConnectionSettings.ServerURL)
                             {
                                 // If Server URL is updated
-                                _registryManager.ServerURL = _connectionSettings.ServerURL;
+                                _registryManager.ServerURL = ConnectionSettingsManager.Instance.ConnectionSettings.ServerURL;
                             }
 
                             // Update OpenBots.settings file
@@ -470,11 +513,12 @@ namespace OpenBots.Agent.Client
                 try
                 {
                     // Calling Service Method to Disconnect from Server
-                    var serverResponse = PipeProxy.Instance.DisconnectFromServer(_connectionSettings);
+                    var serverResponse = PipeProxy.Instance.DisconnectFromServer();
                     if (serverResponse != null)
                     {
                         if (serverResponse.StatusCode == "200")
                         {
+                            ConnectionSettingsManager.Instance.ConnectionSettings = (ServerConnectionSettings)serverResponse.Data;
                             _agentSettings.OpenBotsServerUrl = "";
                             _agentSettings.AgentId = string.Empty;
                             _agentSettings.AgentName = string.Empty;
@@ -683,13 +727,13 @@ namespace OpenBots.Agent.Client
             {
                 try
                 {
-                    _connectionSettings.ServerURL = txt_ServerURL.Text.Trim();
+                    ConnectionSettingsManager.Instance.ConnectionSettings.ServerURL = txt_ServerURL.Text.Trim();
 
-                    var serverResponse = PipeProxy.Instance.PingServer(_connectionSettings);
+                    var serverResponse = PipeProxy.Instance.PingServer();
                     if (serverResponse?.Data != null)
                     {
-                        _connectionSettings.ServerIPAddress = (string)serverResponse.Data;
-                        ShowMachineInfoDialog(_connectionSettings.ServerIPAddress);
+                        ConnectionSettingsManager.Instance.ConnectionSettings.ServerIPAddress = (string)serverResponse.Data;
+                        ShowMachineInfoDialog(ConnectionSettingsManager.Instance.ConnectionSettings.ServerIPAddress);
                     }
                     else
                     {
@@ -706,8 +750,8 @@ namespace OpenBots.Agent.Client
         }
         private void OnClick_NugetFeedManager(object sender, RoutedEventArgs e)
         {
-            string appDataPath = new EnvironmentSettings().GetEnvironmentVariable();
-            string appSettingsDirPath = Directory.GetParent(appDataPath).Parent.FullName;
+            string appDataPath = new EnvironmentSettings().GetEnvironmentVariablePath();
+            string appSettingsDirPath = Directory.GetParent(appDataPath).FullName;
 
             var appSettings = new ApplicationSettings().GetOrCreateApplicationSettings(appSettingsDirPath);
             var packageSourcesDT = appSettings.ClientSettings.PackageSourceDT;
@@ -722,6 +766,20 @@ namespace OpenBots.Agent.Client
                 appSettings.Save(appSettings, appSettingsDirPath);
             }
         }
+        private void OnClick_AttendedExecution(object sender, RoutedEventArgs e)
+        {
+            if (_attendedExecutionWindow == null)
+            {
+                _attendedExecutionWindow = new AttendedExecution();
+                _attendedExecutionWindow.Closed += (s, args) => this._attendedExecutionWindow = null;
+                _attendedExecutionWindow.Show();
+            }
+            else
+                _attendedExecutionWindow.Activate();
+
+            this.WindowState = WindowState.Minimized;
+
+        }
         private void OnClick_ClearCredentials(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(_registryManager.AgentUsername))
@@ -735,7 +793,8 @@ namespace OpenBots.Agent.Client
 
                 MessageDialog messageDialog = new MessageDialog(
                     "Credentials Cleared",
-                    "OpenBots Agent Credentials have been cleared.");
+                    "OpenBots Agent Credentials have been cleared.",
+                    true);
 
                 messageDialog.Owner = Application.Current.MainWindow;
                 messageDialog.ShowDialog();
@@ -758,5 +817,7 @@ namespace OpenBots.Agent.Client
             this.Close();
         }
         #endregion
+
+
     }
 }
