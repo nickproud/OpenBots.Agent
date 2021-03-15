@@ -211,7 +211,15 @@ namespace OpenBots.Service.Client.Manager.Execution
                 });
 
             // Delete Job Directory
-            Directory.Delete(executionDirPath, true);
+            try
+            {
+                Directory.Delete(executionDirPath, true);
+            }
+            catch (Exception)
+            {
+                // Appended 'Long Path Specifier' before the Directory Path
+                Directory.Delete(@"\\?\" + executionDirPath, true);
+            }
 
             // Update Automation Execution Log (Execution Finished)
             _executionLog.CompletedOn = DateTime.UtcNow;
@@ -238,21 +246,22 @@ namespace OpenBots.Service.Client.Manager.Execution
                 if (automation.AutomationEngine == "")
                     automation.AutomationEngine = "OpenBots";
 
-                switch (automation.AutomationEngine.ToString())
+                var automationType = (AutomationType)Enum.Parse(typeof(AutomationType), automation.AutomationEngine);
+                switch (automationType)
                 {
-                    case "OpenBots":
+                    case AutomationType.OpenBots:
                         RunOpenBotsAutomation(job, automation, machineCredential, mainScriptFilePath, projectDependencies);
                         break;
 
-                    case "Python":
-                        RunPythonAutomation(job, machineCredential, mainScriptFilePath);
+                    case AutomationType.Python:
+                        RunPythonAutomation(job, automation, machineCredential, mainScriptFilePath);
                         break;
 
-                    case "TagUI":
+                    case AutomationType.TagUI:
                         RunTagUIAutomation(job, automation, machineCredential, mainScriptFilePath, executionDirPath);
                         break;
 
-                    case "CS-Script":
+                    case AutomationType.CSScript:
                         RunCSharpAutomation(job, automation, machineCredential, mainScriptFilePath);
                         break;
 
@@ -280,20 +289,34 @@ namespace OpenBots.Service.Client.Manager.Execution
             return;
         }
 
-        private void RunPythonAutomation(Job job, MachineCredential machineCredential, string mainScriptFilePath)
+        private void RunPythonAutomation(Job job, Automation automation, MachineCredential machineCredential, string mainScriptFilePath)
         {
-            string projectDir = Path.GetDirectoryName(mainScriptFilePath);
-            string assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string pythonExecutable = GetPythonPath(machineCredential.UserName, "");
-            string cmdLine = $"powershell.exe -File \"{assemblyPath}\\Executors\\PythonExecutor.ps1\" \"{pythonExecutable}\" \"{projectDir}\" \"{mainScriptFilePath}\"";
+            string projectDir = Path.GetDirectoryName(mainScriptFilePath);
+
+            string commandsBatch = $"\"{pythonExecutable}\" -m pip install --upgrade pip && " +
+                $"\"{pythonExecutable}\" -m pip install --user virtualenv && " +
+                $"\"{pythonExecutable}\" -m venv \"{Path.Combine(projectDir, ".env3")}\" && " +
+                $"\"{Path.Combine(projectDir, ".env3", "Scripts", "activate.bat")}\" && " +
+                (File.Exists(Path.Combine(projectDir, "requirements.txt")) ? $"\"{pythonExecutable}\" -m pip install -r \"{Path.Combine(projectDir, "requirements.txt")}\" & " : "") +
+                $"\"{pythonExecutable}\" \"{mainScriptFilePath}\" && " +
+                $"deactivate";
+
+            string batchFilePath = Path.Combine(projectDir, job.Id.ToString() + ".bat");
+            File.WriteAllText(batchFilePath, commandsBatch);
+            string logsFilePath = $"{mainScriptFilePath}.log";
+            string cmdLine = $"\"{batchFilePath}\" > \"{logsFilePath}\"";
 
             ProcessLauncher.PROCESS_INFORMATION procInfo;
             ProcessLauncher.LaunchProcess(cmdLine, machineCredential, out procInfo);
 
+            var executionParams = GetJobExecutionParams(job, automation, mainScriptFilePath, null);
+            SendLogsToServer(mainScriptFilePath, executionParams);
+
             return;
         }
 
-        private void RunTagUIAutomation(Job job, Automation automation, MachineCredential machineCredential, 
+        private void RunTagUIAutomation(Job job, Automation automation, MachineCredential machineCredential,
             string mainScriptFilePath, string executionDirPath)
         {
             string exePath = GetFullPathFromWindows("tagui");
@@ -547,24 +570,35 @@ namespace OpenBots.Service.Client.Manager.Execution
         {
             var logger = new Logging().GetLogger(jobExecutionParams);
 
-            // Get Log File Path
-            var logsFilePath = Directory.GetFiles(Directory.GetParent(mainScriptFilePath).FullName,
-                Path.GetFileNameWithoutExtension(mainScriptFilePath)+"*.log").FirstOrDefault();
-
-            if(logsFilePath != null && File.Exists(logsFilePath))
+            try
             {
-                var logs = File.ReadAllLines(logsFilePath).ToList();
-                foreach(var log in logs)
-                {
-                    if(log.Trim() == string.Empty || 
-                        log.ToLower().StartsWith("start - automation started") ||
-                        log.ToLower().StartsWith("finish - automation finished"))
-                    {
-                        continue;
-                    }
+                // Get Log File Path
+                var logsFilePath = Directory.GetFiles(Directory.GetParent(mainScriptFilePath).FullName,
+                    Path.GetFileNameWithoutExtension(mainScriptFilePath) + "*.log").FirstOrDefault();
 
-                    logger.Information(log.Trim());
+                if (logsFilePath != null && File.Exists(logsFilePath))
+                {
+                    var logs = File.ReadAllLines(logsFilePath).ToList();
+                    foreach (var log in logs)
+                    {
+                        if (log.Trim() == string.Empty ||
+                            log.ToLower().StartsWith("start - automation started") ||
+                            log.ToLower().StartsWith("finish - automation finished"))
+                        {
+                            continue;
+                        }
+
+                        logger.Information(log.Trim());
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                logger.Dispose();
             }
         }
 
