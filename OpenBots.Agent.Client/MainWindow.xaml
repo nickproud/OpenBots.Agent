@@ -53,8 +53,8 @@
                         <ColumnDefinition Width="20"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Image Source="/resources/OpenBots.png" HorizontalAlignment="Left" Width="20" Height="20" Grid.Column="0"/>
-                    <Label Content="OpenBots Agent" FontSize="12" Width="400" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Calibri" Grid.Column="1"/>
+                    <Image Source="NexbotixIcon.PNG" HorizontalAlignment="Left" Width="20" Height="20" Grid.Column="0"/>
+                    <Label Content="Nexbotix Agent" FontSize="12" Width="400" HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="Calibri" Grid.Column="1"/>
                 </Grid>
                 <Grid Name="grd_CustomControls" HorizontalAlignment="Right" Grid.Column="1" Margin="0">
                     <Grid.ColumnDefinitions>

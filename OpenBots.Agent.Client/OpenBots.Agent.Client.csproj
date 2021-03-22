@@ -405,6 +405,8 @@
     <Resource Include="resources\Icons\Commands\command-web.png" />
     <Resource Include="resources\Icons\Commands\command-window-close.png" />
     <Resource Include="resources\Icons\Commands\command-window.png" />
+    <Resource Include="resources\NexbotixIcon.PNG" />
+    <Resource Include="NexbotixIcon.PNG" />
     <Content Include="resources\Samples\HTMLInputSample.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
